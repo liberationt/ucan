@@ -1,0 +1,350 @@
+@import './variables.scss';
+
+//覆盖一些element-ui样式
+
+.el-breadcrumb__inner,
+.el-breadcrumb__inner a {
+  font-weight: 400 !important;
+}
+
+.el-upload {
+  input[type="file"] {
+    display: none !important;
+  }
+}
+
+.el-upload__input {
+  display: none;
+}
+
+.cell {
+  .el-tag {
+    margin-right: 0px;
+  }
+}
+
+.small-padding {
+  .cell {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}
+
+.fixed-width {
+  .el-button--mini {
+    padding: 7px 10px;
+    width: 60px;
+  }
+}
+
+.status-col {
+  .cell {
+    padding: 0 10px;
+    text-align: center;
+
+    .el-tag {
+      margin-right: 0px;
+    }
+  }
+}
+
+//暂时性解决dialog 问题 https://github.com/ElemeFE/element/issues/2461
+.el-dialog {
+  transform: none;
+  left: 0;
+  position: relative;
+  margin: 0 auto;
+  top: 10px;
+  min-width:840px;
+  //max-width:1000px;
+  //width: 60% !important;
+}
+
+//文章页textarea修改样式
+.article-textarea {
+  textarea {
+    padding-right: 40px;
+    resize: none;
+    border: none;
+    border-radius: 0px;
+    border-bottom: 1px solid #bfcbd9;
+  }
+}
+
+//element ui upload
+.upload-container {
+  .el-upload {
+    width: 100%;
+
+    .el-upload-dragger {
+      width: 100%;
+      height: 200px;
+    }
+  }
+}
+
+//dropdown
+.el-dropdown-menu {
+  a {
+    display: block
+  }
+}
+
+// 表单初始化
+.el-form-item {
+  margin-bottom: 16px;
+}
+.el-input__inner{
+  border: 1px solid #d3dde8
+}
+
+.el-input__inner:hover{
+  border: 1px solid #c5cfda
+}
+
+.el-select .el-input.is-focus .el-input__inner{
+  border-color: $assist-light-blue
+}
+
+
+// table初始化
+.el-table--border {
+  border: 1px solid #e1e1e1;
+}
+
+.el-table th.is-leaf, .el-table--border td {
+  border-bottom: 1px solid #e1e1e1;
+  border-right: 0;
+  padding: 8px 0px;
+  color: $text;
+}
+
+.el-table th.is-leaf{
+  background: $bg-thead;
+  font-size: 15px;
+  padding:  0 0;
+  line-height: 45px;
+  font-weight: bold;
+}
+
+.el-table--border td{
+  font-size: 14px
+}
+
+//.el-table .odd-row {
+//  background: #D3DDE8;
+//}
+
+table tr:nth-child(odd) {
+  background-color:#ffffff;
+}
+table tr:nth-child(even) {
+  background-color:$bg-striped;
+}
+
+
+// 启用按钮
+.el-switch.is-checked .el-switch__core {
+  border-color: $assist-light-blue;
+  background-color: $assist-light-blue;
+}
+
+
+// 分页跳转页面
+.el-pagination__editor.el-input .el-input__inner{
+  line-height:  28px;
+}
+
+.el-pagination.is-background .el-pager li:not(.disabled).active{
+  background: $base-blue;
+  color: #ffffff !important;
+}
+.el-pagination.is-background .el-pager li:not(.disabled):hover{
+  color: $base-blue;
+}
+
+// 弹窗样式初始化
+.el-dialog__header {
+  font-size: 16px;
+  font-weight: bold;
+  height: 48px;
+  line-height: 48px;
+  padding: 0 24px;
+  border-bottom: 1px solid #e1e1e1;
+  .el-dialog__title{
+    color: $text;
+    font-size: 16px;
+  }
+  .el-dialog__headerbtn{
+    top: 15px;
+    font-size: 18px;
+  }
+}
+
+.el-dialog{
+  background: $bg-dialog;
+}
+
+.el-dialog__body{
+  padding: 20px 20px 0 20px;
+}
+
+.el-form-item.is-required:not(.is-no-asterisk) > .el-form-item__label:before{
+  margin-right: 0px;
+}
+.el-message-box{
+  top:50%;
+  position:absolute;
+  width:480px;
+  margin-left:-240px;
+  left:50%;
+  transform: translateY(calc(-50% - 0.5px));
+}
+// message弹框按钮
+.el-message-box__btns{
+  .el-button--primary{
+    background: $assist-light-blue;
+    border:1px solid $assist-light-blue;
+    &:hover{
+      background: #1890ff !important;
+      border:1px solid #1890ff !important;
+    }
+    &:focus{
+      background: #1890ff !important;
+      border:1px solid #1890ff !important;
+    }
+    &.is-disabled{
+      background: #5ba5de !important;
+      border:1px solid #5ba5de !important;
+    }
+  }
+}
+
+// message头部
+.el-message-box__header{
+  font-size: 16px;
+  font-weight: bold;
+  height: 44px;
+  padding: 0 24px;
+  border-bottom: 1px solid #bcc1c6;
+  margin-bottom: 10px;
+  .el-message-box__title{
+    color: $text;
+    span{
+      line-height: 44px;
+    }
+  }
+}
+
+.el-message-box__message{
+  p{
+    color: $text;
+  }
+}
+
+.el-cascader-node__postfix{
+  top:10px
+}
+
+.el-message-box_content{
+  padding: 26px 36px;
+}
+
+.el-message{
+  left:50% !important;
+  top:100px !important;
+  background:rgba(0,0,0,.6);
+  border:1px solid rgba(0,0,0,.6)!important;
+  .el-message__content{
+    color:#fff!important;
+  }
+}
+.el-radio__inner{
+  border-color:#ccc;
+}
+
+//.el-dialog {
+//  position: absolute;
+//  top: 50%;
+//  left: 50%;
+//  margin: 0 !important;
+//  transform: translate(-50%, -50%);
+//  max-height: calc(100% - 30px);
+//  max-width: calc(100% - 30px);
+//  display: flex;
+//  flex-direction: column;
+//  > .el-dialog__body {
+//     overflow: auto;
+//  }
+//}
+
+
+// ie11兼容
+.el-col{
+  min-height: 56px
+}
+
+.switchStyle .el-switch__label--right{
+  top:0px
+}
+.switchStyle .el-switch__label--left{
+  top:0px
+}
+
+
+.icons-select .el-input__inner {
+  color: rgba(0,0,0,0);
+}
+.el-range-editor--medium .el-range-separator{
+  width:10% !important;
+}
+.el-range-editor--medium.el-input__inner{
+  overflow: hidden;
+}
+.el-dialog__footer {
+  position: absolute;
+  width: 100%;
+  background: #ffffff;
+  bottom: 0;
+  z-index: 99;
+}
+
+.elDelogLogin .el-dialog{
+  width:50% ;
+  min-width:50% !important;
+}
+
+.elDelogLogin .el-dialog__body{
+  padding: 40px 36px 0px;
+}
+@media screen and (max-width:1440px) {
+  .elDelogLogin .el-dialog{
+    width:60% !important;
+    min-width:60% !important;
+  }
+  .elDelogLogin .el-dialog__body {
+    min-height:60vh;
+  }
+}
+.elDelogLogin .el-step__title{
+  position: relative;
+  top:-85px;
+}
+.elDelogLogin .dialog-footer{
+  text-align: right;
+}
+.elDelogLogin .el-input__suffix{
+  right:30px;
+}
+.elDelogLogin .show-pwd{
+  position: absolute;
+  right:15px;
+}
+.elDelogLogin .el-step__icon.is-text{
+  height:50px;
+  width:50px;
+}
+.elDelogLogin .el-step.is-horizontal .el-step__line{
+  top:23px;
+  height:1px !important;
+}

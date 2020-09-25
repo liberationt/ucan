@@ -1,0 +1,29 @@
+@font-face {font-family: "fjiconfont";
+  src: url('iconfont.eot?t=1593575227139'); /* IE9 */
+  src: url('iconfont.eot?t=1593575227139#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAAPcAAsAAAAAB9wAAAOPAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCDDAqDKIMUATYCJAMQCwoABCAFhG0HRhv0BsgekiSIALCHVAAAFhzFQ/1+/M7eu1/MEbXpoo1G0sx0S1Q81V9J5l08Ep/P22b9QEfEMzNrKpSuGIVAmepLs6p+MvHbHk0qat4n7p3+Kd569i2XOQZ3HwOMO+8C2xOjQAq0QBL0huklDsSn2wQ6zaIayIkO3RRES96iQFyxLQ3RNacc6QztQmvPzvxHFonQXu6Wm4B76ffjF+qQaIqWyrvr5OX2Blp9VT6r8qRmEgbVKabs5wfbR8UGQBIXe4OnyXlxA2SdpuiwCrjXpOCr+r/hqxIrb/uXRygq0cpr7wY7YKnyVQk5gq9OjsJXtU2FFzG/HZ24CZ4hdvrEVNXJ6ITo7o6ZNDKUPHniuvLIsxUD1zrx8KHy8DE0qD1nJpD3j+c8VPrPuZmP9ffmPigiG57HhqV8TD5HPlUVq1qxsWsOVIAy379jTrn1L6xs27cJyrtPzicfXE8eZyrGsm2ZmeqKjXuPZzitlcd3r0snP6uQ/UsW++VWw0q7dqo8OF3tDPcluXOvyJP/n5RdZOPBCaPbrYPrnNTZPXQLtPNSZ33o0kCWnHoQ5YrSVUdK1xSHml5UHskal1bdlyIdp3LYVY6fdIb8M7KLo+s/fZkAn55due2fAd8de8/vqPheDE4cmNe/tGuz5rW6d2ozuEAtHRwl3pf0xZmEyw0qTYwcg9y/lUYuKhttutC08u4jV0bsP3ZK2rVwc8HyvLgXyWtSb0q4AWgm1NN1CjST5EfyJFueWNfXyX/xN17WtJsNTWr2NTouwZeSSk3TRDMhsa5Fu8Js1T8b1rIBSK7x6jPRcissPYV8ML8kbcXm+YJOP0qDooN4vYd5xLQT2o2UKNrMoGq3gkx2A1p02YFW7Q6j03p03N9lCJwssgPrMB0g9OMgil7LqPpxi0z2FVqM4gta9RMZnc5H2oldVhE7ti1nmmAGdY+mth4MmIFHxGadfZg13KfxqiYVqIyH7QytXaNWs9KRBRjfY014hFVHCJOaPOinHcB9zOcL0hAPljFd1PAIEWpSs6bZ96QaetCPWMdxjEZgDBRuo1HYdEEBZtxfiG19vg/GMpyPho/wGmkVw4XZo1PURg3UmkF2NAZm8d7lkbARLHUgCCYKExfkR9EB+BmfXwyiCPVPK8PohBrwrMiHNEFN1Muca6xxvtn/hAegk3daRokaGS3yqu3Xosd4tIAV5oKxo7VASbCEXwMAAA==') format('woff2'),
+  url('iconfont.woff?t=1593575227139') format('woff'),
+  url('iconfont.ttf?t=1593575227139') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+  url('iconfont.svg?t=1593575227139#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont-fj {
+  font-family: "fjiconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.iconmima:before {
+  content: "\e654";
+}
+
+.iconzhanghao:before {
+  content: "\e655";
+}
+
+.iconyanzhengma:before {
+  content: "\e656";
+}
+

@@ -1,0 +1,70 @@
+/*运营*/
+.yunying .app-wrapper .header-top{
+   background-color: #3367D6 !important;
+}
+.yunying .app-wrapper .sidebar-container{
+   background-color: #344A62 !important;
+}
+.yunying .app-wrapper .sidebar-container .el-menu .menu-wrapper .el-menu-item,
+.yunying .app-wrapper .sidebar-container .el-menu .menu-wrapper .el-submenu .el-submenu__title{
+   background-color: #344A62 !important;
+   color: #ffffff !important;
+}
+.yunying .app-wrapper .sidebar-container .el-menu .menu-wrapper .el-submenu .el-submenu__title .el-submenu__icon-arrow{
+   color: #ffffff !important;
+}
+.yunying .app-wrapper .sidebar-container .is-active > .el-submenu__title{
+   background-color: #344A62 !important;
+   color: #ffffff !important;
+}
+.yunying .app-wrapper .sidebar-container .el-menu .menu-wrapper .el-submenu .el-menu .el-menu-item{
+   background-color: #536880 !important;
+}
+.yunying .app-wrapper .sidebar-container .el-menu .menu-wrapper .el-submenu .el-submenu__title:hover,
+.yunying .app-wrapper .sidebar-container .el-menu .menu-wrapper .el-submenu .el-menu .el-menu-item:hover,
+.yunying .app-wrapper .sidebar-container .el-menu .menu-wrapper .el-menu-item:hover{
+   background-color: #345580 !important;
+}
+.yunying .app-wrapper .sidebar-container .el-menu .menu-wrapper .el-submenu .el-menu .el-menu-item.is-active{
+   background-color: #475C74 !important;
+}
+
+/*运维*/
+.yunwei .app-wrapper .header-top{
+   background-color: #273564 !important;
+}
+.yunwei .app-wrapper .sidebar-container{
+   background-color: #EDF0EE !important;
+}
+.yunwei .app-wrapper .sidebar-container .el-menu .menu-wrapper .el-submenu .el-menu .el-menu-item{
+   background-color: #FBFCFC !important;
+}
+.yunwei .app-wrapper .sidebar-container .el-menu .menu-wrapper .el-submenu .el-submenu__title:hover,
+.yunwei .app-wrapper .sidebar-container .el-menu .menu-wrapper .el-submenu .el-menu .el-menu-item:hover,
+.yunwei .app-wrapper .sidebar-container .el-menu .menu-wrapper .el-menu-item:hover{
+   background-color: #E2E4E2 !important;
+}
+.yunwei .app-wrapper .sidebar-container .el-menu .menu-wrapper .el-submenu .el-menu .el-menu-item.is-active{
+   background-color: #EAF0FB !important;
+   color: #527EDC !important;
+}
+
+/*企业*/
+.qiye .app-wrapper .header-top{
+   background-color: #3367D6 !important;
+}
+.qiye .app-wrapper .sidebar-container{
+   background-color: #EDF0EE !important;
+}
+.qiye .app-wrapper .sidebar-container .el-menu .menu-wrapper .el-submenu .el-menu .el-menu-item{
+   background-color: #FBFCFC !important;
+}
+.qiye .app-wrapper .sidebar-container .el-menu .menu-wrapper .el-submenu .el-submenu__title:hover,
+.qiye .app-wrapper .sidebar-container .el-menu .menu-wrapper .el-submenu .el-menu .el-menu-item:hover,
+.qiye .app-wrapper .sidebar-container .el-menu .menu-wrapper .el-menu-item:hover{
+   background-color: #eaf0fb !important;
+}
+.qiye .app-wrapper .sidebar-container .el-menu .menu-wrapper .el-submenu .el-menu .el-menu-item.is-active{
+   background-color: #EAF0FB !important;
+   color: #527EDC !important;
+}

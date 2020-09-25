@@ -1,0 +1,12 @@
+@font-face {
+  font-family: 'fzfont';
+  src: url('fzzy.ttf?t=1563870518939') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.fonr-zero-four{
+  font-family: "fzfont" !important;
+  font-size: 28px;
+  font-weight: bold;
+}
