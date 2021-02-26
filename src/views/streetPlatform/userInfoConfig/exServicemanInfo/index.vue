@@ -286,8 +286,8 @@ export default {
     getEditAuthority(this.$route.meta.id).then(res => {
       res.forEach(item => {
         if (item.menuName === '含小区导入模板') {
-          data.ignoreField = item.menuName
-          this.uploadUrl = process.env.VUE_APP_BASE_API + '/biz/preferential/import?ignoreField=' + data.ignoreField
+          data.ignoreField = encodeURI(item.menuName)
+          this.uploadUrl = process.env.VUE_APP_BASE_API + '/biz/preferential/import?ignoreField=' + encodeURI(data.ignoreField)
           return
         }
       })

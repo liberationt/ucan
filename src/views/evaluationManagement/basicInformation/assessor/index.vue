@@ -44,7 +44,16 @@
           <el-input
             v-model.trim="form.keyWord"
             clearable
-            placeholder="请输入评估师姓名、手机号或身份证号"
+            placeholder="请输入姓名、手机号或身份证号"
+            style="width: 300px"
+            @keyup.enter.native="onSubmit"
+          />
+        </el-form-item>
+        <el-form-item label="登录账号">
+          <el-input
+            v-model.trim="form.loginName"
+            clearable
+            placeholder="请输入登录账号"
             style="width: 300px"
             @keyup.enter.native="onSubmit"
           />
@@ -90,24 +99,25 @@
               </template>
             </el-table-column>
             <el-table-column label="姓名" prop="fullName" min-width="90" />
-            <el-table-column label="性别" prop="sex" min-width="60">
+            <el-table-column label="性别" prop="sex" min-width="80">
               <template slot-scope="{row, $index}">
                 <span v-if="row.sex==0">男</span>
                 <span v-if="row.sex==1">女</span>
               </template>
             </el-table-column>
-            <el-table-column label="年龄" prop="age" min-width="60" />
+            <!-- <el-table-column label="年龄" prop="age" min-width="60" /> -->
             <el-table-column label="身份证" prop="idCard" min-width="180" />
             <el-table-column label="手机号" prop="mobile" min-width="180" />
             <el-table-column label="评估师等级" prop="assessLevelName" min-width="180" />
-            <el-table-column label="评估区域" prop="evaluationArea" show-overflow-tooltip min-width="180" />
+            <!-- <el-table-column label="评估区域" prop="evaluationArea" show-overflow-tooltip min-width="180" /> -->
             <el-table-column label="养老机构" prop="orgName" min-width="180" />
             <el-table-column label="登录账号" prop="userName" min-width="180" />
-            <el-table-column fixed="right" label="操作" width="320" header-align="center">
+            <el-table-column fixed="right" label="操作" width="260" header-align="center">
               <template slot-scope="{row, $index}">
                 <span v-has="{class: '编辑'}" class="table-btn" @click="handleEdit(row)">编辑</span>
-                <span v-has="{class: '设置区域'}" class="table-btn" @click="showDialog(row)">设置区域</span>
+                <!-- <span v-has="{class: '设置区域'}" class="table-btn" @click="showDialog(row)">设置区域</span> -->
                 <span v-has="{class: '关联账号'}" class="table-btn" @click="openAccount(row)">关联账号</span>
+                <span v-has="{class: '解绑账号'}" class="table-btn" @click="removeAccount(row)">解绑账号</span>
                 <!-- 去掉删除评估师功能 UCC-2974 -->
                 <!-- <span v-has="{class: '删除'}" class="table-btn" @click="handleRemove(row)">删除</span>-->
               </template>
@@ -134,7 +144,7 @@ import Address from '@/components/Address'
 import Pagination from '@/components/Pagination'
 import { pageModel } from '@/common'
 import { allSelectdictionaryData } from '@/api/facilitiesConfig/pensionAgency'
-import { getAssessorList, delAssessor, getOrgList } from '@/api/evaluationManagement/basicInformation'
+import { getAssessorList, delAssessor, getOrgList, removeAssessor } from '@/api/evaluationManagement/basicInformation'
 import Dialog from './Dialog'
 import AccountDailog from './accountDailog'
 import ExcelUpload from '@/components/newExcelUpload/assessorInformation'
@@ -150,7 +160,6 @@ export default {
       dialogVisible: false,
       uploadUrl: process.env.VUE_APP_BASE_API + '/assess/pension/assess/emp/import',
       templateApi: getAssessorDownload,
-
       tableData: [],
       total: 0,
       areaCode: [],
@@ -166,6 +175,7 @@ export default {
         liveArea: '',
         assessLevel: '',
         keyWord: '',
+        loginName: '',
         pageNum: pageModel.pageNum, // 分页页数
         pageSize: pageModel.pageSize // 分页数量
       },
@@ -300,6 +310,34 @@ export default {
       this.$router.push({
         path: `/assessor/details/${row.id}`,
         query: { 'modelType': 'edit', '_title': `编辑${row.fullName}`, 'menu': this.$route.meta.id }
+      })
+    },
+    // 解绑
+    removeAccount(row) {
+      this.$confirm('确定解除与账号【' + row.userName + '】的绑定关系吗？', '解除绑定', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        removeAssessor({ id: row.id }).then(res => {
+          if (res.code == '0') {
+            this.$message({
+              type: 'success',
+              message: `解除绑定成功！`
+            })
+            this.form.pageNum = 1
+            this.getDataList()
+          } else {
+            this.$message.error(`解除绑定操作失败，失败原因是：${res.msg}`)
+          }
+        }).catch(() => {
+          this.$message.error(`解除绑定操作失败!`)
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消！'
+        })
       })
     },
     // 删除

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-container>
+    <el-container id="new_message">
       <el-main class="tableContainer">
         <el-tabs v-model="activeTabs">
           <el-tab-pane label="基本信息" name="base">
@@ -21,7 +21,7 @@
                       </el-form-item>
                     </el-col>
                     <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                      <el-form-item :label="isEditForm ? '身份证号' : '身份证号'">
+                      <el-form-item :label="isEditForm ? '身份证号' : '身份证号：'">
                         <span>{{ form.idCard }}</span>
                       </el-form-item>
                     </el-col>
@@ -70,6 +70,107 @@
                         <span>{{ form.maritalStatusName }}</span>
                       </el-form-item>
                     </el-col>
+                  </el-row>
+                </el-collapse-item>
+                <el-collapse-item name="baseItem_4">
+                  <template slot="title">
+                    <div class="titleSlider">
+                      <span>
+                        <i class="titleTip" />本次评估信息
+                      </span>
+                    </div>
+                  </template>
+                  <el-row :gutter="0">
+                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                      <el-form-item :label="isEditForm ? '评估类别' : '评估类别：'">
+                        <span>{{ form.assessTypeName }}</span>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                      <el-form-item :label="isEditForm ? '养老机构' : '养老机构：'">
+                        <span>{{ form.orgName }}</span>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                      <el-form-item :label="isEditForm ? '入住情况' : '入住情况：'">
+                        <span>{{ form.occupancyCodeName }}</span>
+                      </el-form-item>
+                    </el-col>
+                    <!-- <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                      <el-form-item :label="isEditForm ? '评估费用承担' : '评估费用承担：'">
+                        <span>{{ form.costBearingCodeName }}</span>
+                      </el-form-item>
+                    </el-col> -->
+                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                      <el-form-item :label="isEditForm ? '预约评估日期' : '预约评估日期：'">
+                        <span>{{ form.appointmentData }}</span>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                      <el-form-item :label="isEditForm ? '评估地点' : '评估地点：'">
+                        <span>{{ form.assessAddrCodeName }}</span>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                      <el-form-item :label="isEditForm ? '评估师1' : '评估师1：'">
+                        <span>{{ form.orderTakingAssessName1 }}</span>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                      <el-form-item :label="isEditForm ? '手机号码' : '手机号码：'">
+                        <span>{{ form.mobile1 }}</span>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                      <el-form-item :label="isEditForm ? '评估师2' : '评估师2：'">
+                        <span>{{ form.orderTakingAssessName2 }}</span>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                      <el-form-item :label="isEditForm ? '手机号码' : '手机号码：'">
+                        <span>{{ form.mobile2 }}</span>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                      <el-form-item :label="isEditForm ? '评估开始时间' : '评估开始时间：'">
+                        <span>{{ form.assessStartDate }}</span>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                      <el-form-item :label="isEditForm ? '报告完成时间' : '报告完成时间：'">
+                        <span>{{ form.assessCompleteDate }}</span>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="24" :lg="24">
+                      <el-form-item :label="isEditForm ? '合照' : '合照：'">
+                        <!-- <span>{{ form.assessAddrCodeName }}</span> -->
+                        <viewer :images="bizImageInfoList">
+                          <span v-for="(item,i) in bizImageInfoList" :key="i">
+                            <img :src="item" alt="" style="width:150px;height:150px;margin-right:5px">
+                          </span>
+                        </viewer>
+                      </el-form-item>
+                    </el-col>
+                    <!-- <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                      <el-form-item :label="isEditForm ? '所属区划' : '所属区划：'">
+                        <span>{{ form.assessAreaCodeLevelName }}</span>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                      <el-form-item :label="isEditForm ? '评估地址' : '评估地址：'">
+                        <span>{{ form.assessAddr }}</span>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                      <el-form-item :label="isEditForm ? '评估联络人' : '评估联络人：'">
+                        <span>{{ form.assessLinkman }}</span>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                      <el-form-item :label="isEditForm ? '联系电话' : '联系电话：'">
+                        <span>{{ form.assessLinkmanPhone }}</span>
+                      </el-form-item>
+                    </el-col> -->
                   </el-row>
                 </el-collapse-item>
                 <el-collapse-item name="baseItem_2">
@@ -138,11 +239,6 @@
                         <span>{{ form.agentsRelation }}</span>
                       </el-form-item>
                     </el-col>
-                    <el-col v-if="form.isAgents === '1'" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                      <el-form-item :label="isEditForm ? '住宅电话' : '住宅电话：'">
-                        <span>{{ form.agentsHomePhone }}</span>
-                      </el-form-item>
-                    </el-col>
                     <el-col v-if="form.isAgents == '1'" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
                       <el-form-item :label="isEditForm ? '居住行政区划' : '居住行政区划：'">
                         <span>{{ form.agentsLiveAreaCodeLevelName }}</span>
@@ -151,6 +247,11 @@
                     <el-col v-if="form.isAgents === '1'" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
                       <el-form-item :label="isEditForm ? '居住详细地址' : '居住详细地址：'">
                         <span>{{ form.agentsLiveAddr }}</span>
+                      </el-form-item>
+                    </el-col>
+                    <el-col v-if="form.isAgents === '1'" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                      <el-form-item :label="isEditForm ? '住宅电话' : '住宅电话：'">
+                        <span>{{ form.agentsHomePhone }}</span>
                       </el-form-item>
                     </el-col>
                     <el-col v-if="form.isAgents === '1'" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
@@ -165,67 +266,7 @@
                     </el-col>
                   </el-row>
                 </el-collapse-item>
-                <el-collapse-item name="baseItem_4">
-                  <template slot="title">
-                    <div class="titleSlider">
-                      <span>
-                        <i class="titleTip" />本次评估信息
-                      </span>
-                    </div>
-                  </template>
-                  <el-row :gutter="0">
-                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                      <el-form-item :label="isEditForm ? '评估类别' : '评估类别：'">
-                        <span>{{ form.assessTypeName }}</span>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                      <el-form-item :label="isEditForm ? '养老机构' : '养老机构：'">
-                        <span>{{ form.orgName }}</span>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                      <el-form-item :label="isEditForm ? '入住情况' : '入住情况：'">
-                        <span>{{ form.occupancyCodeName }}</span>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                      <el-form-item :label="isEditForm ? '评估费用承担' : '评估费用承担：'">
-                        <span>{{ form.costBearingCodeName }}</span>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                      <el-form-item :label="isEditForm ? '预约评估日期' : '预约评估日期：'">
-                        <span>{{ form.appointmentData }}</span>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                      <el-form-item :label="isEditForm ? '评估地点' : '评估地点：'">
-                        <span>{{ form.assessAddrCodeName }}</span>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                      <el-form-item :label="isEditForm ? '所属区划' : '所属区划：'">
-                        <span>{{ form.assessAreaCodeLevelName }}</span>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                      <el-form-item :label="isEditForm ? '评估地址' : '评估地址：'">
-                        <span>{{ form.assessAddr }}</span>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                      <el-form-item :label="isEditForm ? '评估联络人' : '评估联络人：'">
-                        <span>{{ form.assessLinkman }}</span>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                      <el-form-item :label="isEditForm ? '联系电话' : '联系电话：'">
-                        <span>{{ form.assessLinkmanPhone }}</span>
-                      </el-form-item>
-                    </el-col>
-                  </el-row>
-                </el-collapse-item>
+
                 <el-collapse-item name="baseItem_5">
                   <template slot="title">
                     <div class="titleSlider">
@@ -251,11 +292,6 @@
                       </el-form-item>
                     </el-col>
                     <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                      <el-form-item :label="isEditForm ? '宗教信仰' : '宗教信仰：'">
-                        <span>{{ form.faithName }}</span>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
                       <el-form-item :label="isEditForm ? '家庭支持' : '家庭支持：'">
                         <span>{{ form.homeSupportName }}</span>
                       </el-form-item>
@@ -266,8 +302,23 @@
                       </el-form-item>
                     </el-col>
                     <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                      <el-form-item :label="isEditForm ? '宗教信仰' : '宗教信仰：'">
+                        <span>{{ form.faithName }}</span>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                      <el-form-item v-if="form.faith === 'other_beliefs'" :label="isEditForm ? '其他信仰' : '其他信仰：'">
+                        <span>{{ form.otherBeliefs }}</span>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
                       <el-form-item :label="isEditForm ? '就医方式' : '就医方式：'">
                         <span>{{ form.medicalTreatmentName }}</span>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                      <el-form-item :label="isEditForm ? '就诊医院' : '就诊医院：'">
+                        <span>{{ form.hospitalsUsedToVisit }}</span>
                       </el-form-item>
                     </el-col>
                     <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
@@ -289,7 +340,7 @@
                       :md="adaptiveGrid.md"
                       :lg="adaptiveGrid.lg"
                     >
-                      <el-form-item :label="isEditForm ? '谁帮助照料' : '谁帮助照料：'">
+                      <el-form-item :label="isEditForm ? '照料人' : '照料人：'">
                         <span>{{ form.whoHelpsCareOther }}</span>
                       </el-form-item>
                     </el-col>
@@ -456,7 +507,7 @@
                 </div>
                 <div class="reportContet">
                   <div class="item">
-                    <div class="reportTit">报告一：分值设定和照护服务分级划分</div>
+                    <div class="reportTit">照护服务分级评分参考值</div>
                     <div class="items">
                       <div v-for="(item,i) in formReport.careService" :key="i" style="display:flex;">
                         <div class="itemList">{{ item.level }}</div>
@@ -465,7 +516,7 @@
                     </div>
                   </div>
                   <div class="item">
-                    <div class="reportTit">报告一：分值设定和照护服务分级划分</div>
+                    <div class="reportTit">评估分数总结</div>
                     <div class="items">
                       <div style="display:flex;height:50%;border-bottom:1px solid #e3e3e3">
                         <div v-if="length>0" class="itemList1" :style="{lineHeight:length*20 + length/2+'px'}">评估总分</div>
@@ -495,11 +546,11 @@
                 </el-table>
                 <el-table :data="formReport.abnormalOptions" border style="width: 100%;margin-top:30px;">
                   <el-table-column prop="project" label="评估项目" align="center" min-width="180" />
-                  <el-table-column prop="value" min-width="250" label="项目分析">
+                  <el-table-column prop="value" min-width="250" label="项目分析（得分为4分、8分、10分的选项提示）">
                     <template scope="{row}">
                       <div v-for="(item,i) in row.value" :key="i" style="padding:20px">
                         <!-- <span>题目{{ i+1 }}：{{ item.subjectTitle }}</span> -->
-                        <span>{{ item.subjectTitle }}</span>
+                        <span>{{ i+1 }}、{{ item.subjectTitle }}：{{ item.optionDes }}</span>
                         <!-- style="text-indent:20px" -->
                         <!-- <div>异常提示：{{ item.optionDes }}</div> -->
                         <!-- <div>照护建议：{{ item.careAdvice }}</div> -->
@@ -513,7 +564,7 @@
                         <!-- <span>{{ item.subjectTitle }}</span> -->
                         <!-- style="text-indent:20px" -->
                         <!-- <div>异常提示：{{ item.optionDes }}</div> -->
-                        <div>{{ item.careAdvice }}</div>
+                        <div>{{ i+1 }}、{{ item.careAdvice }}</div>
                       </div>
                     </template>
                   </el-table-column>
@@ -523,9 +574,11 @@
             <div>
               <h3>附件</h3>
               <div class="imgList">
-                <div v-for="(item,i) in formReport.images" :key="i" class="imgListItem" @click="showBig(item.imgUrl)">
-                  <img :src="item.imgUrl" alt="">
-                </div>
+                <viewer :images="formReport.images">
+                  <div v-for="(item,i) in formReport.images" :key="i" class="imgListItem">
+                    <img :src="item.imgUrl" alt="">
+                  </div>
+                </viewer>
               </div>
             </div>
           </el-tab-pane>
@@ -593,6 +646,7 @@ export default {
       form: {
         // 基本信息+联系信息+目前生活状态
         age: '',
+        assessCompleteDate: '',
         agentsHomePhone: '',
         agentsLiveAddr: '',
         agentsLiveAreaCodeLevelName: '',
@@ -651,6 +705,13 @@ export default {
         assessAddr: '', // 评估地址
         assessLinkman: '', // 评估联络人
         assessLinkmanPhone: '', // 联系电话
+        orderTakingAssessName1: '',
+        orderTakingAssessName2: '',
+        mobile1: '',
+        mobile2: '',
+        assessStartDate: '',
+        taskEndDate: '',
+        assessCompleteDate: '',
         // 病及爱好
         data: {
           100: [],
@@ -658,6 +719,7 @@ export default {
           300: []
         }
       },
+      bizImageInfoList: [],
       otherSpecialDesc: '',
       rulesForm: {},
       adaptiveGrid: {
@@ -695,6 +757,9 @@ export default {
   },
   mounted() {
     this.modelType = this.$route.query.modelType
+    if (this.$route.query.isLoad === 'yes') {
+      this.activeTabs = 'report'
+    }
     this.assessId = this.$route.params.id || ''
     this.getData(this.assessId, this.modelType)
   },
@@ -746,6 +811,20 @@ export default {
           }
           this.formReport = res.data
           this.length = res.data.careService.length
+          const arr = []
+          this.formReport.assessObjExtendList.forEach(item => {
+            if (item.propType === 200) {
+              arr.push(item)
+            }
+          })
+          this.formReport.assessObjExtendList = arr
+          if (this.$route.query.isLoad === 'yes') {
+            this.$nextTick(() => {
+              setTimeout(() => {
+                window.scrollTo(0, 2000)
+              }, 100)
+            })
+          }
         }
       })
     },
@@ -788,6 +867,12 @@ export default {
           dataList3.push(item.itemCode)
         })
       }
+
+      if (data.bizImageInfoList && data.bizImageInfoList.length) {
+        data.bizImageInfoList.forEach((item) => {
+          this.bizImageInfoList.push(`${process.env.VUE_APP_API_IMGURL}${item.imgUrl}`)
+        })
+      }
       this.form = {
         // 基本信息
         age: data.bizAssessPerson.age,
@@ -806,6 +891,9 @@ export default {
         economicStateName: data.bizAssessPerson.economicStateName,
         eduLevelName: data.bizAssessPerson.eduLevelName,
         faithName: data.bizAssessPerson.faithName,
+        faith: data.bizAssessPerson.faith,
+        otherBeliefs: data.bizAssessPerson.otherBeliefs,
+        hospitalsUsedToVisit: data.bizAssessPerson.hospitalsUsedToVisit,
         fullName: data.bizAssessPerson.fullName,
         homePhone: data.bizAssessPerson.homePhone,
         homeSupportName: data.bizAssessPerson.homeSupportName,
@@ -844,6 +932,13 @@ export default {
         assessAddr: data.bizAssessInfo.assessAddr, // 评估地址
         assessLinkman: data.bizAssessInfo.assessLinkman, // 评估联络人
         assessLinkmanPhone: data.bizAssessInfo.assessLinkmanPhone, // 联系电话
+        orderTakingAssessName1: data.bizAssessInfo.orderTakingAssessName1,
+        orderTakingAssessName2: data.bizAssessInfo.orderTakingAssessName2,
+        mobile1: data.bizAssessInfo.mobile1,
+        mobile2: data.bizAssessInfo.mobile2,
+        assessStartDate: data.bizAssessInfo.assessStartDate,
+        taskEndDate: data.bizAssessInfo.taskEndDate,
+        assessCompleteDate: data.bizAssessInfo.assessCompleteDate,
         data: {
           100: dataList1,
           200: dataList2,

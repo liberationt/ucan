@@ -1,33 +1,44 @@
 <template>
   <el-container class="adaptive-evaluation-container">
-    <el-main>
+    <el-main v-if="dataList">
       <topic-list-render
         v-for="(data, dindex) in dataList"
         :key="dindex + data.project"
         :title="data.project"
       >
         <template v-slot:topic-list>
-          <div v-for="(item, index) in data.lists" :key="index" class="topic-list-item">
-            <div class="edit-list-item__title">
-              <h6>{{ `${index + 1}、${item.subjectTitle}` }}</h6>
-              <div class="edit-list-item__operate" :class="data.showAdd ? 'disabled': ''">
-                <i class="el-icon-edit-outline" @click="handleEditClick(item, data.showAdd)" />
-                <i class="el-icon-delete" @click="handelDelClick(item, data.showAdd)" />
-                <!-- <i class="el-icon-document-copy" @click="handleRelClick(item, data.showAdd)" /> -->
-              </div>
-            </div>
-            <p v-show="item.subjectRemarks">{{ item.subjectRemarks }}</p>
-            <ul v-if="item.options">
-              <li v-for="(value, key) in item.options" :key="index + key" style="margin-bottom:20px">
-                <div>
-                  <span>{{ fmtOptionName(key + 1) }}、</span>
-                  <span>{{ value.optionDes }}</span>
-                  <div style="text-indent:25px;color:#999;margin-top:5px">{{ value.careAdvice }}</div>
+          <draggable
+            class="edit-list-group"
+            tag="ul"
+            :list="data.lists"
+            v-bind="dragOptions"
+            @start="isDragging = true"
+            @end="dragover"
+          >
+            <transition-group type="transition" name="flip-list">
+              <li v-for="(item, index) in data.lists" :key="index" class="edit-list-group__item edit-cursor__move">
+                <div class="edit-list-item__title">
+                  <h6>{{ `${index + 1}、${item.subjectTitle}` }}</h6>
+                  <div class="edit-list-item__operate" :class="data.showAdd ? 'disabled': ''">
+                    <i class="el-icon-edit-outline" @click="handleEditClick(item, data.showAdd)" />
+                    <i class="el-icon-delete" @click="handelDelClick(item, data.showAdd)" />
+                    <!-- <i class="el-icon-document-copy" @click="handleRelClick(item, data.showAdd)" /> -->
+                  </div>
                 </div>
-                <div v-if="value.optionValue">{{ value.optionValue }} 分</div>
+                <p v-show="item.subjectRemarks">{{ item.subjectRemarks }}</p>
+                <ol v-if="item.options">
+                  <li v-for="(value, key) in item.options" :key="index + key" style="margin-bottom:20px">
+                    <div style="width:96%">
+                      <span>{{ fmtOptionName(key + 1) }}、</span>
+                      <span>{{ value.optionDes }}</span>
+                      <div style="text-indent:25px;color:#999;margin-top:5px">{{ value.careAdvice }}</div>
+                    </div>
+                    <div style="flex:1">{{ value.optionValue }} 分</div>
+                  </li>
+                </ol>
               </li>
-            </ul>
-          </div>
+            </transition-group>
+          </draggable>
           <el-button v-show="!data.showAdd" type="primary" class="base-btn add-topic--button" @click="handleAddTopic(data, dindex)">添加题目</el-button>
           <topic-operate
             :vis-operate="data.showAdd"
@@ -44,7 +55,7 @@
         :visible.sync="showEditTopic"
         direction="rtl"
         class="questionnaire-drawer-container"
-        size="40%"
+        size="55%"
       >
         <topic-operate
           :box-style="boxStyle"
@@ -83,12 +94,14 @@
 <script>
 import TopicListRender from '../components/TopicListRender.vue'
 import TopicOperate from '../components/TopicOperate.vue'
+import draggable from 'vuedraggable'
 import { addQuestionnaire, editQuestionnaire, delQuestionnaire, getRelativePro, editRelativePro } from '@/api/evaluationManagement/questionnaire.js'
 import mixins from '../mixins/index.js'
 // import { DEFAULT_CATE } from '../config/index.js'
 import _ from 'lodash'
 export default {
   components: {
+    draggable,
     TopicListRender,
     TopicOperate
   },
@@ -112,10 +125,35 @@ export default {
       relProData: undefined
     }
   },
+  computed: {
+    dragOptions() {
+      return {
+        animation: 0,
+        group: 'description',
+        disabled: false,
+        ghostClass: 'ghost'
+      }
+    }
+  },
   created() {
     this.getTarQuestionnaireList()
   },
   methods: {
+    async dragover(event) {
+      // 拖拽后修改相应的数据，并且提交
+      // {to, from, item, clone, oldIndex, newIndex} dvalue.lists
+      this.dataList.forEach(item => {
+        item.lists.forEach(v => {
+          v.project = item.project
+        })
+      })
+      this.dataList.forEach(item => {
+        item.lists.forEach((v, i) => {
+          v.orderNum = i + 1
+          editQuestionnaire(v).then(res => {})
+        })
+      })
+    },
     async getTarQuestionnaireList() {
       const allInfo = await this.getTargetTypeQuestionnaireInfo()
       const tarInfo = []

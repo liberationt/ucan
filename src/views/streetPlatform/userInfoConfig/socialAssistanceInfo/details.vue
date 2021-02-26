@@ -1147,7 +1147,7 @@ export default {
         const arrList = []
         this.form.bizHelpPropertityVo.category = this.form.bizHelpPropertityVo.category.toString()
         this.SalvageList.forEach(item => {
-          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyDate != '' && item.subsidyDate != null) {
+          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyDate != '' && item.subsidyDate != null || item.id != null && item.id != '') {
             arrList.push(item)
           }
         })

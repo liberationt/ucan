@@ -165,7 +165,6 @@
                   <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
                     <el-form-item
                       :label="isEditForm?'居住行政区划':'居住行政区划：'"
-                      prop="liveArea"
                     >
                       <Address
                         v-if="isEditForm"
@@ -182,7 +181,6 @@
                   <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
                     <el-form-item
                       :label="isEditForm?'居住详细地址':'居住详细地址：'"
-                      prop="liveAddr"
                     >
                       <el-input
                         v-if="isEditForm"
@@ -196,7 +194,7 @@
                   </el-col>
                 </el-row>
               </el-collapse-item>
-              <el-collapse-item name="baseItem_3">
+              <!-- <el-collapse-item name="baseItem_3">
                 <template slot="title">
                   <div class="titleSlider">
                     <span>
@@ -251,7 +249,7 @@
                     </el-form-item>
                   </el-col>
                 </el-row>
-              </el-collapse-item>
+              </el-collapse-item> -->
             </el-collapse>
           </el-tab-pane>
         </el-tabs>
@@ -263,6 +261,31 @@
         </div>
       </el-footer>
     </el-main>
+    <!-- v-if="dialogSubmit" -->
+    <el-dialog
+
+      v-dialogDrag
+      title="绑定服务人员"
+      :visible.sync="dialogSubmit"
+      width="10%"
+      :close-on-click-modal="false"
+      @close="resetDialog"
+    >
+      <div>
+        <div style="text-align:center;margin:50px 0;">
+          <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="120px" class="demo-ruleForm">
+            <el-form-item prop="censusArea" label="户籍区划：" />
+            <el-form-item prop="censusAddr" label="户籍详细地址：">
+              <el-input v-model="ruleForm.censusAddr" placeholder="请输入户籍详细地址" />
+            </el-form-item>
+          </el-form>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="resetDialog('ruleForm')">取 消</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
+      </span>
+    </el-dialog>
   </el-container>
 </template>
 <script>
@@ -270,7 +293,7 @@ import Address from '@/components/Address'
 import _ from 'lodash'
 import { verifyFullName, verifyIdCard, verifyMobile } from '@/utils/validate'
 import { allSelectdictionaryData } from '@/api/facilitiesConfig/pensionAgency'
-// import { closeSelectedTag } from '@/utils/rooterJump'
+import { closeSelectedTag } from '@/utils/rooterJump'
 import { adaptiveGrid_max } from '@/common/index'
 import { computerAge, getBirthdayFromIdCard } from '@/utils/index'
 import { getAssessor, addAssessor, saveAssessor, getAssessorDetail, checkMobile, getEdit, getAssessOrgan } from '@/api/evaluationManagement/basicInformation'
@@ -300,6 +323,7 @@ export default {
     }
     return {
       modelType: '',
+      dialogSubmit: false,
       sexOptions: [],
       assessorOptions: [],
       idEdit: true,
@@ -308,6 +332,8 @@ export default {
       areaCode: [],
       isDisabled: false,
       options: [],
+      ruleForm: {},
+      rules: {},
       form: {
         id: '',
         fullName: '',
@@ -404,6 +430,12 @@ export default {
     await this.editAssessor(_userId_, this.modelType)
   },
   methods: {
+    resetDialog() {
+
+    },
+    submitForm() {
+
+    },
     birthdayChange() {},
     getAreaCode(val) {
       this.areaCode = val
@@ -433,7 +465,7 @@ export default {
     getAssessOrgList() {
       getAssessOrgan().then(res => {
         if (res.code == 0) {
-          this.options = res.data
+          this.options = res.data.list
         }
       })
     },
@@ -505,7 +537,7 @@ export default {
     // 返回按钮，关闭详情页
     closeDetailsPage() {
       // 关闭页面
-      // closeSelectedTag(this, this.$route)
+      closeSelectedTag(this, this.$route)
       this.$router.push('/evaluationManagement/basicInformation/assessor')
     },
     cancelDetailsPage() {

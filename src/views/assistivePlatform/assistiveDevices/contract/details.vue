@@ -27,7 +27,7 @@
                     <span>{{ contractList.storeName }}</span>
                   </el-col>
                   <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                    <span class="contrat-title">经办人（康复辅具适配师）：</span>
+                    <span class="contrat-title">经办人（康复辅助技术咨询师）：</span>
                     <span>{{ contractList.adapterName }}</span>
                   </el-col>
                   <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
@@ -192,17 +192,21 @@
                   <el-col :md="24" :lg="24">
                     <span class="contrat-title">身份证：</span>
                     <el-row class="agencyImageRow" style="border:0">
-                      <el-col v-for="(item,index) in idCardPic" class="agencyImageCol">
-                        <img :src="item" class="agencyImage">
-                      </el-col>
+                      <viewer :images="idCardPic">
+                        <el-col v-for="(item, index) in idCardPic" class="agencyImageCol" :key="index" style="cursor: pointer">
+                          <img :src="item" class="agencyImage">
+                        </el-col>
+                      </viewer>
                     </el-row>
                   </el-col>
                   <el-col :md="24" :lg="24">
                     <span class="contrat-title">补贴证明：</span>
                     <el-row class="agencyImageRow" style="border:0">
-                      <el-col v-for="(item,index) in subsidyPic" class="agencyImageCol">
-                        <img :src="item" class="agencyImage">
-                      </el-col>
+                      <viewer :images="idCardPic">
+                        <el-col v-for="(item,index) in idCardPic" class="agencyImageCol" :key="index" style="cursor: pointer">
+                          <img :src="item" class="agencyImage">
+                        </el-col>
+                      </viewer>
                     </el-row>
                   </el-col>
                   <el-col :md="24" :lg="24">
@@ -321,7 +325,7 @@
                     </el-form-item>
                   </el-col>
                   <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                    <el-form-item :label="isEditForm?'经办人（康复辅具适配师）':'经办人（康复辅具适配师）：'" prop="adapterId" class="long-item">
+                    <el-form-item :label="isEditForm?'经办人（康复辅助技术咨询师）':'经办人（康复辅助技术咨询师）：'" prop="adapterId" class="long-item">
                       <el-select
                         v-if="isEditForm"
                         v-model="form.adapterId"
@@ -738,7 +742,7 @@
                       康复辅具社区租赁点：<span class="page-input" style="width: 340px;margin-top: 80px">{{ storeName }}</span>
                     </div>
                     <div class="page-style t-center">
-                      经办人（康复辅具适配师）：<span class="page-input" style="width: 292px;margin-top: 20px">{{ adapterName }}</span>
+                      经办人（康复辅助技术咨询师）：<span class="page-input" style="width: 262px;margin-top: 20px">{{ adapterName }}</span>
                     </div>
                     <div class="page-style t-center">
                       经办人身份证号码：<span class="page-input" style="width: 356px;margin-top: 20px">{{ idCard }}</span>
@@ -1224,7 +1228,7 @@
                       </div>
                       <div class="page-content" style="margin-top: 40px;">
                         <span class="page-weight">
-                          5. 保
+                          5. 保证金
                         </span>
                       </div>
                       <div class="page-content" style="margin-top: 30px; text-indent: 35px; line-height: 35px">
@@ -3074,7 +3078,7 @@ export default {
     margin-right: 5px;
   }
   .check-it {
-    background: #333333;
+    border: 6px solid #333333;
   }
 
   .contract-look {

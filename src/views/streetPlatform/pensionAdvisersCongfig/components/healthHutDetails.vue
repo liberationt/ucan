@@ -117,9 +117,11 @@
                   <el-col :md="24" :lg="24" style="height: auto;">
                     <el-form-item :label="this.isEditForm?'机构图片':'机构图片：'">
                       <el-row v-if="!this.isEditForm" class="agencyImageRow">
-                        <el-col v-for="(item,index) in this.imageInfoVosLookUrl" class="agencyImageCol">
-                          <img :src="item" class="agencyImage">
-                        </el-col>
+                        <viewer :images="imageInfoVosLookUrl">
+                          <el-col v-for="(item, index) in imageInfoVosLookUrl" :key="index" class="agencyImageCol" style="cursor: pointer">
+                            <img :src="item" class="agencyImage">
+                          </el-col>
+                        </viewer>
                       </el-row>
                       <div v-else class="agencyImageWrap">
                         <Uploadpics :id-edit="idEdit" :form-imgs="form.imageInfoVos" @pics="getPicList" />

@@ -237,14 +237,15 @@ export default {
     },
     // 表单重置按钮
     onReset() {
+      this.areaCode = []
       this.form = {
         status: '', // 卡状态
         keyword: '', // ID或者姓名
         pageNum: pageModel.pageNum, // 分页页数
         pageSize: pageModel.pageSize // 分页数量
       }
-      this.getData(this.form)
       this.idEdit = !this.idEdit
+      this.getData(this.form)
     },
     fomatFloat(num, n) {
       var f = parseFloat(num)

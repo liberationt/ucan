@@ -83,7 +83,7 @@
         <el-form-item label="申请时间">
           <el-date-picker
             v-model="servicePeriod"
-            type="datetimerange"
+            type="daterange"
             range-separator="-"
             start-placeholder="开始时间"
             end-placeholder="结束时间"
@@ -108,7 +108,7 @@
                 v-for="item in tabs"
                 :key="item.type"
                 :label="item.name"
-                :name="item.type"
+                :name="item.key"
               />
             </el-tabs>
           </div>
@@ -134,42 +134,59 @@
             <el-table-column label="性别" prop="sexName" width="80" />
             <el-table-column label="年龄" prop="age" width="100" />
             <el-table-column label="身份证号" prop="idCard" width="180" />
-            <el-table-column label="评估联络人" prop="assessLinkman" min-width="180" />
-            <el-table-column label="评估地址" prop="assessAddress" min-width="250" />
-            <el-table-column label="预约评估日期" prop="appointmentData" min-width="250" />
-            <el-table-column label="养老机构" prop="orgName" min-width="250" />
-            <el-table-column label="评估状态" prop="assessStatusName" width="120" />
+            <el-table-column label="手机号码" prop="mobile" width="180" />
+            <el-table-column label="居住地址" prop="liveAddr" width="180" />
             <el-table-column label="评估类别" prop="assessTypeName" width="120" />
             <el-table-column label="入住情况" prop="occupancyCodeName" width="120" />
+            <el-table-column label="预约评估日期" prop="appointmentData" min-width="250" />
+            <el-table-column label="评估地点" prop="assessAddrCode" min-width="250" />
             <el-table-column label="评估师1" prop="assessor1" width="160" />
             <el-table-column label="评估师2" prop="assessor2" width="160" />
+            <el-table-column label="养老机构" prop="orgName" min-width="250" />
+            <el-table-column v-if="activeName ==='has_not_started' || activeName === 'started'" label="任务状态" prop="taskStatus" min-width="150" />
             <el-table-column
-              v-show="activeName=='completed'"
+              v-if="activeName ==='to_be_reviewed' || activeName === 'completed'"
               label="完成时间"
               prop="completeTime"
               min-width="150"
             />
             <el-table-column
-              v-show="activeName=='cancelled,put_back'"
+              v-if="activeName === 'cancelled'"
               label="取消时间"
               prop="cancellationTime"
               min-width="150"
             />
-            <el-table-column label="开始时间" prop="assessBuildTime" min-width="150" />
             <el-table-column
-              v-if="activeName=='has_not_started,started'"
-              label="距任务结束时长"
-              prop="distanceTaskEndTime"
-              min-width="250"
+              label="申请时间"
+              prop="createTime"
+              min-width="150"
             />
+            <!--            <el-table-column label="评估联络人" prop="assessLinkman" min-width="180" />-->
+            <!--            <el-table-column label="评估状态" prop="assessStatusName" width="120" />-->
+            <!--            <el-table-column label="评估师2" prop="assessor2" width="160" />-->
+            <!--            <el-table-column-->
+            <!--              v-show="activeName=='completed'"-->
+            <!--              label="完成时间"-->
+            <!--              prop="completeTime"-->
+            <!--              min-width="150"-->
+            <!--            />-->
+            <!--            <el-table-column label="开始时间" prop="assessBuildTime" min-width="150" />-->
+            <!--            <el-table-column-->
+            <!--              v-if="activeName=='has_not_started,started'"-->
+            <!--              label="距任务结束时长"-->
+            <!--              prop="distanceTaskEndTime"-->
+            <!--              min-width="250"-->
+            <!--            />-->
             <el-table-column label="操作" align="center" fixed="right" width="430">
               <template slot-scope="{row}">
                 <!-- 评估状态为 -> 未开始的才可以开始评估 -->
                 <span v-if="row.assessStatus == 'has_not_started'" v-has="{class: '开始评估'}" class="table-btn" @click="beginAssess(row.id,row.fullName)">开始评估</span>
                 <!-- 评估状态为 -> 未开始的才可以修改评估日期 -->
-                <span v-if="row.assessStatus == 'has_not_started' && !row.updatedAppointmentData" v-has="{class: '修改评估日期'}" class="table-btn" @click="modifyData(row.id)">修改评估日期</span>
+                <!--                <span v-if="row.assessStatus == 'has_not_started' && !row.updatedAppointmentData" v-has="{class: '修改评估日期'}" class="table-btn" @click="modifyData(row.id)">修改评估日期</span>-->
+                <span v-if="row.assessStatus == 'has_not_started' && !row.isUpdatedAppointmentData" v-has="{class: '修改评估日期'}" class="table-btn" @click="modifyData(row.id)">修改评估日期</span>
                 <!-- 评估状态为 -> 已开始、待复审的才可以继续评估 并且 如果等于待复审则需要等待14天后才可继续评估 -->
                 <span v-if="hasShowContinueAssess(row)" v-has="{class: '继续评估'}" class="table-btn" @click="handleEdit(row)">继续评估</span>
+                <span class="table-btn" @click="toDetail(row)">查看</span>
               </template>
             </el-table-column>
           </el-table>
@@ -204,45 +221,102 @@
       </el-dialog>
       <el-dialog v-dialogDrag title="评估师身份验证" :visible.sync="dialogVisible1" width="30%">
         <div style="width:400px;margin:10px auto;">
-          <div style="margin-bottom:30px;">
-            请获取并填写短信验证码，进行身份证验证
-            <el-button style="margin-left:5px;" @click="flag && getObtain()">{{ content }}</el-button>
+          <div v-if="nextType === false">
+            <div style="margin-bottom:30px;">
+              请获取并填写短信验证码，进行身份证验证
+              <el-button style="margin-left:5px;" @click="flag && getObtain()">{{ content }}</el-button>
+            </div>
+            <div style="margin-bottom: 50px">
+              <div style="margin-bottom:15px">
+                <span>评估师：{{ stateForm.bizAssessEmp1.fullName }}</span>
+              </div>
+              <div style="margin-bottom:15px">
+                <span>手机号：{{ stateForm.bizAssessEmp1.mobile }}</span>
+              </div>
+              <div style="margin-bottom:50px">
+                <span>
+                  验证码：
+                  <el-input v-model="code1" clearable style="width:200px;" placeholder="请输入验证码" />
+                </span>
+              </div>
+              <div style="margin-bottom:15px">
+                <span>评估师：{{ stateForm.bizAssessEmp2.fullName }}</span>
+              </div>
+              <div style="margin-bottom:15px">
+                <span>手机号：{{ stateForm.bizAssessEmp2.mobile }}</span>
+              </div>
+              <div>
+                <span>
+                  验证码：
+                  <el-input
+                    v-model="code2"
+                    style="width:200px;"
+                    clearable
+                    placeholder="请输入验证码"
+                  />
+                </span>
+              </div>
+            </div>
           </div>
-          <div style="margin-bottom: 50px">
-            <div style="margin-bottom:15px">
-              <span>评估师：{{ stateForm.bizAssessEmp1.fullName }}</span>
+          <div v-if="nextType === true">
+            <div style="text-align: center;margin-bottom: 30px">
+              请上传包含两位评估师、评估对象的三人合照
             </div>
-            <div style="margin-bottom:15px">
-              <span>手机号：{{ stateForm.bizAssessEmp1.mobile }}</span>
+            <div style="width: 160px; margin: 0 auto" class="img-file">
+              <div v-if="imgURL === ''" class="img-add">
+                <span class="el-icon-plus" />
+              </div>
+              <input v-if="imgURL === ''" ref="inputer" type="file" class="upload-img" multiple accept="image/jpeg,image/png,image/jpg,image/bmp" @change="addImg">
+              <div v-if="imgURL !== ''" class="img-show">
+                <img v-if="imgURL !== ''" :src="imgURL">
+                <div class="img-del">
+                  <span class="el-icon-delete" @click="delImg" />
+                </div>
+              </div>
+              <!--              <el-upload-->
+              <!--                class="uploadUrlImg"-->
+              <!--                list-type="picture-card"-->
+              <!--                :headers="headers"-->
+              <!--                :action="uploadUrl"-->
+              <!--                :on-preview="handlePictureCardPreview"-->
+              <!--                :on-success="handleAvatarSuccess"-->
+              <!--                :before-upload="(params) =>beforeAvatarUpload(params, assessId)"-->
+              <!--              >-->
+              <!--                <i class="el-icon-plus" />-->
+              <!--              </el-upload>-->
+              <!--              <el-dialog :visible.sync="dialogVisibleImg">-->
+              <!--                <img width="100%" :src="dialogImageUrl" alt="">-->
+              <!--              </el-dialog>-->
             </div>
-            <div style="margin-bottom:50px">
-              <span>
-                验证码：
-                <el-input v-model="code1" clearable style="width:200px;" placeholder="请输入验证码" />
-              </span>
-            </div>
-            <div style="margin-bottom:15px">
-              <span>评估师：{{ stateForm.bizAssessEmp2.fullName }}</span>
-            </div>
-            <div style="margin-bottom:15px">
-              <span>手机号：{{ stateForm.bizAssessEmp2.mobile }}</span>
-            </div>
-            <div>
-              <span>
-                验证码：
-                <el-input
-                  v-model="code2"
-                  style="width:200px;"
-                  clearable
-                  placeholder="请输入验证码"
-                />
-              </span>
+            <div style="text-align: center;margin-top: 30px; color: #999999;">
+              只能上传一张jpg/png文件，不能超过10M
             </div>
           </div>
         </div>
         <span slot="footer" class="dialog-footer">
           <el-button @click="closeAssesse">取 消</el-button>
-          <el-button type="primary" @click="saveAssesse">确 定</el-button>
+          <el-button v-if="nextType === false" type="primary" @click="saveAssesse">下一步</el-button>
+          <el-button v-if="nextType === true" type="primary" @click="saveImg">确 定</el-button>
+        </span>
+      </el-dialog>
+      <el-dialog v-dialogDrag title="选择外院评估师" :visible.sync="dialogVisible2" width="30%">
+        <div style="width:400px;margin:10px auto;">
+          <div>请选择当前到场的外院评估师</div>
+          <div style="margin-top: 45px">
+            <span class="out-man">外院评估师</span>
+            <el-select v-model="outMan" placeholder="请选择" @change="changeOutMan">
+              <el-option
+                v-for="item in outList"
+                :key="item.id"
+                :label="item.fullName"
+                :value="item.id"
+              />
+            </el-select>
+          </div>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="closeOutMan">取 消</el-button>
+          <el-button type="primary" @click="saveOutMan">下一步</el-button>
         </span>
       </el-dialog>
     </el-main>
@@ -250,17 +324,19 @@
 </template>
 
 <script>
+import { getToken } from '@/utils/auth'
 import _ from 'lodash'
 import { getDate_YMD, setDateTime } from '@/utils/index.js'
 import Address from '@/components/Address'
 import Pagination from '@/components/Pagination'
-import { getEsimateApplyList } from '@/api/esimate/esimate'
+import { getEsimateApplyList, getImg, getOutIn, getOutList, getEsTime } from '@/api/esimate/esimate'
 import { pageModel } from '@/common'
 import { getAssessmentList, getStartAssess, getVerificationCode, saveStartAssess, editAssessDate, updateAssessDate } from '@/api/evaluationManagement/assessmentForm'
 import { allSelectdictionaryData } from '@/api/facilitiesConfig/pensionAgency'
 import { getOrgList } from '@/api/evaluationManagement/basicInformation'
 import { exportAssessmentForm } from '@/api/importExportApi'
 import { exportTitleConstant, exportContentConstant, exportGoDownloadConstant, exportKnowConstant, canExport } from '@/common/constant'// 常量池
+import axios from 'axios'
 export default {
   name: 'AssessmentForm',
   components: {
@@ -269,6 +345,14 @@ export default {
   },
   data() {
     return {
+      dialogImageUrl: '',
+      dialogVisibleImg: false,
+      pics: [],
+      headers: {
+        Authorization: 'Bearer ' + getToken() // Authorization ，而不是token
+      },
+      uploadUrl: '',
+      nextType: false,
       // 修改评估日期需要限制日期选择范围
       pickerOptions: {
         disabledDate: time => {
@@ -286,6 +370,7 @@ export default {
       value1: '',
       dialogVisible: false,
       dialogVisible1: false,
+      dialogVisible2: false,
       code2: '',
       code1: '',
       input: '',
@@ -326,29 +411,39 @@ export default {
       idEdit: true,
       total: 0,
       org_typeOptions: [],
-      tabs: [
-        {
-          name: '全部',
-          type: null
-        },
-        {
-          name: '待评估',
-          type: 'has_not_started,started'
-        },
-        {
-          name: '待复审',
-          type: 'to_be_reviewed'
-        },
-        {
-          name: '已完成',
-          type: 'completed'
-        },
-        {
-          name: '已取消',
-          type: 'cancelled,put_back'
-        }
-      ],
-      activeName: null
+      tabs: [{
+        name: '全部',
+        type: '1',
+        key: ''
+      }, {
+        name: '待评估',
+        type: '2',
+        key: 'has_not_started'
+      }, {
+        name: '评估中',
+        type: '3',
+        key: 'started'
+      }, {
+        name: '待终评',
+        type: '4',
+        key: 'to_be_reviewed'
+      }, {
+        name: '已完成',
+        type: '5',
+        key: 'completed'
+      }, {
+        name: '已取消',
+        type: '6',
+        key: 'cancelled'
+      }],
+      activeName: '',
+      outList: [],
+      outMan: '',
+      files: '',
+      fileName: '',
+      inMan: false,
+      imgURL: '',
+      fil: ''
     }
   },
   mounted() {
@@ -356,18 +451,176 @@ export default {
     this.getOrgOption()
     this.getData()
     this.idEdit = false
+    this.getEsTime()
   },
   methods: {
+    delImg() {
+      this.imgURL = ''
+      this.files = ''
+      this.fileName = ''
+      this.fil = ''
+    },
+    addImg(event) {
+      const inputDOM = this.$refs.inputer
+      // 通过DOM取文件数据
+      console.log(inputDOM.files, 777)
+      this.files = inputDOM.files[0]
+      this.fil = inputDOM.files
+      const len = this.fil.length
+      if (len > 1) {
+        this.$message.warning('只能上传一张图片！')
+        return false
+      }
+      for (let i = 0; i < this.fil.length; i++) {
+        const size = Math.floor(this.fil[i].size / 1024)
+        if (size > 10 * 1024 * 1024) {
+          this.$message.warning('请选择10M以内的图片！')
+          return false
+        }
+      }
+      this.fileName = inputDOM.files[0].name
+      const URL = window.URL || window.webkitURL
+      // 通过 file 生成目标 url
+      this.imgURL = URL.createObjectURL(inputDOM.files[0])
+    },
+    getEsTime() {
+      getEsTime({
+        type3: '从提交评估时间计,超过'
+      }).then(res => {
+        if (res.code === 0) {
+          res.data.forEach(item => {
+            if (item.title === '从提交评估时间计,超过') {
+              this.pickerOptions = {
+                disabledDate(time) {
+                  const date = time.getTime() + 3600 * 1000 * 24
+                  const dateVal = time.getTime() - 3600 * 1000 * 24 * item.value1
+                  if (date < Date.now()) {
+                    return true
+                  } else if (Date.now() < dateVal) {
+                    return true
+                  }
+                }
+              }
+            }
+          })
+        }
+      })
+    },
+    changeOutMan(val) {
+      this.outList.forEach(item => {
+        if (item.id === val) {
+          this.stateForm.bizAssessEmp2 = item
+        }
+      })
+    },
+    saveOutMan() {
+      if (this.outMan === '') {
+        this.$message.warning('请选择外院评估员！')
+        return false
+      }
+      this.dialogVisible2 = false
+      this.dialogVisible1 = true
+      this.code1 = ''
+      this.code2 = ''
+    },
+    closeOutMan() {
+      this.dialogVisible2 = false
+    },
+    saveImg() {
+      if (this.fileName === '') {
+        this.$message.warning('请选择要上传的文件！')
+        return false
+      }
+      const nameList = this.files.name.split('.')
+      const isJPG = nameList[nameList.length - 1] === 'jpeg' || nameList[nameList.length - 1] === 'png' || nameList[nameList.length - 1] === 'jpg' || nameList[nameList.length - 1] === 'bmp'
+      const isLt2M = this.files.size / 1024 / 1024 < 10
+      if (!isJPG) {
+        this.$message.error('上传图片只能是jpeg,png,jpg,bmp格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传图片大小不能超过 10MB!')
+      }
+      if (isJPG && isLt2M) {
+        const fileFormData = new FormData()
+        const requestConfig = {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': 'Bearer ' + getToken()
+          }
+        }
+        fileFormData.append('file', this.files, this.fileName)
+        axios.post(process.env.VUE_APP_BASE_API + '/assess/assess/report/upload/detail/' + this.assessId + '/' + this.stateForm.bizAssessEmp2.id, fileFormData, requestConfig).then(res => {
+          if (res.data.code === 0) {
+            this.$message.success('上传成功！')
+            this.dialogVisible1 = false
+            this.$router.push({
+              path: `/assessmentForm/details/${this.assessId}?`,
+              query: {
+                modelType: 'edit',
+                _title: `编辑${this.fullName}`
+              }
+            })
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }
+      // getImg(this.assessId, this.stateForm.bizAssessEmp2.id, this.stateForm.bizAssessEmp2.mobile).then(res => {
+      //   console.log(res)
+      // })
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url
+      this.dialogVisibleImg = true
+    },
+    // 上传成功后
+    handleAvatarSuccess(response, file, fileList) {
+      if (response.code === 0) {
+        // this.$message.success(response.data)
+      } else {
+        this.$message.error(response.data)
+      }
+    },
+    beforeAvatarUpload(file, id) {
+      this.fileName = ''
+      // return new Promise((resolve, reject) => {
+      //   this.$nextTick(() => {
+      //     this.uploadUrl = `${process.env.VUE_APP_BASE_API}/assess/assess/report/upload/${id}`
+      //     resolve()
+      //   })
+      // })
+      console.log(file, 666)
+      this.files = file
+      const isJPG = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg' || file.type === 'image/bmp'
+      const isLt2M = file.size / 1024 / 1024 < 10
+
+      if (!isJPG) {
+        this.$message.error('上传图片只能是jpeg,png,jpg,bmp格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传图片大小不能超过 10MB!')
+      }
+      this.fileName = file.name
+      if (isJPG && isLt2M) {
+        return new Promise((resolve, reject) => {
+          this.$nextTick(() => {
+            this.uploadUrl = `${process.env.VUE_APP_BASE_API}/assess/assess/report/upload/${id}`
+            resolve()
+          })
+        })
+      }
+      return isJPG && isLt2M
+    },
     // 是否可以继续评估
     hasShowContinueAssess(assess) {
       // 如果等于待复审则需要等待14天后才可继续评估
       const assessStatus = assess.assessStatus
-      if (assessStatus == 'to_be_reviewed' && assess.completeTime != null) {
+      if (assessStatus === 'to_be_reviewed' && assess.completeTime != null) {
         const completeTimeDate = new Date(assess.completeTime)
         const completeTimeDateOffset14 = new Date(completeTimeDate.setDate(completeTimeDate.getDate() + 14))
         return new Date().getTime() > completeTimeDateOffset14.getTime()
       }
-      return assessStatus == 'to_be_reviewed' || assessStatus == 'started'
+      return assessStatus === 'to_be_reviewed' || assessStatus === 'started'
     },
     // 修改评估日期
     modifyData(assessId) {
@@ -410,18 +663,58 @@ export default {
       this.dialogVisible = false
       this.value1 = ''
     },
+    getOutIn() {
+      return new Promise((resolve) => {
+        getOutIn({
+          bizAssessInfoId: this.assessId
+        }).then(res => {
+          if (res.code === 0) {
+            if (res.msg === 'true') {
+              this.inMan = true
+            } else {
+              this.stateForm.bizAssessEmp2 = res.data
+            }
+          }
+          resolve()
+        })
+      })
+    },
+    getStartAssess(id) {
+      return new Promise((resolve) => {
+        getStartAssess({ assessId: id }).then(res => {
+          if (res.code === 0) {
+            if (res.data.bizAssessEmp2 !== null) {
+              this.stateForm = res.data
+              this.dialogVisible1 = true
+            } else {
+              if (this.inMan === true) {
+                this.dialogVisible2 = true
+              } else {
+                this.dialogVisible1 = true
+              }
+              this.stateForm.bizAssessEmp1 = res.data.bizAssessEmp1
+              getOutList().then(response => {
+                if (response.code === 0) {
+                  this.outList = response.data
+                }
+              })
+            }
+          } else {
+            this.$message.error(res.msg)
+          }
+          resolve()
+        })
+      })
+    },
     // 评估师身份验证
-    beginAssess(id, fullName) {
+    async beginAssess(id, fullName) {
+      this.outMan = ''
+      this.nextType = false
       this.assessId = id
       this.fullName = fullName
-      getStartAssess({ assessId: id }).then(res => {
-        if (res.code === 0) {
-          this.stateForm = res.data
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
-      this.dialogVisible1 = true
+      this.inMan = false
+      await this.getOutIn()
+      await this.getStartAssess(id)
     },
     closeAssesse() {
       this.dialogVisible1 = false
@@ -438,13 +731,14 @@ export default {
       }
       saveStartAssess(data).then(res => {
         if (res.code === 0) {
-          this.$router.push({
-            path: `/assessmentForm/details/${this.assessId}`,
-            query: {
-              modelType: 'edit',
-              _title: `编辑${this.fullName}`
-            }
-          })
+          // this.$router.push({
+          //   path: `/assessmentForm/details/${this.assessId}`,
+          //   query: {
+          //     modelType: 'edit',
+          //     _title: `编辑${this.fullName}`
+          //   }
+          // })
+          this.nextType = true
           this.flag = true
           this.content = '获取验证码'
           clearInterval(this.timer)
@@ -514,11 +808,14 @@ export default {
     // 获取验证码
     getObtain() {
       this.setTimeout()
-      getVerificationCode({ assessId: this.assessId }).then(res => {
-        if (res.code == 0) {
+      getVerificationCode({
+        assessId: this.assessId,
+        emp2Mobile: this.stateForm.bizAssessEmp2.mobile
+      }).then(res => {
+        if (res.code === 0) {
           this.$message.success('短信验证码发送成功')
         } else {
-          this.$message.error('短信验证码发送失败')
+          this.$message.error(res.msg)
           clearInterval(this.timer)
           this.content = '获取验证码'
           this.flag = true
@@ -546,15 +843,27 @@ export default {
     },
     // 编辑
     handleEdit(row) {
-      this.$router.push({
-        path: `/assessmentForm/details/${row.id}?`,
-        query: {
-          modelType: 'edit',
-          _title: `编辑${row.fullName}`
-        }
-      })
+      if (row.assessStatus === 'to_be_reviewed') {
+        this.$router.push({
+          path: `/assessmentForm/details/${row.id}?`,
+          query: {
+            modelType: 'edit',
+            _title: `编辑${row.fullName}`,
+            assessStatus: 'true'
+          }
+        })
+      } else {
+        this.$router.push({
+          path: `/assessmentForm/details/${row.id}?`,
+          query: {
+            modelType: 'edit',
+            _title: `编辑${row.fullName}`
+          }
+        })
+      }
     },
     handleClick() {
+      this.tableData = []
       this.form.assessTypeTab = this.activeName == '0' ? '' : this.activeName
       this.getData()
     },
@@ -659,7 +968,7 @@ export default {
     createFilter(queryString) {
       return (restaurant) => {
         return (
-          restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+          restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) !== -1
         )
       }
     }
@@ -672,5 +981,73 @@ export default {
   .el-dialog__body {
     min-height: 470px;
   }
+}
+.uploadUrlImg {
+  .el-upload-list {
+    position: absolute;
+  }
+}
+.out-man:before {
+  content: "*";
+  color: #f56c6c;
+  margin-right: 4px;
+}
+.img-file {
+  position: relative;
+  .img-add {
+    width: 160px;
+    height: 160px;
+    position: absolute;
+    border: 1px dashed #e1e1e1;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    .el-icon-plus {
+      line-height: 160px;
+      font-size: 30px;
+      font-weight: bold;
+      color: #999999;
+    }
+  }
+}
+.img-show {
+  width: 160px;
+  height: 160px;
+  position: relative;
+  border-radius: 5px;
+  overflow: hidden;
+  img {
+    width: 160px;
+    height: 160px;
+  }
+  .img-del {
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    text-align: center;
+    line-height: 160px;
+    top: 0;
+    border-radius: 5px;
+    background: rgba(0,0,0, 0.5);
+    display: none;
+    .el-icon-delete {
+      font-size: 30px;
+      color: #ffffff;
+      cursor: pointer;
+    }
+  }
+}
+.img-show:hover {
+  .img-del {
+    display: block;
+  }
+}
+.upload-img {
+  width: 160px;
+  height: 160px;
+  background: #ffffff;
+  opacity: 0;
+  position: relative;
+  z-index: 99;
 }
 </style>

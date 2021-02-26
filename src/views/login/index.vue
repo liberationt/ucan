@@ -1,6 +1,6 @@
 <template>
   <div style="width: 100%; height: 100%">
-    <el-row v-if="isLogin === true" :gutter="0">
+    <el-row v-if="isLogin === 0" :gutter="0">
 
       <!-- 2019-09-26 产品确认去掉logo -->
       <!--		<img class="ucanLogo" src="../../assets/images/ucanLogo.png">-->
@@ -97,7 +97,7 @@
           <img src="../../assets/images/emblembg.png"><span style="margin: 0px 0px 0px 5px;">沪公网安备 31011202011519号</span></a>
       </p>
     </el-row>
-    <div v-if="isLogin === false" class="fj-login">
+    <div v-if="isLogin === 1" class="fj-login">
       <div class="fj-login-form">
         <div class="fj-login-logo">
           <img src="../../assets/fjImg/fj-logo.png" alt="">
@@ -142,9 +142,9 @@
                   @keyup.native="checkCapslock"
                   @blur="capsTooltip = false"
                 />
-<!--                <span class="show-pwd" @click="showPwd">-->
-<!--                  <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />-->
-<!--                </span>-->
+                <!--                <span class="show-pwd" @click="showPwd">-->
+                <!--                  <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />-->
+                <!--                </span>-->
               </el-form-item>
             </el-tooltip>
 
@@ -181,15 +181,207 @@
         </div>
       </div>
       <div class="fj-login-bz">
-        <p>©上海市民政局版权所有&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;沪ICP备11002366号&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;沪公网安备 31011202011519号</p>
+        <p>©上海市康复器具协会版权所有&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;沪ICP备09034032号-2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;沪公网安备 31010502005544号</p>
         <p>技术支持：上海友康信息科技有限公司</p>
+      </div>
+    </div>
+    <div v-if="isLogin === 2" class="pg-login">
+      <div class="pg-login-bd">
+        <div class="logo-pg">
+          <img src="../../assets/images/pg_logo.png" alt="">
+        </div>
+        <div class="pg-login-form">
+          <img src="../../assets/images/pg_banner.png" alt="">
+          <div class="pg-form-list">
+            <div class="pg-login-title">
+              后台管理系统
+            </div>
+            <div class="fj-login-input">
+              <el-form
+                ref="loginForm"
+                :model="loginForm"
+                :rules="loginRules"
+                class="fj-login-input-bd"
+                auto-complete="on"
+                label-position="left"
+              >
+                <el-form-item prop="username">
+                  <span class="iconfont-fj fj-icon">&#xe655</span>
+                  <el-input
+                    ref="username"
+                    v-model="loginForm.username"
+                    :placeholder="$t('login.username')"
+                    name="username"
+                    type="text"
+                    autocomplete="off"
+                    tabindex="1"
+                  />
+                </el-form-item>
+
+                <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+                  <el-form-item prop="password">
+                    <span class="iconfont-fj fj-icon">&#xe654</span>
+                    <el-input
+                      :key="passwordType"
+                      ref="password"
+                      v-model="loginForm.password"
+                      :type="passwordType"
+                      :placeholder="$t('login.password')"
+                      name="password"
+                      autocomplete="off"
+                      tabindex="2"
+                      @keyup.native="checkCapslock"
+                      @blur="capsTooltip = false"
+                    />
+                    <!--                <span class="show-pwd" @click="showPwd">-->
+                    <!--                  <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />-->
+                    <!--                </span>-->
+                  </el-form-item>
+                </el-tooltip>
+
+                <el-form-item prop="code" class="codeWrap">
+                  <span class="iconfont-fj fj-icon">&#xe656</span>
+                  <el-input
+                    ref="code"
+                    v-model="loginForm.code"
+                    name="code"
+                    type="text"
+                    placeholder="请输入验证码"
+                    tabindex="3"
+                    @keyup.enter.native="flag&&handleLogin()"
+                  />
+                  <img class="codeDiv" :src="codeImgUrl" @click="getCodeImgUrl">
+                </el-form-item>
+                <!-- <input type="text" > -->
+                <el-checkbox
+                  v-model="checked"
+                  tabindex="4"
+                  @keyup.space.native="spaces"
+                >记住密码
+                </el-checkbox>
+
+                <el-button
+                  :loading="loading"
+                  type="primary"
+                  style="width:100%;margin-bottom:30px;"
+                  tabindex="5"
+                  @click.native.prevent="handleLogin"
+                >立即登录
+                </el-button>
+              </el-form>
+            </div>
+          </div>
+        </div>
+        <div class="fj-login-bz" style="left: 0">
+          <p>©上海市养老服务行业协会&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 沪ICP备11002366号&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;沪公网安备 31011202011519号</p>
+          <p>技术支持：上海友康信息科技有限公司</p>
+        </div>
+      </div>
+    </div>
+    <div v-if="isLogin === 3" class="gd-login">
+      <div class="gd-title">
+        <img src="../../assets/fjImg/gd-logo.png" alt="">
+        <span>池州服务商管理系统</span>
+      </div>
+      <div class="gd-bd">
+        <div class="gd-bd-title">
+          <div class="gd-bd-title-cn">欢迎登陆</div>
+          <div class="gd-bd-title-eg">
+            <span>
+              Welcome landing
+            </span>
+          </div>
+        </div>
+        <div class="gd-form">
+          <el-form
+            ref="loginForm"
+            :model="loginForm"
+            :rules="loginRules"
+            class="gd-form-input"
+            auto-complete="on"
+            label-position="left"
+          >
+            <el-form-item prop="username">
+              <span class="gd-icon">
+                <img src="../../assets/fjImg/zh.png" alt="">
+              </span>
+              <el-input
+                ref="username"
+                v-model="loginForm.username"
+                :placeholder="$t('login.username')"
+                name="username"
+                type="text"
+                autocomplete="off"
+                tabindex="1"
+              />
+            </el-form-item>
+
+            <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+              <el-form-item prop="password">
+                <span class="gd-icon">
+                  <img src="../../assets/fjImg/mm.png" alt="">
+                </span>
+                <el-input
+                  :key="passwordType"
+                  ref="password"
+                  v-model="loginForm.password"
+                  :type="passwordType"
+                  :placeholder="$t('login.password')"
+                  name="password"
+                  autocomplete="off"
+                  tabindex="2"
+                  @keyup.native="checkCapslock"
+                  @blur="capsTooltip = false"
+                />
+                <span class="show-pwd" @click="showPwd">
+                  <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+                </span>
+              </el-form-item>
+            </el-tooltip>
+
+            <el-form-item prop="code" class="codeWrap">
+              <span class="gd-icon">
+                <img src="../../assets/fjImg/yzm.png" alt="">
+              </span>
+              <el-input
+                ref="code"
+                v-model="loginForm.code"
+                name="code"
+                type="text"
+                placeholder="请输入验证码"
+                tabindex="3"
+                @keyup.enter.native="flag&&handleLogin()"
+              />
+              <img class="codeDiv" :src="codeImgUrl" @click="getCodeImgUrl">
+            </el-form-item>
+            <!-- <input type="text" > -->
+            <div style="width: 100%">
+              <el-checkbox
+                v-model="checked"
+                tabindex="4"
+                @keyup.space.native="spaces"
+              >记住密码
+              </el-checkbox>
+            </div>
+            <div class="gd-btn">
+              <el-button
+                :loading="loading"
+                type="primary"
+                style="width:100%;margin-bottom:30px;"
+                tabindex="5"
+                @click.native.prevent="handleLogin"
+              >登录
+              </el-button>
+            </div>
+          </el-form>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+// import { validUsername } from '@/utils/validate'
 import { setName } from '@/utils/auth'
 import {
   menuList,
@@ -200,22 +392,22 @@ import qs from 'qs'
 export default {
   name: 'Login',
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入用户名'))
-      } else {
-        callback()
-      }
-      callback()
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入密码'))
-      } else {
-        callback()
-      }
-      callback()
-    }
+    // const validateUsername = (rule, value, callback) => {
+    //   if (value === '') {
+    //     callback(new Error('请输入用户名'))
+    //   } else {
+    //     callback()
+    //   }
+    //   callback()
+    // }
+    // const validatePassword = (rule, value, callback) => {
+    //   if (value === '') {
+    //     callback(new Error('请输入密码'))
+    //   } else {
+    //     callback()
+    //   }
+    //   callback()
+    // }
     return {
       flag: true,
       loginForm: {
@@ -242,7 +434,7 @@ export default {
       redirect: undefined,
       checked: false,
       codeImgUrl: '', // 图片验证码
-      isLogin: true
+      isLogin: 0
     }
   },
   watch: {
@@ -254,12 +446,28 @@ export default {
     }
   },
   created() {
-    if (window.location.hostname === process.env.VUE_APP_host) {
-      this.isLogin = false
+    console.log(process.env.NODE_ENV)
+    if (process.env.NODE_ENV === 'development') {
+      if (window.location.hostname === process.env.VUE_APP_host) {
+        this.isLogin = 0
+      } else if (window.location.hostname === 'localhosta') {
+        this.isLogin = 1
+      } else if (window.location.hostname === 'localhostb') {
+        this.isLogin = 2
+      } else if (window.location.hostname === 'localhostc') {
+        this.isLogin = 3
+      }
     } else {
-      this.isLogin = true
+      if (window.location.hostname === process.env.VUE_APP_host) {
+        this.isLogin = 1
+      } else if (window.location.hostname === 'rypg.ucanyun.com') {
+        this.isLogin = 2
+      } else if (window.location.hostname === 'fws.ucanyun.com') {
+        this.isLogin = 3
+      } else {
+        this.isLogin = 0
+      }
     }
-    console.log(window.location.hostname, process.env.VUE_APP_host, this.isLogin)
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
@@ -328,7 +536,7 @@ export default {
           this.$store
             .dispatch('user/login', this.loginForm)
             .then((response) => {
-			  this.flag = true
+			      this.flag = true
               const queryStr = location.search.slice(1)
               const query = qs.parse(queryStr)
               if (query.redirectType === 'screen') {
@@ -540,6 +748,276 @@ export default {
       text-shadow: 2px 2px 2px #3367d6;
     }
   }
+  .pg-login {
+    width: 100%;
+    height: 100%;
+    background: url("../../assets/images/pg_body_bg.png") no-repeat center;
+    background-size: 100% 100%;
+    .logo-pg {
+      padding-top: 60px;
+      width: 100%;
+      text-align: center;
+      padding-bottom: 40px;
+    }
+    .pg-login-bd {
+      width: 1001px;
+      margin: 0 auto;
+      .pg-login-form {
+        width: 100%;
+        height: 600px;
+        background: #ffffff;
+        border-radius: 10px;
+        .pg-form-list {
+          width: 495px;
+          display: inline-block;
+          vertical-align: top;
+          margin-top: 100px;
+          .pg-login-title {
+            width: 100%;
+            text-align: center;
+            font-size: 30px;
+            font-weight: bold;
+          }
+          .fj-login-input {
+            width: 100%;
+            padding: 0 50px;
+            margin-top: 30px;
+            .fj-login-input-bd {
+              .el-form-item__content {
+                border-bottom: 1px solid #DCDFE6;
+                padding-bottom: 10px;
+              }
+              .el-form-item {
+                margin-bottom: 24px;
+              }
+              .el-input__inner {
+                height: 46px;
+                border-radius: 0px;
+                text-indent: 35px;
+                border:0;
+              }
+              .el-input {
+                border: none;
+              }
+              .el-button--medium {
+                font-size: 18px;
+                height: 48px;
+                border-radius: 5px;
+                background: #3367D6;
+                border: 1px solid #3367D6;
+                margin-top: 24px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .gd-login {
+    width: 100%;
+    height: 100%;
+    background: url("../../assets/fjImg/gd-bg.png") no-repeat center;
+    background-size: 100% 100%;
+    position: relative;
+    .gd-title {
+      width: 100%;
+      padding: 40px;
+      img {
+        vertical-align: middle;
+      }
+      span {
+        display: inline-block;
+        vertical-align: middle;
+        color: #ffffff;
+        font-size: 28px;
+      }
+    }
+    .gd-btn {
+      width: 100%; padding: 0 20%;position: absolute; left: 0;bottom: 8%
+    }
+    .show-pwd {
+      position: absolute;
+      right: 5px;
+      top: 5px;
+    }
+    .el-checkbox {
+      float: right;
+    }
+    .gd-bd {
+      width: 30%;
+      height: 74%;
+      position: absolute;
+      background: #ffffff;
+      box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.1);
+      right: 5%;
+      border-radius: 15px;
+      top: 13%;
+      padding: 5% 3.5%;
+      .el-checkbox__input.is-checked .el-checkbox__inner {
+        background-color: #344a62;
+        border-color: #344a62;
+      }
+      .el-checkbox__inner:hover {
+        border-color: #344a62;
+      }
+      .el-checkbox__input.is-checked+.el-checkbox__label {
+        color: #344a62;
+      }
+      .gd-bd-title {
+        width: 100%;
+        text-align: center;
+        .gd-bd-title-cn {
+          font-size: 22px;
+        }
+        .gd-bd-title-eg {
+          font-size: 18px;
+          padding-top: 4%;
+          span {
+            padding: 5px 3px;
+            border-bottom: 3px solid #344a62;
+          }
+        }
+      }
+      .gd-form {
+        width: 100%;
+        margin-top: 10%;
+        .gd-form-input {
+          width: 100%;
+          background: #ffffff;
+          .gd-icon {
+            width: 10%;
+            display: inline-block;
+            vertical-align: middle;
+            img {
+              width: 100%;
+              vertical-align: middle;
+            }
+          }
+          .el-form-item__content {
+            border-bottom: 0px solid #DCDFE6;
+            padding-bottom: 10px;
+          }
+          .el-form-item {
+            margin-bottom: 24px;
+          }
+          .el-input__inner {
+            height: 46px;
+            border-radius: 0px;
+            border:0;
+            background: #ffffff;
+            border-bottom: 2px solid #344a62;
+          }
+          .el-input {
+            border: none;
+            width: 88%;
+            vertical-align: middle;
+            display: inline-block;
+          }
+          .el-button--medium {
+            font-size: 18px;
+            height: 48px;
+            border-radius: 5px;
+            background: #344a62;
+            border: 0px solid #3367D6;
+            outline: 0;
+            margin-top: 24px;
+          }
+        }
+      }
+    }
+  }
+  @media (max-width: 1550px) {
+    .pg-login {
+      width: 100%;
+      height: 100%;
+      background: url("../../assets/images/pg_body_bg.png") no-repeat center;
+      background-size: 100% 100%;
+      .logo-pg {
+        padding-top: 30px;
+        width: 100%;
+        text-align: center;
+        padding-bottom: 20px;
+        img {
+          width: 800px;
+        }
+      }
+      .pg-login-bd {
+        width: 800px;
+        margin: 0 auto;
+        .pg-login-form {
+          width: 100%;
+          height: 480px;
+          background: #ffffff;
+          border-radius: 10px;
+          img {
+            height: 100%;
+          }
+          .pg-form-list {
+            width: 390px;
+            display: inline-block;
+            vertical-align: top;
+            margin-top: 50px;
+            .pg-login-title {
+              width: 100%;
+              text-align: center;
+              font-size: 30px;
+              font-weight: bold;
+            }
+            .fj-login-input {
+              width: 100%;
+              padding: 0 50px;
+              margin-top: 20px;
+              .fj-login-input-bd {
+                .el-form-item__content {
+                  border-bottom: 1px solid #DCDFE6;
+                  padding-bottom: 10px;
+                }
+                .el-form-item {
+                  margin-bottom: 24px;
+                }
+                .el-input__inner {
+                  height: 46px;
+                  border-radius: 0px;
+                  text-indent: 35px;
+                  border:0;
+                }
+                .el-input {
+                  border: none;
+                }
+                .el-button--medium {
+                  font-size: 18px;
+                  height: 48px;
+                  border-radius: 5px;
+                  background: #3367D6;
+                  border: 1px solid #3367D6;
+                  margin-top: 24px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .gd-login {
+      .gd-bd {
+        width: 30%;
+        height: 74%;
+        position: absolute;
+        background: #ffffff;
+        box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.1);
+        right: 5%;
+        border-radius: 15px;
+        top: 13%;
+        padding: 3% 3.5%;
+      }
+      .gd-btn {
+        width: 100%; padding: 0 20%;position: absolute; left: 0;bottom: 3%
+      }
+    }
+  }
+  input:-webkit-autofill{
+    -webkit-box-shadow:0 0 0 1000px white inset !important;
+  }
 </style>
 
 <style lang="scss" scoped>
@@ -667,7 +1145,7 @@ export default {
 
 		.el-input {
 			padding: 0;
-			width: 60%;
+			width: 50% !important;
 			border: 1px solid #cfdbe9;
 			border-radius: 25px;
 		}

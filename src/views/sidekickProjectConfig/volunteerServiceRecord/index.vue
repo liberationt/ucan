@@ -392,7 +392,7 @@ export default {
                 this.form.pageNum = 1
                 this.getData(this.form)
                 Msg.hideLoading();
-              }, 5000)
+              }, 9000)
             } else {
               this.$message.error(response.msg)
             }

@@ -210,7 +210,7 @@
                       </el-form-item>
                     </el-col>
                     <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                      <el-form-item :label="isEditForm ? '需要帮助时是否得到照料' : '需要帮助时是否得到照料：'">
+                      <el-form-item :label="isEditForm ? '需要帮助时是否得到照料' : '需要帮助时是否得到照料：'" style="width: 150px">
                         <span>{{ form.needHelpIsCareName }}</span>
                       </el-form-item>
                     </el-col>
@@ -303,7 +303,7 @@
               <el-table-column prop="assessCompleteDate" label="评估完成时间" align="center" min-width="180" />
               <el-table-column prop="assessTypeName" label="评估类别" align="center" min-width="180" />
               <el-table-column prop="assessCareLevel" label="评估等级" align="center" min-width="180" />
-              <el-table-column prop="costBearingCodeName" label="评估费用承担方" align="center" min-width="180" />
+              <!-- <el-table-column prop="costBearingCodeName" label="评估费用承担方" align="center" min-width="180" /> -->
               <el-table-column label="评估师" align="center" min-width="180">
                 <template slot-scope="{row}">
                   <span>{{ row.orderTakingAssessName1 }}</span>

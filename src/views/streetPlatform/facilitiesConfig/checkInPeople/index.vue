@@ -56,6 +56,7 @@
           <el-select
             v-model="form.orgName"
             clearable
+            filterable
             placeholder="请选择服务机构"
             style="width: 200px"
             @keyup.enter.native="onSubmit"

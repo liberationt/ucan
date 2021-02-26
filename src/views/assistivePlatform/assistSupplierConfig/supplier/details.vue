@@ -39,7 +39,7 @@
 									</el-col>
 									<el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
 										<el-form-item :label="isEditForm?'咨询电话':'咨询电话：'" prop="phone">
-											<el-input v-if="isEditForm" v-model.trim="form.phone" 
+											<el-input v-if="isEditForm" v-model.trim="form.phone"
 											    clearable placeholder="请输入咨询电话"></el-input>
 											<span v-else>{{form.phone}}</span>
 										</el-form-item>
@@ -83,10 +83,11 @@
 													:form-imgs="form.imageInfoVos"></Uploadpics>
 											</div>
 											<el-row v-else class="agencyImageRow">
-												<el-col class="agencyImageCol"
-												        v-for="(item,index) in imageInfoVosLookUrl" :key="index">
-													<img :src="item" class="agencyImage"/>
-												</el-col>
+                        <viewer :images="imageInfoVosLookUrl">
+                          <el-col v-for="(item, index) in imageInfoVosLookUrl" :key="index" class="agencyImageCol" style="cursor: pointer">
+                            <img :src="item" class="agencyImage">
+                          </el-col>
+                        </viewer>
 											</el-row>
 										</el-form-item>
 									</el-col>

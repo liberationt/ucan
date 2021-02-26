@@ -1427,7 +1427,7 @@ export default {
         let neqArray = []
         neqArray = this.SalvageList.concat(this.SalvageList1)
         neqArray.forEach(item => {
-          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyDate != '' && item.subsidyDate != null) {
+          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyDate != '' && item.subsidyDate != null || item.id != null && item.id != '') {
             arrList.push(item)
           }
         })

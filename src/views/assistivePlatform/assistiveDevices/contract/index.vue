@@ -44,6 +44,18 @@
             @keyup.enter.native="onSubmit"
           />
         </el-form-item>
+        <el-form-item label="合同创建日期">
+          <el-date-picker
+            v-model="createDate"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            format="yyyy年MM月dd日"
+            value-format="yyyy-MM-dd"
+            style="width:380px"
+          />
+        </el-form-item>
         <el-form-item>
           <el-button v-has="{class: '查询'}" type="primary" class="base-btn" @click="onSubmit">查询
           </el-button>
@@ -94,10 +106,11 @@
             <el-table-column label="服务商" show-overflow-tooltip prop="spName" min-width="150" header-align="center" sortable="custom" />
             <el-table-column label="合同状态" prop="status" min-width="180" header-align="center" />
             <el-table-column label="合同终止日期" prop="contractEndDate" min-width="180" header-align="center" />
+            <el-table-column label="合同创建日期" prop="createTime" min-width="180" header-align="center" />
             <el-table-column fixed="right" label="操作" width="400" header-align="center">
               <template slot-scope="{row,$index}">
                 <span v-has="{class: '查看合同'}" class="table-btn" @click="openlookDialog(row)">查看合同</span>
-                <span v-if="row.status !== '已终止' && row.status !== '已作废'" v-has="{class: '上传附件'}" class="table-btn" @click="openUploadDialog(row)">上传附件</span>
+                <span v-if="row.status !== '已作废'" v-has="{class: '上传附件'}" class="table-btn" @click="openUploadDialog(row)">上传附件</span>
                 <span v-if="row.status !== '已终止' && row.status !== '已作废'" v-has="{class: '终止'}" class="table-btn" @click="openStop(row)">终止</span>
                 <span v-if="row.status !== '已终止' && row.status !== '已作废'" v-has="{class: '作废'}" class="table-btn" @click="InvalidContract(row)">作废</span>
               </template>
@@ -234,7 +247,7 @@
           <div id="printTest" class="contract-content-body">
             <div ref="contractContent" class="contract-content-all">
               <!--           风格-->
-              <div class="contract-content-list page-one" style="page-break-after:always">
+              <div class="contract-content-list page-one" style="page-break-after:always;">
                 <div class="page-style" style="text-align: right;padding: 30px 30px 0px 30px">
                   合同编号：<span class="page-input" style="width: 200px">{{ contractContent.contractNo }}</span>
                 </div>
@@ -253,7 +266,7 @@
                   康复辅具社区租赁点：<span class="page-input" style="width: 340px;margin-top: 80px">{{ contractContent.storeName }}</span>
                 </div>
                 <div class="page-style t-center">
-                  经办人（康复辅具适配师）：<span class="page-input" style="width: 292px;margin-top: 15px">{{ contractContent.adapterName }}</span>
+                  经办人（康复辅助技术咨询师）：<span class="page-input" style="width: 262px;margin-top: 15px">{{ contractContent.adapterName }}</span>
                 </div>
                 <div class="page-style t-center">
                   经办人身份证号码：<span class="page-input" style="width: 356px;margin-top: 15px">{{ contractContent.adapterIdCard }}</span>
@@ -425,7 +438,7 @@
                     <span class="page-input" style="width: 150px; text-align: center;text-indent: 0" />
                   </div>
                   <div class="page-content" style="margin-top: 12px; text-indent: 35px">
-                    <span class="page-check" :class="[contractContent.payType === 'wechat_payment' ? 'check-it' : '']" style="margin-left: 27px" />微信支付：甲方的微信收款账号如下：
+                    <span class="page-check" :class="[contractContent.payType === 'wechat_payment' ? 'check-it' : '']" style="margin-left: 27px" /> 微信支付：甲方的微信收款账号如下：
                     <span class="page-input" style="width: 188px; text-align: center;text-indent: 0" />
                   </div>
                   <div class="page-content" style="margin-top: 25px; text-indent: 35px">
@@ -739,7 +752,7 @@
                   </div>
                   <div class="page-content" style="margin-top: 40px;">
                     <span class="page-weight">
-                      5. 保
+                      5. 保证金
                     </span>
                   </div>
                   <div class="page-content" style="margin-top: 30px; text-indent: 35px; line-height: 35px">
@@ -1602,6 +1615,8 @@ export default {
       org_typeOptions: [],
       // 签署日期临时存储变量
       signDate: [],
+      // 创建日期临时存储变量
+      createDate: [],
       // 终止合同表单
       formStop: {
         contractEndCause: '', // 合同终止原因
@@ -1628,6 +1643,10 @@ export default {
         signDateStart: '',
         // 签署日期结束
         signDateEnd: '',
+        // 创建日期开始
+        createDateStart: '',
+        // 创建日期结束
+        createDateEnd: '',
         // 合同状态
         status: '',
         keyword: '', // 关键字查询
@@ -1994,6 +2013,10 @@ export default {
         parmas.signDateStart = this.signDate[0]
         parmas.signDateEnd = this.signDate[1]
       }
+      if (this.createDate && this.createDate[0] && this.createDate[1]) {
+        parmas.createDateStart = this.createDate[0]
+        parmas.createDateEnd = this.createDate[1]
+      }
 
       // 获取合同列表数据
       listContract(parmas).then(res => {
@@ -2014,11 +2037,16 @@ export default {
     onReset() {
       this.ctyId = []
       this.signDate = []
+      this.createDate = []
       this.form = {
         // 签署日期开始
         signDateStart: '',
         // 签署日期结束
         signDateEnd: '',
+        // 创建日期开始
+        createDateStart: '',
+        // 创建日期结束
+        createDateEnd: '',
         // 合同状态
         status: '',
         keyword: '', // 关键字查询
@@ -2326,7 +2354,7 @@ export default {
     margin-right: 5px;
   }
   .check-it {
-    background: #333333;
+    border: 6px solid #333333;
   }
   .contract-list {
     .el-dialog {

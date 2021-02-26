@@ -67,7 +67,7 @@ service.interceptors.response.use(
             // -999  未知错误
             // 403  无权限
             if (res.code === 50008 || res.code === 50010 || res.code === 50012 || res.code === 50013 ||
-              res.code === 50016 || res.code === 50015 || res.code === 429 || res.code === -999 || res.code === 403 || res.code === 500) {
+              res.code === 50016 || res.code === 50015 || res.code === 429 || res.code === -999 || res.code === 403 || res.code === 500 || res.code === -1) {
                 Message({
                     message: res.msg || 'error',
                     type: 'error',

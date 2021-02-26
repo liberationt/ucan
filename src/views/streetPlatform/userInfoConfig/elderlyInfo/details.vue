@@ -1241,6 +1241,7 @@
                         <span v-if="scope.row.subsidyUnit=='yuan/month'">元/月</span>
                         <span v-if="scope.row.subsidyUnit=='yuan/year'">元/年</span>
                         <span v-if="scope.row.subsidyUnit=='yuan/time'">元/次</span>
+                        <span v-if="scope.row.subsidyUnit=='yuan/quarter'">元/季度</span>
                       </span>
                     </template>
                   </el-table-column>
@@ -2028,9 +2029,9 @@
           </div>
           <div v-else-if="this.activeTabs === 'subsidy'">
             <el-button type="warning" class="base-btn btnMarginLeft15" @click="tabsStep('label')">上一步</el-button>
-            <el-button type="warning" class="base-btn btnMarginLeft15" @click="tabsStep('serve')" v-if="isShow15">下一步</el-button>
-            <el-button class="cancel-btn btnMarginLeft15" @click="cancelDetailsPage" v-if="!isShow15">取消</el-button>
-            <el-button type="warning" class="base-btn btnMarginLeft15" @click="editContent('form_base')" v-if="!isShow15">确定</el-button>
+            <el-button v-if="isShow15" type="warning" class="base-btn btnMarginLeft15" @click="tabsStep('serve')">下一步</el-button>
+            <el-button v-if="!isShow15" class="cancel-btn btnMarginLeft15" @click="cancelDetailsPage">取消</el-button>
+            <el-button v-if="!isShow15" type="warning" class="base-btn btnMarginLeft15" @click="editContent('form_base')">确定</el-button>
           </div>
           <div v-else>
             <el-button type="warning" class="base-btn btnMarginLeft15" @click="tabsStep('subsidy')">上一步</el-button>
@@ -2455,7 +2456,7 @@ export default {
           liveStatusName: '', // 居住情况(纯文本)
           censusStatus: '', // 户籍情况
           censusStatusName: '', // 户籍情况(纯文本)
-          assessType: '0', // 评估类型
+          assessType: '', // 评估类型
           assessTypeName: '', // 评估类型(纯文本)
           assessLevel: '', // 评估等级
           assessLevelName: '', // 评估等级(纯文本)
@@ -2850,6 +2851,11 @@ export default {
     'form.birthday': function(val, oldVal) {
       if (val) {
         this.form.age = computerAge(this.form.birthday) + '岁'
+        if (parseInt(this.form.age) >= 80 && parseInt(this.form.age) <= 99) {
+          this.form.personProperty.ageLevel = '300'
+        } else if (parseInt(this.form.age) >= 100) {
+          this.form.personProperty.ageLevel = '100'
+        }
       } else {
         this.form.age = ''
       }
@@ -3508,6 +3514,8 @@ export default {
         // }
         if (this.form.personProperty.assessLevel) {
           this.form.personProperty.assessType = '0'
+        } else {
+          this.form.personProperty.assessType = ''
         }
         const noPhoneContacts = this.form.contact.filter(i => i.homePhone == '' && i.mobile == '')
         if (noPhoneContacts.length > 0) {
@@ -3555,53 +3563,53 @@ export default {
         const regs = /^[0-9]*$/
         let arrList = []
         this.PensionList.forEach(item => {
-          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyDate != '' && item.subsidyDate != null) {
+          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyDate != '' && item.subsidyDate != null || item.id != null && item.id != '') {
             arrList.push(item)
           }
         })
         this.SalvageList.forEach(item => {
-          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyDate != '' && item.subsidyDate != null) {
+          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyDate != '' && item.subsidyDate != null || item.id != null && item.id != '') {
             arrList.push(item)
           }
         })
         this.DisabilityList.forEach(item => {
-          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyDate != '' && item.subsidyDate != null) {
+          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyDate != '' && item.subsidyDate != null || item.id != null && item.id != '') {
             arrList.push(item)
           }
         })
         this.PreferentialList.forEach(item => {
-          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyDate != '' && item.subsidyDate != null) {
+          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyDate != '' && item.subsidyDate != null || item.id != null && item.id != '') {
             arrList.push(item)
           }
         })
         this.ShiDuList.forEach(item => {
-          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyDate != '' && item.subsidyDate != null) {
+          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyDate != '' && item.subsidyDate != null || item.id != null && item.id != '') {
             arrList.push(item)
           }
         })
         this.ShiDiList.forEach(item => {
-          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyDate != '' && item.subsidyDate != null) {
+          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyDate != '' && item.subsidyDate != null || item.id != null && item.id != '') {
             arrList.push(item)
           }
         })
         this.LiPingList.forEach(item => {
-          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyDate != '' && item.subsidyDate != null) {
+          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyDate != '' && item.subsidyDate != null || item.id != null && item.id != '') {
             arrList.push(item)
           }
         })
 
         this.DisposableList.forEach(item => {
-          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyRemark != '' && item.subsidyRemark != null) {
+          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyRemark != '' && item.subsidyRemark != null || item.id != null && item.id != '') {
             arrList.push(item)
           }
         })
         this.familyList.forEach(item => {
-          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyRemark != '' && item.subsidyRemark != null) {
+          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyRemark != '' && item.subsidyRemark != null || item.id != null && item.id != '') {
             arrList.push(item)
           }
         })
         this.familyList1.forEach(item => {
-          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyRemark != '' && item.subsidyRemark != null) {
+          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyRemark != '' && item.subsidyRemark != null || item.id != null && item.id != '') {
             arrList.push(item)
           }
         })
@@ -3851,7 +3859,7 @@ export default {
           liveStatusName: '', // 居住情况(纯文本)
           censusStatus: '', // 户籍情况
           censusStatusName: '', // 户籍情况(纯文本)
-          assessType: '0', // 评估类型
+          assessType: '', // 评估类型
           assessTypeName: '', // 评估类型(纯文本)
           assessLevel: '', // 评估等级
           assessLevelName: '', // 评估等级(纯文本)

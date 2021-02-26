@@ -24,7 +24,14 @@ import 'font-awesome/css/font-awesome.css';
 
 import './polyfill'
 import Print from 'vue-print-nb'
+import Viewer from 'v-viewer'
+import 'viewerjs/dist/viewer.css'
 Vue.use(Print);
+Vue.use(Viewer, {
+  defaultOptions: {
+    zIndex: 9999
+  }
+})
 // import { mockXHR } from '../mock' // simulation data
 //
 // // mock api in github pages site build

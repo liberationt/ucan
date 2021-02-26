@@ -62,6 +62,7 @@
                 <el-col :md="12" :lg="16">
                   <el-form-item prop="censusRegisterAreaCode">
                     <Address
+                      ref="address"
                       :id-edit="idEdit"
                       :area-code="areaCode"
                       :form-code="form.censusRegisterAreaCode"
@@ -212,17 +213,7 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <!-- <el-col :md="24" :lg="24">
-                  <el-form-item prop="category" :label="'残疾人类别'">
-                    <el-select v-model="form.category"
-                               placeholder="" multiple clearable style="width:100%;">
-                      <el-option v-if="category.length !== 0"
-                                 v-for="item in category" :key="item.dictValue"
-                                 :label="item.dictLabel" :value="item.dictValue"></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-col> -->
-                <el-col :md="24" :lg="24">
+                <!--<el-col :md="24" :lg="24">
                   <el-form-item prop="defoType" :label="'残疾类型'">
                     <el-select
                       v-model="form.defoType"
@@ -258,6 +249,22 @@
                         :value="item.dictValue"
                       />
                     </el-select>
+                  </el-form-item>
+                </el-col>-->
+                <el-col :md="24" :lg="24">
+                  <el-form-item
+                    label="残疾类别"
+                    prop="defoTypeLevels"
+                  >
+                    <el-cascader
+                      v-model="defoTypeLevels"
+                      style="width:100%"
+                      :props="props"
+                      :options="deformityTypeOptions"
+                      placeholder=""
+                      clearable
+                      @change="changeDisable"
+                    />
                   </el-form-item>
                 </el-col>
                 <el-col :md="24" :lg="24">
@@ -298,25 +305,25 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-<!--                <el-col :md="24" :lg="24">-->
-<!--                  <el-form-item prop="birthControlSubsidy" :label="'计生补助'">-->
-<!--                    <el-select-->
-<!--                      v-model="form.birthControlSubsidy"-->
-<!--                      placeholder=""-->
-<!--                      multiple-->
-<!--                      clearable-->
-<!--                      style="width:100%;"-->
-<!--                    >-->
-<!--                      <el-option-->
-<!--                        v-for="item in birthControlSubsidy"-->
-<!--                        v-if="birthControlSubsidy.length !== 0"-->
-<!--                        :key="item.dictValue"-->
-<!--                        :label="item.dictLabel"-->
-<!--                        :value="item.dictValue"-->
-<!--                      />-->
-<!--                    </el-select>-->
-<!--                  </el-form-item>-->
-<!--                </el-col>-->
+                <!--                <el-col :md="24" :lg="24">-->
+                <!--                  <el-form-item prop="birthControlSubsidy" :label="'计生补助'">-->
+                <!--                    <el-select-->
+                <!--                      v-model="form.birthControlSubsidy"-->
+                <!--                      placeholder=""-->
+                <!--                      multiple-->
+                <!--                      clearable-->
+                <!--                      style="width:100%;"-->
+                <!--                    >-->
+                <!--                      <el-option-->
+                <!--                        v-for="item in birthControlSubsidy"-->
+                <!--                        v-if="birthControlSubsidy.length !== 0"-->
+                <!--                        :key="item.dictValue"-->
+                <!--                        :label="item.dictLabel"-->
+                <!--                        :value="item.dictValue"-->
+                <!--                      />-->
+                <!--                    </el-select>-->
+                <!--                  </el-form-item>-->
+                <!--                </el-col>-->
                 <el-col :md="24" :lg="24">
                   <div class="sub-btn">
                     <span @click="onSubmit('cx')">智能匹配</span>
@@ -390,7 +397,7 @@
                     :total="total"
                     :page.sync="form.pageNum"
                     :limit.sync="form.pageSize"
-                    @pagination="onSubmit()"
+                    @pagination="onSubmit"
                   />
                 </el-col>
               </el-row>
@@ -724,6 +731,9 @@ export default {
   },
   data() {
     return {
+      props: { multiple: true, checkStrictly: true },
+      deformityTypeOptions: [], // 残疾options
+      defoTypeLevels: [], // 残疾数据保存
       assDetailShow: false,
       comminityDetailShow: false,
       compreDetailShow: false,
@@ -879,6 +889,38 @@ export default {
     },
     closeNursingDetail() {
       this.nursingDetailShow = false
+    },
+    changeDisable(val) {
+      this.deformityTypeOptions.forEach(item => {
+        if (val && val.length) {
+          val.forEach(items => {
+            item.children.forEach(itemc => {
+              itemc.disabled = false
+            })
+          })
+        }
+      })
+      this.deformityTypeOptions.forEach(item => {
+        if (val && val.length) {
+          val.forEach(items => {
+            if (item.value == items[0]) {
+              item.children.forEach(itemc => {
+                if (items[1] !== itemc.value) {
+                  itemc.disabled = true
+                } else {
+                  itemc.disabled = false
+                }
+              })
+            }
+          })
+        } else {
+          this.deformityTypeOptions.forEach(item => {
+            item.children.forEach(itemc => {
+              this.$set(itemc, 'disabled', false)
+            })
+          })
+        }
+      })
     },
     openComunityDetail(id, type) {
       this.datailId = id
@@ -1086,6 +1128,27 @@ export default {
                 this.bigEnjoyLevel = response.data[k]
                 break
             }
+            const defoTypeOptions = []
+            const defoLevelOptions = []
+            this.defoLevel.forEach(item => {
+              defoLevelOptions.push({
+                value: item.dictValue,
+                label: item.dictLabel,
+                disabled: false
+              })
+            })
+            this.defoType.forEach(item => {
+              const arrList = _.cloneDeep(defoLevelOptions)
+              defoTypeOptions.push(
+                {
+                  value: item.dictValue,
+                  label: item.dictLabel,
+                  disabled: true,
+                  children: arrList
+                }
+              )
+            })
+            this.deformityTypeOptions = defoTypeOptions
             // this.bizAssessType.forEach((item, index) =>{
             //   const data = JSON.parse(JSON.stringify(this.bizAssessLevel));
             //   data.forEach((list, i) =>{
@@ -1134,12 +1197,14 @@ export default {
     },
     // 循环遍历多选塞入数组中
     pushArr(arr, allArr, name) {
-      arr.forEach(item => {
-        const data = {}
-        data.dictType = name
-        data.dictValue = item
-        allArr.push(data)
-      })
+      if (arr) {
+        arr.forEach(item => {
+          const data = {}
+          data.dictType = name
+          data.dictValue = item
+          allArr.push(data)
+        })
+      }
     },
     addCkecked(arr) {
       arr.forEach((item, index) => {
@@ -1163,6 +1228,9 @@ export default {
       })
     },
     getData(form) {
+      if (this.form.censusRegisterAreaCode instanceof Array) {
+        this.form.censusRegisterAreaCode = this.form.censusRegisterAreaCode[this.form.censusRegisterAreaCode.length - 1 ]
+      }
       this.showNoData = true
       searchListMs(form).then(res => {
         if (res.code === 0) {
@@ -1195,36 +1263,18 @@ export default {
         data.dictValue = 'p_population'
         params.dictTags.push(data)
       }
-      this.arr.forEach((item, index) => {
-        for (let i = 0; i < this.monthlyCapita.length; i++) {
-          if (index === i) {
-            const myData = {}
-            myData.dictType = this.monthlyCapita[i].dictType
-            myData.dictValue = this.monthlyCapita[i].dictValue
-            params.dictTags.push(myData)
+      if (this.arr) {
+        this.arr.forEach((item, index) => {
+          for (let i = 0; i < this.monthlyCapita.length; i++) {
+            if (index === i) {
+              const myData = {}
+              myData.dictType = this.monthlyCapita[i].dictType
+              myData.dictValue = this.monthlyCapita[i].dictValue
+              params.dictTags.push(myData)
+            }
           }
-        }
-      })
-      // if (this.form.bizAssessType.length !== 0) {
-      //   if (this.form.bizAssessType[0] && this.form.bizAssessType[1]) {
-      //     const bizAssessType = [];
-      //     this.bizAssessType.forEach(item =>{
-      //       if (item.dictValue === this.form.bizAssessType[0]) {
-      //         bizAssessType.push(item.dictValue)
-      //       }
-      //     });
-      //     this.pushArr(bizAssessType, params.dictTags, 'biz_assess_type'); // 评估类型
-
-      //     const bizAssessLevel = [];
-      //     let s = this.form.bizAssessType[1].substring(0, this.form.bizAssessType[1].length-1);
-      //     this.bizAssessLevel.forEach(item =>{
-      //       if (item.dictValue === s) {
-      //         bizAssessLevel.push(item.dictValue)
-      //       }
-      //     });
-      //     this.pushArr(bizAssessLevel, params.dictTags, 'biz_assess_level'); // 评估等级
-      //   }
-      // }
+        })
+      }
       this.pushArr(this.form.bizAssessLevel, params.dictTags, 'biz_assess_level')// 评估等级
       this.pushArr(this.form.bigEnjoyLevel, params.dictTags, 'is_enjoy')// 居家养老
       this.pushArr(this.form.bigAgeLevel, params.dictTags, 'biz_age_level')// 年龄分类
@@ -1234,8 +1284,8 @@ export default {
       this.pushArr(this.form.familyType, params.dictTags, 'family_type') // 家庭类别
       this.pushArr(this.form.monthlyCapita, params.dictTags, 'monthly_capita') // 家庭人均收入
       this.pushArr(this.form.category, params.dictTags, 'category') // 残疾人类别
-      this.pushArr(this.form.defoType, params.dictTags, 'defo_type') // 残疾类型
-      this.pushArr(this.form.defoLevel, params.dictTags, 'defo_level') // 残疾等级
+      // this.pushArr(this.form.defoType, params.dictTags, 'defo_type') // 残疾类型
+      // this.pushArr(this.form.defoLevel, params.dictTags, 'defo_level') // 残疾等级
       this.pushArr(this.form.entitledGroups, params.dictTags, 'entitled_groups') // 优抚类别
       this.pushArr(this.form.birthControlFamily, params.dictTags, 'birthControl_family') // 计生家庭
       // this.pushArr(this.form.birthControlSubsidy, params.dictTags, 'birthControl_subsidy') // 计生补助
@@ -1244,10 +1294,27 @@ export default {
         arr.push(this.areaCode[this.areaCode.length - 1])
       }
       params.areaCode = arr[0] // 所选区域赋值
-      if (this.form.censusRegisterAreaCode.length !== 0) {
-        params.censusRegisterAreaCode = this.form.censusRegisterAreaCode[this.form.censusRegisterAreaCode.length - 1]
+      params.censusRegisterAreaCode = ''
+      if (this.form.censusRegisterAreaCode instanceof Array && this.form.censusRegisterAreaCode.length !== 0) {
+        params.censusRegisterAreaCode = (this.form.censusRegisterAreaCode[this.form.censusRegisterAreaCode.length - 1])
+      } else if (typeof (this.form.censusRegisterAreaCode) === 'string' && this.form.censusRegisterAreaCode) {
+        params.censusRegisterAreaCode = this.form.censusRegisterAreaCode
       } else {
         params.censusRegisterAreaCode = ''
+      }
+      // 处理残疾类型数据
+      if (this.defoTypeLevels && this.defoTypeLevels.length) {
+        this.defoTypeLevels.forEach(item => {
+          params.dictTags.push({
+            'dictType': 'defo_type' + item[0],
+            'dictValue': 'defo_level' + item[1]
+          })
+        })
+      }
+      // 残疾类别 特殊处理
+      else {
+        this.form.defoType = []
+        this.form.defoLevel = []
       }
       this.getData(params)
       if (type === 'cx') {
@@ -1506,7 +1573,10 @@ export default {
         birthControlSubsidy: [],
         bigAgeLevel: [] // 年龄类别
       }
+      this.defoTypeLevels = [] // 残疾类别
       this.arr = []
+      this.areaCode = []
+      this.$refs.address.resetCode() // 调用子组件方法重置code
       // this.onSubmit();
     },
     keepIt() {

@@ -245,3 +245,50 @@ export function shortMes(params) {
     params
   })
 }
+
+// 获取评估时效
+export function getEsTime(params) {
+  return request({
+    url: '/assess/pension/assess/parameter/setting',
+    method: 'get',
+    params
+  })
+}
+
+// 评估师验证
+export function getImg(assessId, empId2, empName2) {
+  return request({
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    url: '/assess/assess/report/upload/detail/' + assessId + '/' + empId2 + '/' + empName2,
+    method: 'post'
+  })
+}
+
+// 判断评估师是外院还是内院
+export function getOutIn(params) {
+  return request({
+    url: '/assess/assess/table/judgeemp',
+    method: 'get',
+    params
+  })
+}
+
+// 外院评估师列表
+export function getOutList(params) {
+  return request({
+    url: '/assess/assess/emp/match/list',
+    method: 'get',
+    params
+  })
+}
+
+// 评估申请下载模板
+export function getShenDownload(data) {
+  return request({
+    url: '/assess/apply/download/template',
+    method: 'post',
+    responseType: 'arraybuffer'
+  })
+}

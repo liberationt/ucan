@@ -32,7 +32,7 @@
                 </el-form-item>
               </el-col>
               <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                <el-form-item :label="isEditForm ? '身份证号' : '身份证号'" prop="idCard">
+                <el-form-item :label="isEditForm ? '身份证号' : '身份证号：'" prop="idCard">
                   <el-input
                     v-if="this.isEditForm"
                     v-model="form.idCard"
@@ -46,12 +46,13 @@
                 </el-form-item>
               </el-col>
               <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                <el-form-item :label="isEditForm ? '性别' : '性别：'" prop="sex">
+                <el-form-item :label="isEditForm ? '性别' : '性别：'">
                   <el-select
                     v-if="isEditForm"
                     v-model="form.sex"
                     placeholder="请选择性别"
                     filterable
+                    disabled
                     clearable
                     style="width:100%;"
                     @keyup.enter.native="editContent('form_base')"
@@ -147,7 +148,7 @@
                 </el-form-item>
               </el-col>
               <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                <el-form-item :label="isEditForm? '曾从事职业': '曾从事职业：'" prop="age">
+                <el-form-item :label="isEditForm? '曾从事职业': '曾从事职业：'" prop="jobDes">
                   <el-input
                     v-if="isEditForm"
                     v-model="form.jobDes"
@@ -323,39 +324,6 @@
               </el-col>
             </el-row>
             <el-row :gutter="0">
-              <el-col v-if="form.isAgents === '1'" :md="adaptiveGrid_plus.md" :lg="adaptiveGrid_plus.lg">
-                <el-form-item
-                  :label="isEditForm ? '居住行政区划' : '居住行政区划：'"
-                  prop="agentsLiveArea"
-                >
-                  <Address
-                    v-if="isEditForm"
-                    :id-edit="idEdits"
-                    :area-code="agentsAreaCode"
-                    :form-code="form.agentsLiveArea"
-                    :width="'100%'"
-                    @getAreaCode="getAreaCode_agentsLive"
-                    @keyup.enter.native="editContent"
-                  />
-                  <span v-else>{{ form.agentsLiveAreaCodeLevelName }}</span>
-                </el-form-item>
-              </el-col>
-              <el-col v-if="form.isAgents === '1'" :md="adaptiveGrid_plus.md" :lg="adaptiveGrid_plus.lg">
-                <el-form-item
-                  :label="isEditForm ? '居住详细地址' : '居住详细地址：'"
-                  prop="agentsLiveAddr"
-                >
-                  <el-input
-                    v-if="isEditForm"
-                    v-model="form.agentsLiveAddr"
-                    :disabled="disabled"
-                    clearable
-                    placeholder="请输入居住详细地址"
-                    @keyup.enter.native="editContent"
-                  />
-                  <span v-else>{{ form.agentsLiveAddr }}</span>
-                </el-form-item>
-              </el-col>
               <el-col v-if="form.isAgents === '1'" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
                 <el-form-item :label="isEditForm ? '代理人姓名' : '代理人姓名：'" prop="agentsName">
                   <el-input
@@ -378,6 +346,39 @@
                     style="width:100%;"
                   />
                   <span v-else>{{ form.agentsRelation }}</span>
+                </el-form-item>
+              </el-col>
+              <el-col v-if="form.isAgents === '1'" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                <el-form-item
+                  :label="isEditForm ? '居住行政区划' : '居住行政区划：'"
+                  prop="agentsLiveArea"
+                >
+                  <Address
+                    v-if="isEditForm"
+                    :id-edit="idEdits"
+                    :area-code="agentsAreaCode"
+                    :form-code="form.agentsLiveArea"
+                    :width="'100%'"
+                    @getAreaCode="getAreaCode_agentsLive"
+                    @keyup.enter.native="editContent"
+                  />
+                  <span v-else>{{ form.agentsLiveAreaCodeLevelName }}</span>
+                </el-form-item>
+              </el-col>
+              <el-col v-if="form.isAgents === '1'" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                <el-form-item
+                  :label="isEditForm ? '居住详细地址' : '居住详细地址：'"
+                  prop="agentsLiveAddr"
+                >
+                  <el-input
+                    v-if="isEditForm"
+                    v-model="form.agentsLiveAddr"
+                    :disabled="disabled"
+                    clearable
+                    placeholder="请输入居住详细地址"
+                    @keyup.enter.native="editContent"
+                  />
+                  <span v-else>{{ form.agentsLiveAddr }}</span>
                 </el-form-item>
               </el-col>
               <el-col v-if="form.isAgents === '1'" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
@@ -432,15 +433,15 @@
             </template>
             <el-row :gutter="0">
               <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                <el-form-item :label="isEditForm ? '上次评估日期' : '上次评估日期：'">
+                <el-form-item :label="isEditForm ? '评估编号' : '评估编号：'">
                   <el-input
                     v-if="isEditForm"
-                    v-model="lastDetail.assessCompleteDate"
+                    v-model="lastDetail.assessNo"
                     disabled
                     clearable
-                    placeholder="请输入上次评估日期"
+                    placeholder="请输入评估编号"
                   />
-                  <span v-else>{{ lastDetail.assessCompleteDate }}</span>
+                  <span v-else>{{ lastDetail.assessNo }}</span>
                 </el-form-item>
               </el-col>
               <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
@@ -468,13 +469,25 @@
                 </el-form-item>
               </el-col>
               <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                <el-form-item :label="isEditForm ? '评估完成日期' : '评估完成日期：'">
+                  <el-input
+                    v-if="isEditForm"
+                    v-model="lastDetail.assessCompleteDate"
+                    disabled
+                    clearable
+                    placeholder="请输入评估完成日期"
+                  />
+                  <span v-else>{{ lastDetail.assessCompleteDate }}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
                 <el-form-item :label="isEditForm ? '评估师1' : '评估师1：'">
                   <el-input
                     v-if="isEditForm"
                     v-model="lastDetail.orderTakingAssessName1"
                     disabled
                     clearable
-                    placeholder="请输入评估师1"
+                    placeholder="请输入本院评估师"
                     @keyup.enter.native="editContent('form_base')"
                   />
                   <span v-else>{{ lastDetail.orderTakingAssessName1 }}</span>
@@ -561,43 +574,6 @@
                 </el-form-item>
               </el-col>
               <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                <el-form-item :label="isEditForm ? '评估费用承担' : '评估费用承担：'" prop="costBearingCode">
-                  <el-select
-                    v-if="isEditForm"
-                    v-model="form.costBearingCode"
-                    placeholder="请选择评估费用承担"
-                    filterable
-                    clearable
-                    style="width:100%;"
-                    @keyup.enter.native="editContent('form_base')"
-                  >
-                    <el-option
-                      v-for="item in evaluationCostCommitment"
-                      :key="item.dictValue"
-                      :label="item.dictLabel"
-                      :value="item.dictValue"
-                    />
-                  </el-select>
-                  <span v-else>{{ form.costBearingCodeName }}</span>
-                </el-form-item>
-              </el-col>
-              <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                <el-form-item :label="isEditForm ? '预约评估日期' : '预约评估日期：'" prop="appointmentData">
-                  <el-date-picker
-                    v-if="isEditForm"
-                    v-model="form.appointmentData"
-                    type="date"
-                    format="yyyy年MM月dd日"
-                    value-format="yyyy-MM-dd"
-                    placeholder="请选择预约评估日期"
-                    :picker-options="pickerOptions"
-                    style="width:100%;"
-                    @keyup.enter.native="editContent"
-                  />
-                  <span v-else>{{ form.appointmentData }}</span>
-                </el-form-item>
-              </el-col>
-              <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
                 <el-form-item :label="isEditForm ? '评估地点' : '评估地点：'" prop="assessAddrCode">
                   <el-select
                     v-if="isEditForm"
@@ -618,73 +594,113 @@
                   <span v-else>{{ form.assessAddrCodeName }}</span>
                 </el-form-item>
               </el-col>
-              <el-col :md="adaptiveGrid_plus.md" :lg="adaptiveGrid_plus.lg">
-                <el-form-item
-                  :label="isEditForm ? '所属区划' : '所属区划：'"
-                  prop="assessAreaCode"
-                >
-                  <Address
-                    v-if="isEditForm"
-                    :id-edit="idSbEdit"
-                    :area-code="areaCodeBase"
-                    :form-code="form.assessAreaCode"
-                    :width="'100%'"
-                    :disabled="disabledAdd"
-                    @getAreaCode="getAreaCodeBase_reg"
-                    @keyup.enter.native="editContent"
-                  />
-                  <span v-else>{{ form.assessAreaCodeLevelName }}</span>
-                </el-form-item>
-              </el-col>
-              <el-col :md="adaptiveGrid_plus.md" :lg="adaptiveGrid_plus.lg">
-                <el-form-item
-                  :label="isEditForm ? '评估地址' : '评估地址：'"
-                  prop="assessAddr"
-                >
+              <el-col v-if="isOther" :md="adaptiveGrid_plus.md" :lg="adaptiveGrid_plus.lg">
+                <el-form-item :label="isEditForm ? '评估地址' : '评估地址：'" prop="forOtherAddr">
                   <el-input
                     v-if="isEditForm"
-                    v-model="form.assessAddr"
+                    v-model="form.forOtherAddr"
                     clearable
+                    maxlength="50"
                     placeholder="请输入评估地址"
-                    :disabled="disabledAdd"
                     @keyup.enter.native="editContent"
                   />
-                  <span v-else>{{ form.assessAddr }}</span>
+                  <span v-else>{{ form.forOtherAddr }}</span>
                 </el-form-item>
               </el-col>
+              <!--              <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">-->
+              <!--                <el-form-item :label="isEditForm ? '评估费用承担' : '评估费用承担：'" prop="costBearingCode">-->
+              <!--                  <el-select-->
+              <!--                    v-if="isEditForm"-->
+              <!--                    v-model="form.costBearingCode"-->
+              <!--                    placeholder="请选择评估费用承担"-->
+              <!--                    filterable-->
+              <!--                    clearable-->
+              <!--                    style="width:100%;"-->
+              <!--                    @keyup.enter.native="editContent('form_base')"-->
+              <!--                  >-->
+              <!--                    <el-option-->
+              <!--                      v-for="item in evaluationCostCommitment"-->
+              <!--                      :key="item.dictValue"-->
+              <!--                      :label="item.dictLabel"-->
+              <!--                      :value="item.dictValue"-->
+              <!--                    />-->
+              <!--                  </el-select>-->
+              <!--                  <span v-else>{{ form.costBearingCodeName }}</span>-->
+              <!--                </el-form-item>-->
+              <!--              </el-col>-->
               <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                <el-form-item :label="isEditForm ? '评估联络人' : '评估联络人：'" prop="assessLinkman">
-                  <el-input
+                <el-form-item :label="isEditForm ? '预约评估日期' : '预约评估日期：'" prop="appointmentData">
+                  <el-date-picker
                     v-if="isEditForm"
-                    v-model="form.assessLinkman"
-                    clearable
-                    placeholder="请输入评估联络人"
+                    v-model="form.appointmentData"
+                    type="date"
+                    format="yyyy年MM月dd日"
+                    value-format="yyyy-MM-dd"
+                    placeholder="请选择预约评估日期"
+                    :picker-options="pickerOptions"
+                    style="width:100%;"
                     @keyup.enter.native="editContent"
                   />
-                  <span v-else>{{ form.assessLinkman }}</span>
+                  <span v-else>{{ form.appointmentData }}</span>
                 </el-form-item>
               </el-col>
+
+              <!--              <el-col :md="adaptiveGrid_plus.md" :lg="adaptiveGrid_plus.lg">-->
+              <!--                <el-form-item-->
+              <!--                  :label="isEditForm ? '所属区划' : '所属区划：'"-->
+              <!--                  prop="assessAreaCode"-->
+              <!--                >-->
+              <!--                  <Address-->
+              <!--                    v-if="isEditForm"-->
+              <!--                    :id-edit="idSbEdit"-->
+              <!--                    :area-code="areaCodeBase"-->
+              <!--                    :form-code="form.assessAreaCode"-->
+              <!--                    :width="'100%'"-->
+              <!--                    :disabled="disabledAdd"-->
+              <!--                    @getAreaCode="getAreaCodeBase_reg"-->
+              <!--                    @keyup.enter.native="editContent"-->
+              <!--                  />-->
+              <!--                  <span v-else>{{ form.assessAreaCodeLevelName }}</span>-->
+              <!--                </el-form-item>-->
+              <!--              </el-col>-->
+              <!--              <el-col :md="adaptiveGrid_plus.md" :lg="adaptiveGrid_plus.lg">-->
+              <!--                <el-form-item-->
+              <!--                  :label="isEditForm ? '评估地址' : '评估地址：'"-->
+              <!--                  prop="assessAddr"-->
+              <!--                >-->
+              <!--                  <el-input-->
+              <!--                    v-if="isEditForm"-->
+              <!--                    v-model="form.assessAddr"-->
+              <!--                    clearable-->
+              <!--                    placeholder="请输入评估地址"-->
+              <!--                    :disabled="disabledAdd"-->
+              <!--                    @keyup.enter.native="editContent"-->
+              <!--                  />-->
+              <!--                  <span v-else>{{ form.assessAddr }}</span>-->
+              <!--                </el-form-item>-->
+              <!--              </el-col>-->
+              <!--              <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">-->
+              <!--                <el-form-item :label="isEditForm ? '评估联络人' : '评估联络人：'" prop="assessLinkman">-->
+              <!--                  <el-input-->
+              <!--                    v-if="isEditForm"-->
+              <!--                    v-model="form.assessLinkman"-->
+              <!--                    clearable-->
+              <!--                    placeholder="请输入评估联络人"-->
+              <!--                    @keyup.enter.native="editContent"-->
+              <!--                  />-->
+              <!--                  <span v-else>{{ form.assessLinkman }}</span>-->
+              <!--                </el-form-item>-->
+              <!--              </el-col>-->
               <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                <el-form-item :label="isEditForm ? '联系电话' : '联系电话：'" prop="assessLinkmanPhone">
-                  <el-input
-                    v-if="isEditForm"
-                    v-model="form.assessLinkmanPhone"
-                    clearable
-                    placeholder="请输入联系电话"
-                    @keyup.enter.native="editContent"
-                  />
-                  <span v-else>{{ form.assessLinkmanPhone }}</span>
-                </el-form-item>
-              </el-col>
-              <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                <el-form-item :label="isEditForm ? '本院评估师' : '评估师1：'" prop="ourAssessEmpId">
+                <el-form-item :label="isEditForm ? '评估师1' : '评估师1：'" prop="ourAssessEmpId">
                   <el-select
                     v-if="isEditForm"
                     v-model="form.ourAssessEmpId"
-                    placeholder="请选择本院评估师"
+                    placeholder="请选择评估师1"
                     filterable
                     clearable
                     style="width:100%;"
+                    @change="changeMobile"
                     @keyup.enter.native="editContent('form_base')"
                   >
                     <el-option
@@ -692,46 +708,101 @@
                       :key="item.id"
                       :label="item.fullName"
                       :value="item.id"
+                      :disabled="item.disabled"
                     />
                   </el-select>
                   <span v-else>{{ form.ourAssessEmpName }}</span>
                 </el-form-item>
               </el-col>
-              <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg" v-if="!isEditForm && (assessStatusName === '已取消' || assessStatusName === '已完成' || assessStatusName === '已开始' || assessStatusName === '未开始' || assessStatusName === '待复审')">
-                <el-form-item label="评估师2：">
-                  <span>{{ orderTakingAssessName2 }}</span>
+              <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                <el-form-item :label="isEditForm ? '手机号码' : '手机号码：'" prop="orderTakingAssessMobile1">
+                  <el-input
+                    v-if="isEditForm"
+                    v-model="form.orderTakingAssessMobile1"
+                    disabled
+                    clearable
+                    placeholder="系统自动获取"
+                    @keyup.enter.native="editContent"
+                  />
+                  <span v-else>{{ form.orderTakingAssessMobile1 }}</span>
                 </el-form-item>
               </el-col>
-              <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg" v-if="!isEditForm && (assessStatusName === '待支付' || assessStatusName === '待接单' || assessStatusName === '已取消' || assessStatusName === '已完成' || assessStatusName === '已开始' || assessStatusName === '未开始' || assessStatusName === '待复审')">
-                <el-form-item label="申请状态：">
+              <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                <el-form-item :label="isEditForm ? '评估师2' : '评估师2：'" prop="orderTakingAssessId2">
+                  <el-select
+                    v-if="isEditForm"
+                    v-model="form.orderTakingAssessId2"
+                    placeholder="请选择评估师2"
+                    filterable
+                    clearable
+                    style="width:100%;"
+                    @change="changeMobile2"
+                    @keyup.enter.native="editContent('form_base')"
+                  >
+                    <el-option
+                      v-for="item in ourAssessEmpList2"
+                      :key="item.id"
+                      :label="item.fullName"
+                      :value="item.id"
+                      :disabled="item.disabled"
+                    />
+                  </el-select>
+                  <span v-else>{{ form.orderTakingAssessName2 }}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                <el-form-item :label="isEditForm ? '手机号码' : '手机号码：'" prop="orderTakingAssessMobile2">
+                  <el-input
+                    v-if="isEditForm"
+                    v-model="form.orderTakingAssessMobile2"
+                    disabled
+                    clearable
+                    placeholder="系统自动获取"
+                    @keyup.enter.native="editContent"
+                  />
+                  <span v-else>{{ form.orderTakingAssessMobile2 }}</span>
+                </el-form-item>
+              </el-col>
+              <!--              <el-col v-if="!isEditForm && (assessStatusName === '评估中' || assessStatusName === '待终评' || assessStatusName === '已完成')" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">-->
+              <!--                <el-form-item label="外院评估师：">-->
+              <!--                  <span>{{ orderTakingAssessName2 }}</span>-->
+              <!--                </el-form-item>-->
+              <!--              </el-col>-->
+              <!--              <el-col v-if="!isEditForm && (assessStatusName === '评估中' || assessStatusName === '待终评' || assessStatusName === '已完成')" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">-->
+              <!--                <el-form-item label="手机号码：">-->
+              <!--                  <span>{{ orderTakingAssessMobile2 }}</span>-->
+              <!--                </el-form-item>-->
+              <!--              </el-col>-->
+              <el-col v-if="!isEditForm" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                <el-form-item label="评估状态：">
                   <span>{{ assessStatusName }}</span>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
-              <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg" v-if="!isEditForm && (assessStatusName === '待支付' || assessStatusName === '待接单' || assessStatusName === '已取消'|| assessStatusName === '已完成' || assessStatusName === '已开始' || assessStatusName === '未开始' || assessStatusName === '待复审')">
-                <el-form-item label="申请创建时间：">
+              <el-col v-if="!isEditForm && (assessStatusName === '评估中' || assessStatusName === '待终评' || assessStatusName === '待评估'|| assessStatusName === '已完成' || assessStatusName === '已取消')" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                <el-form-item label="申请时间：">
                   <span>{{ createTime }}</span>
                 </el-form-item>
               </el-col>
-              <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg" v-if="!isEditForm && (assessStatusName === '待接单' || assessStatusName === '已取消' || assessStatusName === '已完成' || assessStatusName === '已开始' || assessStatusName === '未开始' || assessStatusName === '待复审')">
-                <el-form-item label="支付时间：">
-                  <span>{{ paymentTime }}</span>
+              <el-col v-if="!isEditForm && (assessStatusName === '待终评' || assessStatusName === '已完成')" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                <el-form-item label="完成时间：">
+                  <span>{{ assessCompleteDate }}</span>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
-              <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg" v-if="!isEditForm && assessStatusName === '已取消'">
+              <el-col v-if="!isEditForm && assessStatusName === '已取消'" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
                 <el-form-item label="取消账号：">
                   <span>{{ updateBy }}</span>
                 </el-form-item>
               </el-col>
-              <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg" v-if="!isEditForm && assessStatusName === '已取消'">
+              <el-col v-if="!isEditForm && assessStatusName === '已取消'" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
                 <el-form-item label="取消时间：">
                   <span>{{ updateTime }}</span>
                 </el-form-item>
               </el-col>
-              <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg" v-if="!isEditForm && assessStatusName === '已取消'">
+              <el-col v-if="!isEditForm && assessStatusName === '已取消'" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
                 <el-form-item label="取消原因：">
                   <span>{{ remark }}</span>
                 </el-form-item>
@@ -742,8 +813,12 @@
       </el-form>
       <el-footer>
         <div v-if="isEditForm" class="footerBtn">
-          <el-button type="primary" class="base-btn btnMarginLeft15" @click="editContent('form_base')">确定</el-button>
+          <el-button type="primary" class="base-btn btnMarginLeft15" @click="editContent('form_base', 'has_not_started')">提交</el-button>
+          <el-button type="primary" class="base-btn btnMarginLeft15" @click="editContent('form_base', 'to_submit')">保存</el-button>
           <el-button class="mr" @click="cancelDetailsPage">取消</el-button>
+        </div>
+        <div v-if="modelType=='look'" class="footerBtn">
+          <el-button @click="returnGo">返回</el-button>
         </div>
       </el-footer>
     </el-main>
@@ -758,7 +833,7 @@ import { allSelectdictionaryData } from '@/api/facilitiesConfig/pensionAgency'
 import { adaptiveGrid_max, adaptiveGrid_plus } from '@/common/index'
 import { computerAge, getBirthdayFromIdCard, getDate_YMD } from '@/utils/index'
 import { getAssessor } from '@/api/evaluationManagement/basicInformation'
-import { getOurHospList, addApply, getApplyDetail, editApply } from '@/api/esimate/esimate'
+import { getOurHospList, addApply, getApplyDetail, editApply, getEsTime } from '@/api/esimate/esimate'
 import { closeSelectedTag } from '@/utils/rooterJump'
 export default {
   name: 'EsimateApplyDetails',
@@ -797,7 +872,12 @@ export default {
       pickerOptions: {
         disabledDate(time) {
           const date = time.getTime() + 3600 * 1000 * 24
-          return date < Date.now()
+          const dateVal = time.getTime() - 3600 * 1000 * 24 * 0
+          if (date < Date.now()) {
+            return true
+          } else if (Date.now() < dateVal) {
+            return true
+          }
         }
       },
       activeTabs: 'base',
@@ -845,23 +925,47 @@ export default {
         assessType: 'first_evaluation',
         orgId: '',
         orgName: '',
+        forOtherAddr: '',
         occupancyCode: '', // 入住情况
-        costBearingCode: '', // 评估费用承担
+        // costBearingCode: '', // 评估费用承担
         appointmentData: '', // 预约评估日期
         assessAddrCode: '', // 评估地点
         assessAreaCode: '', // 所属区划
-        assessAddr: '', // 评估地址
+        // assessAddr: '', // 评估地址
         assessLinkman: '', // 评估联络人
-        assessLinkmanPhone: '', // 联系电话
-        ourAssessEmpId: '' // 本院评估师ID
+        orderTakingAssessMobile1: '', // 联系电话
+        orderTakingAssessMobile2: '',
+        ourAssessEmpId: '', // 本院评估师ID
+        orderTakingAssessId2: ''
       },
       rulesForm: {
+        maritalStatus: [
+          { required: true, trigger: 'change', message: '请选择婚姻状况！' }
+        ],
+        hometown: [
+          { required: true, trigger: 'blur', message: '请填写籍贯！' }
+        ],
+        jobDes: [
+          { required: true, trigger: 'blur', message: '请填写曾从事职业！' }
+        ],
+        eduLevel: [
+          { required: true, trigger: 'change', message: '请选择文化程度！' }
+        ],
+        nation: [
+          { required: true, trigger: 'change', message: '请选择民族！' }
+        ],
+        socialSecurityArd: [
+          { required: true, trigger: 'blur', message: '请填写社保卡号！' }
+        ],
         fullName: [
           { required: true, trigger: 'blur', message: '请填写姓名！' },
           { trigger: 'blur', validator: verifyFullName }
         ],
         sex: [
           { required: true, trigger: 'change', message: '请选择性别！' }
+        ],
+        forOtherAddr: [
+          { required: true, trigger: 'blur', message: '请填写评估地址！' }
         ],
         idCard: [
           { required: true, trigger: 'MANUAL_TRIGGER', message: '请填写身份证！' },
@@ -910,9 +1014,9 @@ export default {
         occupancyCode: [
           { required: true, trigger: 'change', message: '请选择入住情况！' }
         ],
-        costBearingCode: [
-          { required: true, trigger: 'change', message: '请选择评估费用承担！' }
-        ],
+        // costBearingCode: [
+        //   { required: true, trigger: 'change', message: '请选择评估费用承担！' }
+        // ],
         appointmentData: [
           { required: true, trigger: 'change', message: '请选择预约评估日期！' }
         ],
@@ -922,21 +1026,24 @@ export default {
         agentsRelation: [
           { required: true, trigger: 'blur', message: '请填写与申请人关系' }
         ],
-        assessAreaCode: [
-          { required: true, trigger: 'change', validator: verifyAreaCodeBase }
-        ],
-        assessAddr: [
-          { required: true, trigger: 'blur', message: '请填写评估地址！' }
-        ],
+        // assessAreaCode: [
+        //   { required: true, trigger: 'change', validator: verifyAreaCodeBase }
+        // ],
+        // assessAddr: [
+        //   { required: true, trigger: 'blur', message: '请填写评估地址！' }
+        // ],
         assessLinkman: [
           { required: true, trigger: 'blur', message: '请填写评估联络人！' }
         ],
         assessLinkmanPhone: [
-          { required: true, trigger: 'blur', message: '请填写联系电话！' },
-          { trigger: 'blur', validator: validatePhoneThere }
+          { required: true, trigger: 'blur', message: '请填写手机号码！' },
+          { trigger: 'blur', validator: verifyMobile }
         ],
         ourAssessEmpId: [
-          { required: true, trigger: 'change', message: '请选择本院评估师！' }
+          { required: true, trigger: 'change', message: '请选择评估师1！' }
+        ],
+        orderTakingAssessId2: [
+          { required: true, trigger: 'change', message: '请选择评估师2！' }
         ],
         agentsMobile: [
           { required: true, trigger: 'blur', message: '请填写代理人手机号码！' },
@@ -964,6 +1071,7 @@ export default {
       agentsAreaCode: [], // 代理人居住区划
       areaCodeBase: [], // 所属区划
       ourAssessEmpList: [], // 本院评估师列表
+      ourAssessEmpList2: [],
       lastMan: '',
       modelType: null,
       jgAreaCode: '',
@@ -974,15 +1082,40 @@ export default {
       agentsAreaCodeInfor: [],
       assessStatusName: '',
       orderTakingAssessName2: '',
+      orderTakingAssessMobile2: '',
       createTime: '',
-      paymentTime: '',
+      assessCompleteDate: '',
       remark: '',
       updateTime: '',
       updateBy: '',
-      isFirst: true
+      isFirst: true,
+      isOther: false
     }
   },
   watch: {
+    'form.ourAssessEmpId': {
+      handler(newName, oldName) {
+        this.ourAssessEmpList2.forEach((item, index) => {
+          if (this.form.ourAssessEmpId === item.id) {
+            this.ourAssessEmpList2[index].disabled = true
+          } else {
+            this.ourAssessEmpList2[index].disabled = false
+          }
+        })
+        console.log(this.ourAssessEmpList2)
+      }
+    },
+    'form.orderTakingAssessId2': {
+      handler(newName, oldName) {
+        this.ourAssessEmpList.forEach((item, index) => {
+          if (this.form.orderTakingAssessId2 === item.id) {
+            this.ourAssessEmpList[index].disabled = true
+          } else {
+            this.ourAssessEmpList[index].disabled = false
+          }
+        })
+      }
+    },
     'form.isAgents': {
       handler(newName, oldName) {
         this.idEdits = true
@@ -1003,37 +1136,39 @@ export default {
       }
     },
     'form.assessAddrCode': function(val, oldVal) {
-      if (val === 'other') {
-        if (this.isFirst === true) {
-          this.isFirst = false
-          return false
-        }
-        this.disabledAdd = false
-        this.form.assessAddr = ''
-        this.form.assessAreaCode = []
-        this.areaCodeBase = []
-        setTimeout(() => {
-          this.idSbEdit = !this.idSbEdit
-        })
-      } else {
-        this.disabledAdd = true
+      if (val === 'other_location') {
+        this.isOther = true
+        // if (this.isFirst === true) {
+        //   this.isFirst = false
+        //   return false
+        // }
+        // this.disabledAdd = false
         // this.form.assessAddr = ''
+        // this.form.assessAreaCode = []
         // this.areaCodeBase = []
-        if (val === 'old_man_s_home') {
-          this.form.assessAddr = this.form.liveAddr
-          this.form.assessAreaCode = JSON.parse(JSON.stringify(this.areaCode[1]))
-          this.areaCodeBase = JSON.parse(JSON.stringify(this.areaCode[1]))
-          setTimeout(() => {
-            this.idSbEdit = !this.idSbEdit
-          })
-        } else {
-          this.form.assessAddr = JSON.parse(JSON.stringify(this.jgAddress))
-          this.form.assessAreaCode = JSON.parse(JSON.stringify(this.jgAreaCode.split(',')))
-          this.areaCodeBase = JSON.parse(JSON.stringify(this.jgAreaCode.split(',')))
-          setTimeout(() => {
-            this.idSbEdit = !this.idSbEdit
-          })
-        }
+        // setTimeout(() => {
+        //   this.idSbEdit = !this.idSbEdit
+        // })
+      } else {
+        this.isOther = false
+        // this.disabledAdd = true
+        // // this.form.assessAddr = ''
+        // // this.areaCodeBase = []
+        // if (val === 'old_man_s_home') {
+        //   this.form.assessAddr = this.form.liveAddr
+        //   this.form.assessAreaCode = JSON.parse(JSON.stringify(this.areaCode[1]))
+        //   this.areaCodeBase = JSON.parse(JSON.stringify(this.areaCode[1]))
+        //   setTimeout(() => {
+        //     this.idSbEdit = !this.idSbEdit
+        //   })
+        // } else {
+        //   this.form.assessAddr = JSON.parse(JSON.stringify(this.jgAddress))
+        //   this.form.assessAreaCode = JSON.parse(JSON.stringify(this.jgAreaCode.split(',')))
+        //   this.areaCodeBase = JSON.parse(JSON.stringify(this.jgAreaCode.split(',')))
+        //   setTimeout(() => {
+        //     this.idSbEdit = !this.idSbEdit
+        //   })
+        // }
       }
     }
   },
@@ -1043,76 +1178,219 @@ export default {
     this.disabledAgain = !!this.$route.query.applyId
     const _userId_ = this.$route.params.id || ''
     this.getSelect()
-    if (this.modelType === 'look') {
-
-    } else {
+    if (this.modelType === 'look') {} else {
       this.isEditForm = true
     }
     this.allData(_userId_, this.modelType)
+    this.getEsTime()
   },
   methods: {
-    editContent(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          const params = _.cloneDeep(this.clearData(this.form))
-          params.objVo.censusArea = this.areaCode[0].length === 0 ? '' : this.areaCode[0][this.areaCode[0].length - 1] + ''
-          params.objVo.censusAreaCodeLevel = this.areaCode[0].join(',')
-          params.objVo.liveArea = this.areaCode[1].length === 0 ? '' : this.areaCode[1][this.areaCode[1].length - 1] + ''
-          params.objVo.liveAreaCodeLevel = this.areaCode[1].join(',')
-          params.objVo.agentsLiveArea = this.agentsAreaCode.length === 0 ? '' : this.agentsAreaCode[this.agentsAreaCode.length - 1] + ''
-          params.objVo.agentsLiveAreaCodeLevel = this.agentsAreaCode.join(',')
-          params.applyVo.assessAreaCode = this.areaCodeBase.length === 0 ? '' : this.areaCodeBase[this.areaCodeBase.length - 1] + ''
-          params.applyVo.assessAreaCodeLevel = this.areaCodeBase.join(',')
-          if (params.applyVo.ourAssessEmpId !== 0) {
-            this.ourAssessEmpList.forEach(item => {
-              if (item.id === params.applyVo.ourAssessEmpId) {
-                params.applyVo.ourAssessEmpName = item.fullName
+    getEsTime() {
+      getEsTime({
+        type3: '从提交评估时间计,超过'
+      }).then(res => {
+        if (res.code === 0) {
+          res.data.forEach(item => {
+            if (item.title === '从提交评估时间计,超过') {
+              this.pickerOptions = {
+                disabledDate(time) {
+                  const date = time.getTime() + 3600 * 1000 * 24
+                  const dateVal = time.getTime() - 3600 * 1000 * 24 * item.value1
+                  if (date < Date.now()) {
+                    return true
+                  } else if (Date.now() < dateVal) {
+                    return true
+                  }
+                }
               }
-            })
-          } else {
-            params.applyVo.ourAssessEmpId = ''
-          }
-          if (this.modelType === 'add') {
-            addApply(params).then(res => {
-              if (res.code === 0) {
-                this.$message({
-                  type: 'success',
-                  message: '新增评估申请保存成功!'
-                })
-                this.afterAdd()
-                // 关闭页面，跳转到列表
-                this.closeDetailsPage()
-              } else if (res.code === 1) {
-                this.$message.warning(res.msg)
-              } else {
-                this.$message.error(res.msg)
-              }
-            })
-          } else if (this.modelType === 'edit') {
-            if (this.$route.query.applyId) {
-              params.applyVo.bizAssessInfoId = this.$route.query.applyId
-            } else {
-              params.applyVo.id = this.form.applyId
+              console.log(this.pickerOptions)
             }
-            params.objVo.id = this.form.objId
-            params.applyVo.applyPersonId = this.form.applyPersonId
-            editApply(params).then(res => {
-              if (res.code === 0) {
-                this.$message({
-                  type: 'success',
-                  message: '编辑评估申请保存成功!'
-                })
-                // 关闭页面，跳转到列表
-                this.closeDetailsPage()
-              } else if (res.code === 1) {
-                this.$message.warning(res.msg)
-              } else {
-                this.$message.error(res.msg)
-              }
-            })
-          }
+          })
         }
       })
+    },
+    changeMobile(val) {
+      if (val !== '') {
+        this.ourAssessEmpList.forEach(item => {
+          if (val === item.id) {
+            this.form.orderTakingAssessMobile1 = item.mobile
+          }
+        })
+      } else {
+        this.form.orderTakingAssessMobile1 = ''
+      }
+    },
+    changeMobile2(val) {
+      if (val !== '') {
+        this.ourAssessEmpList2.forEach(item => {
+          if (val === item.id) {
+            this.form.orderTakingAssessMobile2 = item.mobile
+          }
+        })
+      } else {
+        this.form.orderTakingAssessMobile2 = ''
+      }
+    },
+    editContent(formName, type) {
+      if (type === 'to_submit') {
+        if (this.form.fullName === '') {
+          this.$message.warning('请填写姓名！')
+          return false
+        }
+        const params = _.cloneDeep(this.clearData(this.form))
+        params.applyVo.assessStatus = type
+        params.objVo.censusArea = this.areaCode[0].length === 0 ? '' : this.areaCode[0][this.areaCode[0].length - 1] + ''
+        params.objVo.censusAreaCodeLevel = this.areaCode[0] === '' ? '' : this.areaCode[0].join(',')
+        params.objVo.liveArea = this.areaCode[1].length === 0 ? '' : this.areaCode[1][this.areaCode[1].length - 1] + ''
+        params.objVo.liveAreaCodeLevel = this.areaCode[1] === '' ? '' : this.areaCode[1].join(',')
+        params.objVo.agentsLiveArea = this.agentsAreaCode.length === 0 ? '' : this.agentsAreaCode[this.agentsAreaCode.length - 1] + ''
+        params.objVo.agentsLiveAreaCodeLevel = this.agentsAreaCode.length === 0 ? '' : this.agentsAreaCode.join(',')
+        // params.applyVo.assessAreaCode = this.areaCodeBase.length === 0 ? '' : this.areaCodeBase[this.areaCodeBase.length - 1] + ''
+        params.applyVo.assessAreaCodeLevel = this.areaCodeBase.length === 0 ? '' : this.areaCodeBase.join(',')
+        if (params.applyVo.ourAssessEmpId !== 0) {
+          this.ourAssessEmpList.forEach(item => {
+            if (item.id === params.applyVo.ourAssessEmpId) {
+              params.applyVo.ourAssessEmpName = item.fullName
+            }
+          })
+        } else {
+          params.applyVo.ourAssessEmpId = ''
+        }
+        if (params.applyVo.orderTakingAssessId2 !== 0) {
+          this.ourAssessEmpList2.forEach(item => {
+            if (item.id === params.applyVo.orderTakingAssessId2) {
+              params.applyVo.orderTakingAssessName2 = item.fullName
+            }
+          })
+        } else {
+          params.applyVo.orderTakingAssessId2 = ''
+        }
+        if (this.modelType === 'add') {
+          addApply(params).then(res => {
+            if (res.code === 0) {
+              this.$message({
+                type: 'success',
+                message: '新增评估申请保存成功!'
+              })
+              this.afterAdd()
+              // 关闭页面，跳转到列表
+              this.closeDetailsPage()
+            } else if (res.code === 1) {
+              this.$message.warning(res.msg)
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+        } else if (this.modelType === 'edit') {
+          if (this.$route.query.applyId) {
+            params.applyVo.bizAssessInfoId = this.$route.query.applyId
+          } else {
+            params.applyVo.id = this.form.applyId
+            params.applyVo.bizAssessInfoId = this.form.bizAssessInfoId
+          }
+          params.objVo.id = this.form.objId
+          params.applyVo.applyPersonId = this.form.applyPersonId
+          editApply(params).then(res => {
+            if (res.code === 0) {
+              this.$message({
+                type: 'success',
+                message: '编辑评估申请保存成功!'
+              })
+              // 关闭页面，跳转到列表
+              this.closeDetailsPage()
+            } else if (res.code === 1) {
+              this.$message.warning(res.msg)
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+        }
+      } else {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            const params = _.cloneDeep(this.clearData(this.form))
+            params.applyVo.assessStatus = type
+            params.objVo.censusArea = this.areaCode[0].length === 0 ? '' : this.areaCode[0][this.areaCode[0].length - 1] + ''
+            params.objVo.censusAreaCodeLevel = this.areaCode[0].join(',')
+            params.objVo.liveArea = this.areaCode[1].length === 0 ? '' : this.areaCode[1][this.areaCode[1].length - 1] + ''
+            params.objVo.liveAreaCodeLevel = this.areaCode[1].join(',')
+            params.objVo.agentsLiveArea = this.agentsAreaCode.length === 0 ? '' : this.agentsAreaCode[this.agentsAreaCode.length - 1] + ''
+            params.objVo.agentsLiveAreaCodeLevel = this.agentsAreaCode.join(',')
+            // params.applyVo.assessAreaCode = this.areaCodeBase.length === 0 ? '' : this.areaCodeBase[this.areaCodeBase.length - 1] + ''
+            params.applyVo.assessAreaCodeLevel = this.areaCodeBase.join(',')
+            if (params.applyVo.ourAssessEmpId !== 0) {
+              this.ourAssessEmpList.forEach(item => {
+                if (item.id === params.applyVo.ourAssessEmpId) {
+                  params.applyVo.ourAssessEmpName = item.fullName
+                }
+              })
+            } else {
+              params.applyVo.ourAssessEmpId = ''
+            }
+            if (params.applyVo.orderTakingAssessId2 !== 0) {
+              this.ourAssessEmpList2.forEach(item => {
+                if (item.id === params.applyVo.orderTakingAssessId2) {
+                  params.applyVo.orderTakingAssessName2 = item.fullName
+                }
+              })
+            } else {
+              params.applyVo.orderTakingAssessId2 = ''
+            }
+            if (this.modelType === 'add') {
+              this.$confirm('提交信息后将不可编辑，确定提交评估申请吗？', '确认提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                addApply(params).then(res => {
+                  if (res.code === 0) {
+                    this.$message({
+                      type: 'success',
+                      message: '新增评估申请保存成功!'
+                    })
+                    this.afterAdd()
+                    // 关闭页面，跳转到列表
+                    this.closeDetailsPage()
+                  } else if (res.code === 1) {
+                    this.$message.warning(res.msg)
+                  } else {
+                    this.$message.error(res.msg)
+                  }
+                })
+              })
+            } else if (this.modelType === 'edit') {
+              this.$confirm('提交信息后将不可编辑，确定提交评估申请吗？', '确认提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                if (this.$route.query.applyId) {
+                  params.applyVo.bizAssessInfoId = this.$route.query.applyId
+                } else {
+                  params.applyVo.id = this.form.applyId
+                  params.applyVo.bizAssessInfoId = this.form.bizAssessInfoId
+                }
+                params.objVo.id = this.form.objId
+                params.applyVo.applyPersonId = this.form.applyPersonId
+                editApply(params).then(res => {
+                  if (res.code === 0) {
+                    this.$message({
+                      type: 'success',
+                      message: '编辑评估申请保存成功!'
+                    })
+                    // 关闭页面，跳转到列表
+                    this.closeDetailsPage()
+                  } else if (res.code === 1) {
+                    this.$message.warning(res.msg)
+                  } else {
+                    this.$message.error(res.msg)
+                  }
+                })
+              })
+            }
+          }
+        })
+      }
     },
     closeDetailsPage() {
       closeSelectedTag(this, this.$route)
@@ -1121,6 +1399,9 @@ export default {
       } else {
         this.$router.push('/evaluationManagement/esimateManage/esimateApply')
       }
+    },
+    returnGo() {
+      this.$router.go(-1)
     },
     cancelDetailsPage() {
       this.$confirm('该页面的信息尚未保存，确定要关闭页面吗', '提示', {
@@ -1249,14 +1530,20 @@ export default {
             bizAssessInfoId: this.$route.query.applyId
           }).then(res => {
             if (res.code === 0) {
-              if (res.data.list.length === 0 || res.data.list === null) {
-                const data = {}
-                data.id = 0
-                data.fullName = '无'
-                this.ourAssessEmpList.push(data)
-              } else {
-                this.ourAssessEmpList = res.data.list
-              }
+              const data = res.data.list
+              data.forEach((item, index) => {
+                data[index].disabled = false
+              })
+              this.ourAssessEmpList = _.cloneDeep(data)
+              this.ourAssessEmpList2 = _.cloneDeep(data)
+              // if (res.data.list.length === 0 || res.data.list === null) {
+              //   const data = {}
+              //   data.id = 0
+              //   data.fullName = '无'
+              //   this.ourAssessEmpList.push(data)
+              // } else {
+              //   this.ourAssessEmpList = res.data.list
+              // }
             }
             resolve()
           }).catch(() => {
@@ -1267,14 +1554,20 @@ export default {
             orgId: this.form.orgId
           }).then(res => {
             if (res.code === 0) {
-              if (res.data.list.length === 0 || res.data.list === null) {
-                const data = {}
-                data.id = 0
-                data.fullName = '无'
-                this.ourAssessEmpList.push(data)
-              } else {
-                this.ourAssessEmpList = res.data.list
-              }
+              const data = res.data.list
+              data.forEach((item, index) => {
+                data[index].disabled = false
+              })
+              this.ourAssessEmpList = _.cloneDeep(data)
+              this.ourAssessEmpList2 = _.cloneDeep(data)
+              // if (res.data.list.length === 0 || res.data.list === null) {
+              //   const data = {}
+              //   data.id = 0
+              //   data.fullName = '无'
+              //   this.ourAssessEmpList.push(data)
+              // } else {
+              //
+              // }
             }
             resolve()
           }).catch(() => {
@@ -1322,16 +1615,23 @@ export default {
       this.$refs['form_base'].validateField('idCard', (message) => {
         const valid = message === ''
         if (valid) {
-          const idCard = this.form.idCard
-          this.form.birthday = getBirthdayFromIdCard(idCard)
+          const UUserCard = this.form.idCard
+          this.form.birthday = getBirthdayFromIdCard(UUserCard)
+          UUserCard.substring(6, 10) + '-' + UUserCard.substring(10, 12) + '-' + UUserCard.substring(12, 14)
+          if (parseInt(UUserCard.substr(16, 1)) % 2 === 1) {
+            this.form.sex = '0'
+          } else {
+            this.form.sex = '1'
+          }
         } else {
           this.form.birthday = ''
+          this.form.sex = ''
         }
       })
     },
     relevance() {
       if (this.form.assessAddrCode === 'old_man_s_home') {
-        this.form.assessAreaCode = JSON.parse(JSON.stringify(this.areaCode[1]))
+        // this.form.assessAreaCode = JSON.parse(JSON.stringify(this.areaCode[1]))
         this.areaCodeBase = JSON.parse(JSON.stringify(this.areaCode[1]))
         setTimeout(() => {
           this.idSbEdit = !this.idSbEdit
@@ -1384,14 +1684,17 @@ export default {
       applyVo.orgId = data.orgId
       applyVo.orgName = data.orgName
       applyVo.occupancyCode = data.occupancyCode
-      applyVo.costBearingCode = data.costBearingCode
+      // applyVo.costBearingCode = data.costBearingCode
       applyVo.appointmentData = data.appointmentData
       applyVo.assessAddrCode = data.assessAddrCode
-      applyVo.assessAreaCode = data.assessAreaCode
-      applyVo.assessAddr = data.assessAddr
+      applyVo.forOtherAddr = data.assessAddrCode === 'other_location' ? data.forOtherAddr : ''
+      // applyVo.assessAreaCode = data.assessAreaCode
+      // applyVo.assessAddr = data.assessAddr
       applyVo.assessLinkman = data.assessLinkman
-      applyVo.assessLinkmanPhone = data.assessLinkmanPhone
+      applyVo.orderTakingAssessMobile1 = data.orderTakingAssessMobile1
+      applyVo.orderTakingAssessMobile2 = data.orderTakingAssessMobile2
       applyVo.ourAssessEmpId = data.ourAssessEmpId
+      applyVo.orderTakingAssessId2 = data.orderTakingAssessId2
       newData.applyVo = applyVo
       newData.objVo = objVo
 
@@ -1403,85 +1706,90 @@ export default {
         this.lastDetail = data.lastApplyInfo
         this.lastDetail.assessCompleteDate = getDate_YMD(this.lastDetail.assessCompleteDate)
       }
+      this.assessCompleteDate = data.applyVo.updateTime
       this.assessStatusName = data.applyVo.assessStatusName
       this.orderTakingAssessName2 = data.applyVo.orderTakingAssessName2
+      this.orderTakingAssessMobile2 = data.applyVo.orderTakingAssessMobile2
       this.remark = data.applyVo.remark
       this.updateTime = data.applyVo.updateTime
       this.createTime = data.applyVo.createTime
-      this.paymentTime = data.applyVo.paymentTime
       this.updateBy = data.applyVo.updateBy
-      this.form = {
-        objId: data.objVo.id,
-        fullName: data.objVo.fullName,
-        idCard: data.objVo.idCard,
-        sex: data.objVo.sex,
-        birthday: getDate_YMD(data.objVo.birthday),
-        age: data.objVo.age,
-        socialSecurityArd: data.objVo.socialSecurityArd,
-        nation: data.objVo.nation,
-        nationName: data.objVo.nationName,
-        eduLevel: data.objVo.eduLevel,
-        eduLevelName: data.objVo.eduLevelName,
-        hometown: data.objVo.hometown,
-        jobDes: data.objVo.jobDes,
-        maritalStatus: data.objVo.maritalStatus,
-        maritalStatusName: data.objVo.maritalStatusName,
-        censusAddr: data.objVo.censusAddr,
-        // censusArea: data.objVo.censusArea,
-        censusAreaLevelName: data.objVo.censusAreaLevelName,
-        liveAddr: data.objVo.liveAddr,
-        // liveArea: data.objVo.liveArea,
-        liveAreaLevelName: data.objVo.liveAreaLevelName,
-        homePhone: data.objVo.homePhone,
-        mobile: data.objVo.mobile,
-        placeResidence: data.objVo.placeResidence,
-        isAgents: data.objVo.isAgents,
-        agentsName: data.objVo.agentsName,
-        agentsRelation: data.objVo.agentsRelation,
-        // agentsLiveArea: data.objVo.agentsLiveArea,
-        agentsLiveAreaCodeLevelName: data.objVo.agentsLiveAreaCodeLevelName,
-        agentsLiveAddr: data.objVo.agentsLiveAddr,
-        agentsHomePhone: data.objVo.agentsHomePhone,
-        agentsMobile: data.objVo.agentsMobile,
-        agentsPlaceResidence: data.objVo.agentsPlaceResidence,
-        assessType: data.applyVo.assessType,
-        assessTypeName: data.applyVo.assessTypeName,
-        orgId: data.applyVo.orgId,
-        orgName: data.applyVo.orgName,
-        occupancyCode: data.applyVo.occupancyCode, // 入住情况
-        occupancyCodeName: data.applyVo.occupancyCodeName, // 入住情况
-        costBearingCode: data.applyVo.costBearingCode, // 评估费用承担
-        costBearingCodeName: data.applyVo.costBearingCodeName, // 评估费用承担
-        appointmentData: getDate_YMD(data.applyVo.appointmentData), // 预约评估日期
-        assessAddrCode: data.applyVo.assessAddrCode, // 评估地点
-        assessAddrCodeName: data.applyVo.assessAddrCodeName, // 评估地点
-        // assessAreaCode: data.applyVo.assessAreaCode, // 所属区划
-        assessAreaCodeLevelName: data.applyVo.assessAreaCodeLevelName,
-        applyId: data.applyVo.id,
-        applyPersonId: data.applyVo.applyPersonId,
-        assessAddr: data.applyVo.assessAddr, // 评估地址
-        assessLinkman: data.applyVo.assessLinkman, // 评估联络人
-        assessLinkmanPhone: data.applyVo.assessLinkmanPhone, // 联系电话
-        ourAssessEmpName: data.applyVo.ourAssessEmpName, // 本院评估师ID
-        censusArea: data.objVo.censusAreaCodeLevel.split(','),
-        liveArea: data.objVo.liveAreaCodeLevel.split(','),
-        agentsLiveArea: data.objVo.agentsLiveAreaCodeLevel.split(','),
-        assessAreaCode: data.applyVo.assessAreaCodeLevel.split(',')
-      }
-      if (this.$route.query.typeApply === 'review_assessment') {
+      this.form.bizAssessInfoId = data.applyVo.bizAssessInfoId
+      this.form.objId = data.objVo.id
+      this.form.fullName = data.objVo.fullName
+      this.form.idCard = data.objVo.idCard
+      this.form.sex = data.objVo.sex
+      this.form.birthday = getDate_YMD(data.objVo.birthday)
+      this.form.age = data.objVo.age
+      this.form.socialSecurityArd = data.objVo.socialSecurityArd
+      this.form.nation = data.objVo.nation
+      this.form.nationName = data.objVo.nationName
+      this.form.eduLevel = data.objVo.eduLevel
+      this.form.eduLevelName = data.objVo.eduLevelName
+      this.form.hometown = data.objVo.hometown
+      this.form.jobDes = data.objVo.jobDes
+      this.form.maritalStatus = data.objVo.maritalStatus
+      this.form.maritalStatusName = data.objVo.maritalStatusName
+      this.form.censusAddr = data.objVo.censusAddr
+      // censusArea: data.objVo.censusArea,
+      this.form.censusAreaLevelName = data.objVo.censusAreaLevelName
+      this.form.liveAddr = data.objVo.liveAddr
+      // liveArea: data.objVo.liveArea,
+      this.form.liveAreaLevelName = data.objVo.liveAreaLevelName
+      this.form.homePhone = data.objVo.homePhone
+      this.form.mobile = data.objVo.mobile
+      this.form.placeResidence = data.objVo.placeResidence
+      this.form.isAgents = data.objVo.isAgents
+      this.form.agentsName = data.objVo.agentsName
+      this.form.agentsRelation = data.objVo.agentsRelation
+      // agentsLiveArea: data.objVo.agentsLiveArea,
+      this.form.agentsLiveAreaCodeLevelName = data.objVo.agentsLiveAreaCodeLevelName
+      this.form.agentsLiveAddr = data.objVo.agentsLiveAddr
+      this.form.agentsHomePhone = data.objVo.agentsHomePhone
+      this.form.agentsMobile = data.objVo.agentsMobile
+      this.form.agentsPlaceResidence = data.objVo.agentsPlaceResidence
+      this.form.assessType = data.applyVo.assessType
+      this.form.assessTypeName = data.applyVo.assessTypeName
+      this.form.orgId = data.applyVo.orgId
+      this.form.orgName = data.applyVo.orgName
+      this.form.forOtherAddr = data.applyVo.forOtherAddr
+      this.form.occupancyCode = data.applyVo.occupancyCode // 入住情况
+      this.form.occupancyCodeName = data.applyVo.occupancyCodeName // 入住情况
+      // costBearingCode: data.applyVo.costBearingCode, // 评估费用承担
+      this.form.costBearingCodeName = data.applyVo.costBearingCodeName // 评估费用承担
+      this.form.appointmentData = this.$route.query.typeApply === 'review_assessment' || this.$route.query.typeApply === 'continuous_assessment' ? '' : getDate_YMD(data.applyVo.appointmentData) // 预约评估日期
+      this.form.assessAddrCode = this.$route.query.typeApply === 'review_assessment' || this.$route.query.typeApply === 'continuous_assessment' ? '' : data.applyVo.assessAddrCode // 评估地点
+      this.form.assessAddrCodeName = data.applyVo.assessAddrCodeName // 评估地点
+      // assessAreaCode: data.applyVo.assessAreaCode, // 所属区划
+      this.form.assessAreaCodeLevelName = data.applyVo.assessAreaCodeLevelName
+      this.form.applyId = data.applyVo.id
+      this.form.applyPersonId = data.applyVo.applyPersonId
+      // assessAddr: data.applyVo.assessAddr, // 评估地址
+      this.form.assessLinkman = data.applyVo.assessLinkman // 评估联络人
+      this.form.orderTakingAssessMobile1 = this.$route.query.typeApply === 'review_assessment' || this.$route.query.typeApply === 'continuous_assessment' ? '' : data.applyVo.orderTakingAssessMobile1 // 联系电话
+      this.form.orderTakingAssessMobile2 = this.$route.query.typeApply === 'review_assessment' || this.$route.query.typeApply === 'continuous_assessment' ? '' : data.applyVo.orderTakingAssessMobile2
+      this.form.ourAssessEmpName = data.applyVo.ourAssessEmpName // 本院评估师ID
+      this.form.orderTakingAssessName2 = data.applyVo.orderTakingAssessName2
+      this.form.censusArea = data.objVo.censusAreaCodeLevel && data.objVo.censusAreaCodeLevel !== null ? data.objVo.censusAreaCodeLevel.split(',') : this.form.censusArea
+      this.form.liveArea = data.objVo.liveAreaCodeLevel && data.objVo.liveAreaCodeLevel !== null ? data.objVo.liveAreaCodeLevel.split(',') : this.form.liveArea
+      this.form.agentsLiveArea = data.objVo.agentsLiveAreaCodeLevel && data.objVo.agentsLiveAreaCodeLevel !== null ? data.objVo.agentsLiveAreaCodeLevel.split(',') : this.form.agentsLiveArea
+      // assessAreaCode: data.applyVo.assessAreaCodeLevel.split(',')
+      if (this.$route.query.typeApply === 'review_assessment' || this.$route.query.typeApply === 'continuous_assessment') {
         this.form.ourAssessEmpId = ''
+        this.form.orderTakingAssessId2 = ''
       } else {
-        this.form.ourAssessEmpId = data.applyVo.ourAssessEmpId === '' ? 0 : data.applyVo.ourAssessEmpId // 本院评估师ID
+        this.form.ourAssessEmpId = data.applyVo.ourAssessEmpId === '' || data.applyVo.ourAssessEmpId === null ? '' : data.applyVo.ourAssessEmpId // 本院评估师ID
+        this.form.orderTakingAssessId2 = data.applyVo.orderTakingAssessId2 === '' || data.applyVo.orderTakingAssessId2 === null ? '' : data.applyVo.orderTakingAssessId2
       }
-      this.areaCode[0] = data.objVo.censusAreaCodeLevel.split(',')
-      this.areaCode[1] = data.objVo.liveAreaCodeLevel.split(',')
-      this.agentsAreaCode = data.objVo.agentsLiveAreaCodeLevel.split(',')
-      this.areaCodeBase = data.applyVo.assessAreaCodeLevel.split(',')
+      this.areaCode[0] = data.objVo.censusAreaCodeLevel && data.objVo.censusAreaCodeLevel !== null ? data.objVo.censusAreaCodeLevel.split(',') : this.areaCode[0]
+      this.areaCode[1] = data.objVo.liveAreaCodeLevel && data.objVo.liveAreaCodeLevel !== null ? data.objVo.liveAreaCodeLevel.split(',') : this.areaCode[1]
+      this.agentsAreaCode = data.objVo.agentsLiveAreaCodeLevel && data.objVo.agentsLiveAreaCodeLevel !== null ? data.objVo.agentsLiveAreaCodeLevel.split(',') : this.agentsAreaCode
+      this.areaCodeBase = data.applyVo.assessAreaCodeLevel && data.applyVo.assessAreaCodeLevel !== null ? data.applyVo.assessAreaCodeLevel.split(',') : this.areaCodeBase
       if (this.$route.query.applyId) {
         this.form.occupancyCode = 'checked_in'
       }
-      this.agentsLiveAreaInfor = data.objVo.agentsLiveAreaCodeLevel.split(',')
-      this.agentsAreaCodeInfor = data.objVo.agentsLiveAreaCodeLevel.split(',')
+      this.agentsLiveAreaInfor = data.objVo.agentsLiveAreaCodeLevel && data.objVo.agentsLiveAreaCodeLevel !== null ? data.objVo.agentsLiveAreaCodeLevel.split(',') : this.agentsLiveAreaInfor
+      this.agentsAreaCodeInfor = data.objVo.agentsLiveAreaCodeLevel && data.objVo.agentsLiveAreaCodeLevel !== null ? data.objVo.agentsLiveAreaCodeLevel.split(',') : this.agentsAreaCodeInfor
       setTimeout(() => {
         this.idEdit = false
         this.idEdits = !this.idEdits
@@ -1529,15 +1837,18 @@ export default {
         assessType: 'first_evaluation',
         orgId: '',
         orgName: '',
+        forOtherAddr: '',
         occupancyCode: '', // 入住情况
-        costBearingCode: '', // 评估费用承担
+        // costBearingCode: '', // 评估费用承担
         appointmentData: '', // 预约评估日期
         assessAddrCode: '', // 评估地点
-        assessAreaCode: '', // 所属区划
-        assessAddr: '', // 评估地址
+        // assessAreaCode: '', // 所属区划
+        // assessAddr: '', // 评估地址
         assessLinkman: '', // 评估联络人
-        assessLinkmanPhone: '', // 联系电话
-        ourAssessEmpId: '' // 本院评估师ID
+        orderTakingAssessMobile1: '', // 联系电话
+        orderTakingAssessMobile2: '',
+        ourAssessEmpId: '', // 本院评估师ID
+        orderTakingAssessId2: ''
       }
       this.areaCode = [[], []] // 区域行政的全部ID
       this.agentsAreaCode = [] // 代理人居住区划
@@ -1550,7 +1861,7 @@ export default {
     },
     changeIt(val) {
       if (this.form.assessAddrCode === 'old_man_s_home') {
-        this.form.assessAddr = val
+        // this.form.assessAddr = val
       }
     }
   }

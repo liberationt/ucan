@@ -78,3 +78,11 @@ export function getPassWord(params) {
     params
   })
 }
+
+//通过username获取机构的信息
+export function getOrgInfo() {
+  return request({
+    url:'biz/use/org',
+    method:'get'
+  })
+}

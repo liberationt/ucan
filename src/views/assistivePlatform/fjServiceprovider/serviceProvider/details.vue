@@ -81,10 +81,11 @@
 													:form-imgs="form.imageInfoVos"></Uploadpics>
 											</div>
 											<el-row v-else class="agencyImageRow">
-												<el-col class="agencyImageCol"
-												        v-for="(item,index) in imageInfoVosLookUrl" :key="index">
-													<img :src="item" class="agencyImage"/>
-												</el-col>
+                        <viewer :images="imageInfoVosLookUrl">
+                          <el-col v-for="(item, index) in imageInfoVosLookUrl" :key="index" class="agencyImageCol" style="cursor: pointer">
+                            <img :src="item" class="agencyImage">
+                          </el-col>
+                        </viewer>
 											</el-row>
 										</el-form-item>
 									</el-col>

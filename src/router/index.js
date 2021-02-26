@@ -412,6 +412,14 @@ export const asyncRoutes = [
         name: 'pensionInfo',
         meta: { title: '居家养老服务管理' },
         hidden: true
+      },
+      {
+        path: '/personnelSubsidy/details/:id',
+        component: () =>
+					import ('@/views/streetPlatform/subsidyConfig/personnelSubsidy/details'),
+        name: 'personnelSubsidy',
+        meta: { title: '补贴信息管理' },
+        hidden: true
       }
     ]
   },
@@ -526,17 +534,17 @@ export const asyncRoutes = [
         meta: { title: '社区卫生服务设施' },
         hidden: true
       },
-      //村民互助点  -2021
-      //社区养老服务站  -2022
-      //养老服务指导中心 -2023
-      //池州日间照护机构 -2010_chizhou
-      //综合为老服务中心 -2011_chizhou
+      // 村民互助点  -2021
+      // 社区养老服务站  -2022
+      // 养老服务指导中心 -2023
+      // 池州日间照护机构 -2010_chizhou
+      // 综合为老服务中心 -2011_chizhou
       {
         path: '/communityFacilities/chiZhouService/:id',
-        component: () => 
+        component: () =>
           import ('@/views/streetPlatform/facilitiesConfig/communityFacilities/chiZhouService'),
-        name:'chiZhouService',
-        meta: { title: '村民互助点'},
+        name: 'chiZhouService',
+        meta: { title: '村民互助点' },
         hidden: true
       },
 
@@ -744,6 +752,22 @@ export const asyncRoutes = [
 					import('@/views/streetPlatform/inteligentDeviceConfig/pos/details'),
         name: 'posDetails',
         meta: { title: 'POS机详情' },
+        hidden: true
+      },
+      {
+        path: '/equipment/details',
+        component: () =>
+          import('@/views/streetPlatform/inteligentDeviceConfig/equipment/details'),
+        name: 'addEquipment',
+        meta: { title: '新增设备' },
+        hidden: true
+      },
+      {
+        path: '/equipment/details/:id',
+        component: () =>
+          import('@/views/streetPlatform/inteligentDeviceConfig/equipment/details'),
+        name: 'equipmentDetails',
+        meta: { title: '设备详情' },
         hidden: true
       }
     ]
@@ -1112,6 +1136,136 @@ export const asyncRoutes = [
         hidden: true
       }
     ]
+  },
+  {
+    path: '/serverManagement',
+    component: () => import ('@/layout'),
+    meta: {
+      title: '服务商管理',
+      icon: 'settings'
+    },
+    children: [
+      {
+        path: '/projectManagement/serveProject/details',
+        component: () =>
+					import ('@/views/serverManagement/projectManagement/serveProject/details'),
+        name: 'serveProject',
+        meta: { title: '服务项目' },
+        hidden: true
+      },
+      {
+        path: '/projectManagement/serveProject/details/:id',
+        component: () =>
+					import ('@/views/serverManagement/projectManagement/serveProject/details'),
+        name: 'serveProject',
+        meta: { title: '服务项目' },
+        hidden: true
+      },
+      {
+        path: '/orderManagement/servicePlan/details/:id',
+        component: () =>
+        import ('@/views/serverManagement/orderManagement/servicePlan/details'),
+        name: 'serveProject',
+        meta: { title: '服务计划' },
+        hidden: true
+      },
+      {
+        path: '/orderManagement/servicePlan/details',
+        component: () =>
+					import ('@/views/serverManagement/orderManagement/servicePlan/details'),
+        name: 'serveProject',
+        meta: { title: '服务计划' },
+        hidden: true
+      },
+      {
+        path: '/serverManagement/servicePersonal/details',
+        component: () =>
+					import ('@/views/serverManagement/servicePersonal/details'),
+        name: 'servicePersonal',
+        meta: { title: '服务人员' },
+        hidden: true
+      },
+      {
+        path: '/serverManagement/servicePersonal/details/:id',
+        component: () =>
+					import ('@/views/serverManagement/servicePersonal/details'),
+        name: 'servicePersonal',
+        meta: { title: '服务人员' },
+        hidden: true
+      },
+      {
+        path: '/ISPManagement/details',
+        component: () =>
+          import ('@/views/serverManagement/ISPManagement/details'),
+        name: 'ISPManagement',
+        meta: { title: '新增服务商' },
+        hidden: true
+      },
+      {
+        path: '/ISPManagement/details/:id',
+        component: () =>
+          import ('@/views/serverManagement/ISPManagement/details'),
+        name: 'serveProject',
+        meta: { title: '服务商' },
+        hidden: true
+      },
+      {
+        path: '/projectManagement/mealService/details',
+        component: () =>
+          import ('@/views/serverManagement/projectManagement/mealService/details'),
+        name: 'mealService',
+        meta: { title: '服务套餐' },
+        hidden: true
+      },
+      {
+        path: '/orderManagement/orderWork/details',
+        component: () =>
+          import ('@/views/serverManagement/orderManagement/orderWork/details'),
+        name: 'mealService',
+        meta: { title: '工单详情' },
+        hidden: true
+      },
+      {
+        path: '/orderManagement/orderWork/details/:id',
+        component: () =>
+          import ('@/views/serverManagement/orderManagement/orderWork/details'),
+        name: 'mealService',
+        meta: { title: '工单详情' },
+        hidden: true
+      },
+      {
+        path: '/orderManagement/orderSetting/details',
+        component: () =>
+          import ('@/views/serverManagement/orderManagement/orderSetting/details'),
+        name: 'mealService',
+        meta: { title: '工单设置' },
+        hidden: true
+      },
+      {
+        path: '/projectManagement/mealService/details/:id',
+        component: () =>
+          import ('@/views/serverManagement/projectManagement/mealService/details'),
+        name: 'mealService',
+        meta: { title: '服务套餐' },
+        hidden: true
+      },
+      {
+        path: '/orderManagement/servicePlan/orderDetail',
+        component: () =>
+          import ('@/views/serverManagement/orderManagement/servicePlan/orderDetail'),
+        name: 'serveProject',
+        meta: { title: '服务计划' },
+        hidden: true
+      },
+      {
+        path: '/orderManagement/servicePlan/planDetail',
+        component: () =>
+          import ('@/views/serverManagement/orderManagement/servicePlan/planDetails'),
+        name: 'serveProject',
+        meta: { title: '创建计划' },
+        hidden: true
+      }
+    ]
   }
 ]
 
@@ -1182,6 +1336,20 @@ router.beforeEach(async(to, from, next) => {
 })
 
 router.afterEach((to, from, next) => {
+  if (window.location.host === 'rypg.ucanyun.com') {
+    setTimeout(() => {
+      var _hmt = _hmt || [];
+      (function() {
+        // 每次执行前，先移除上次插入的代码
+        document.getElementById('baidu_tj') && document.getElementById('baidu_tj').remove()
+        var hm = document.createElement('script')
+        hm.src = 'https://hm.baidu.com/hm.js?a11722f9631543da5e49439ddad0adc7'
+        hm.id = 'baidu_tj'
+        var s = document.getElementsByTagName('script')[0]
+        s.parentNode.insertBefore(hm, s)
+      })()
+    }, 0)
+  }
   setTimeout(() => {
     var _hmt = _hmt || [];
     (function() {

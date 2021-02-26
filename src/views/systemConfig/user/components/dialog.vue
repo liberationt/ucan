@@ -96,6 +96,28 @@
             </el-form-item>
           </el-col>
           <el-col
+            v-if="data.accountType === '3'"
+            :md="this.adaptiveGrid_plus.md"
+            :lg="this.adaptiveGrid_plus.lg"
+          >
+            <el-form-item label="服务商账号类型" prop="assistiveRentType">
+              <el-select
+                ref="assistiveRentType"
+                v-model="form.assistiveRentType"
+                :disabled="disabled"
+                placeholder="请选择服务商账号类型"
+                @keyup.enter.native="submitDialog"
+              >
+                <el-option
+                  v-for="item in accountSvOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col
             v-if="data.accountType === '4'"
             :md="this.adaptiveGrid_plus.md"
             :lg="this.adaptiveGrid_plus.lg"
@@ -349,6 +371,7 @@ import {
   accountRole,
   accountType,
   accountfjType,
+  accountSvDataType,
   accountDataType,
   getInitialPass,
   getAccountProject,
@@ -546,8 +569,9 @@ export default {
       projectInfo: false,
       // 账号角色
       accountOptions: [], // 账号类型数组
-        		accountESOptions: [], // 入院评估
+      accountESOptions: [], // 入院评估
       accountfjOptions: [], // 辅具类型数组
+      accountSvOptions: [], // 服务商类型数组
       accountDataOptions: [], // 账号数据类型数组
       projectOptions: [], // 关联项目下拉列表值
       btnWrap: true, // 是否显示按钮组
@@ -726,6 +750,21 @@ export default {
         .catch(() => {
           this.$message.error('获取账号类型失败！')
         })
+
+      // 获取服务商账号类型
+      accountSvDataType().then(response => {
+        this.accountSvOptions = response.rows
+        for (let i = 0; i < this.data.sysRoles.length; i++) {
+          if (this.data.sysRoles[i].roleKey === 'assistive_rent_type') {
+            this.accountSvOptions.splice(0, 1)
+            break
+          }
+        }
+      })
+        .catch(() => {
+          this.$message.error('获取账号类型失败！')
+        })
+
       // 获取账号数据类型
       accountDataType().then(response => {
         this.accountDataOptions = response.rows

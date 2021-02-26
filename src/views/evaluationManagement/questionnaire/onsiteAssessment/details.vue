@@ -15,7 +15,7 @@
                 :list="dvalue.lists"
                 v-bind="dragOptions"
                 @start="isDragging = true"
-                @end="isDragging = false"
+                @end="dragover"
               >
                 <transition-group type="transition" name="flip-list">
                   <li
@@ -157,6 +157,21 @@ export default {
     this.getTarQuestionnaireList()
   },
   methods: {
+    async dragover(event) {
+      // 拖拽后修改相应的数据，并且提交
+      // {to, from, item, clone, oldIndex, newIndex} dvalue.lists
+      this.curTabData.forEach(item => {
+        item.lists.forEach(v => {
+          v.project = item.project
+        })
+      })
+      this.curTabData.forEach(item => {
+        item.lists.forEach((v, i) => {
+          v.orderNum = i + 1
+          editQuestionnaire(v).then(res => {})
+        })
+      })
+    },
     async getTarQuestionnaireList() {
       const allInfo = await this.getTargetTypeQuestionnaireInfo()
       const tarInfo = []

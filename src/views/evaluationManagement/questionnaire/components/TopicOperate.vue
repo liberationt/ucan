@@ -3,22 +3,24 @@
     <div v-show="visOperate" class="topic-operate-container" :style="fmtBoxStyle">
       <el-form v-if="topicForm" ref="topicForm" :model="topicForm" label-width="75px" :rules="topicFormRules">
         <el-form-item label="题目" prop="subjectTitle" required>
-          <el-input v-model="topicForm.subjectTitle" type="text" maxlength="100" show-word-limit />
+          <el-input v-model.trim="topicForm.subjectTitle" type="text" maxlength="100" show-word-limit />
         </el-form-item>
         <el-form-item label="备注" prop="subjectRemarks">
           <el-input v-model="topicForm.subjectRemarks" type="textarea" maxlength="200" show-word-limit />
         </el-form-item>
         <el-row v-for="(item, optkey) in topicForm.options" :key="optkey">
           <el-row>
-            <el-col :span="15">
+            <el-col :span="14">
               <el-form-item label="选项" :prop="`options.${optkey}.optionDes`" :rules="optionsRules.optionDes">
                 <el-input v-model="item.optionDes" placeholder="选项内容" maxlength="200" show-word-limit />
               </el-form-item>
             </el-col>
-            <el-col :span="8" class="form-item-col__flex">
+            <el-col :span="10" class="form-item-col__flex">
               <el-form-item>
                 <el-input-number v-model="item.optionValue" size="small" :step="1" :min="0" :max="10" />
                 <span style="margin-left:10px;">分</span>
+                <span style="margin-left:10px;">排序</span>
+                <el-input-number v-model="item.orderNum" size="small" :step="1" :min="0" :max="10" />
               </el-form-item>
             </el-col>
           </el-row>

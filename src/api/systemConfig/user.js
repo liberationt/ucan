@@ -91,6 +91,22 @@ export function accountfjType() {
         // params: data
     })
 }
+// 获取入住人员账号类型
+export function accountCheckType() {
+  return request({
+    url: '/admin/system/dict/data?dictType=pension_agencys',
+    method: 'get',
+    // params: data
+  })
+}
+// 获取服务商账户类型
+export function accountSvDataType() {
+  return request({
+    url: '/admin/system/dict/data?dictType=order_account_type',
+    method: 'get',
+    // params: data
+  })
+}
 // 获取账号数据类型
 export function accountDataType() {
     return request({

@@ -61,4 +61,12 @@ export function getOptionList() {
     method: 'get'
   })
 }
+//获取当前用户所有信息
+export function getUserInfo() {
+  return request({
+    url: `admin/system/user/detail`,
+    method: 'get'
+  })
+}
+
 

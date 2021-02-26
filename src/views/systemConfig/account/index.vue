@@ -61,7 +61,7 @@
 
               <el-table-column label="机构名称" user-id="userId" prop="loginName" align="center">
                 <template slot-scope="{row}">
-                  <span style="cursor: pointer" @click="getBindList(row)" :class="[isChooseOrg === row.orgId ? 'chooseOrg' : '']">{{ row.orgName }}</span>
+                  <span style="cursor: pointer" :class="[isChooseOrg === row.orgId ? 'chooseOrg' : '']" @click="getBindList(row)">{{ row.orgName }}</span>
                 </template>
               </el-table-column>
               <el-table-column label="操作" align="center" width="250">
@@ -86,11 +86,11 @@
               <el-input v-model="checkedName" placeholder="输入关键字查询" clearable @keyup.enter.native="searchBindList" />
               <div class="aaa">
                 <div v-for="(item, i) in accountDatas" :key="i" class="aaa-list">
-                  <span style="flex: 1; cursor: pointer" @click="getOrg(item)" :class="[isChooseAccount === item.userId ? 'chooseOrg' : '']">{{ item.userName }}</span>
+                  <span style="flex: 1; cursor: pointer" :class="[isChooseAccount === item.userId ? 'chooseOrg' : '']" @click="getOrg(item)">{{ item.userName }}</span>
                   <span class="el-icon-close" style="font-size: 16px; cursor: pointer;" @click="delBindUser(item.userId)" />
                 </div>
               </div>
-              <div style="margin-top: 10px" v-show="orgShow">
+              <div v-show="orgShow" style="margin-top: 10px">
                 <span>所属机构：</span>
                 <span>{{ org }}</span>
               </div>
@@ -116,7 +116,7 @@
         </el-main>
       </el-container>
     </el-main>
-    <EsDailog :dialog-table-visible="isDailog" :close="closeDailog" :org-id="id" :table-list="tableList" :bindSuccess="bindSuccess"/>
+    <EsDailog :dialog-table-visible="isDailog" :close="closeDailog" :org-id="id" :table-list="tableList" :bind-success="bindSuccess" />
   </el-container>
 </template>
 
@@ -124,27 +124,15 @@
 import Address from '@/components/Address'
 import Pagination from '@/components/Pagination'
 import EsDailog from './component/dailog'
-import {
-  getInstitutionalTypeData
-} from '@/api/facilitiesConfig/pensionAgency'
-import {
-  getOrgList, getBindList, getUnBindList, delBindUser, searchBindList
-} from '@/api/esimate/esimate'
+import { getInstitutionalTypeData } from '@/api/systemConfig/orgPair'
+import { getBindList, getUnBindList, delBindUser, searchBindList } from '@/api/esimate/esimate'
+import { getOrgList } from '@/api/systemConfig/account'
 export default {
   name: 'Account',
   components: {
     Address,
     Pagination,
     EsDailog
-  },
-  watch: {
-    org() {
-      if (this.org === '' || this.org === null) {
-        this.orgShow = false
-      } else {
-        this.orgShow = true
-      }
-    }
   },
   data() {
     return {
@@ -174,9 +162,18 @@ export default {
       rowNew: ''
     }
   },
+  watch: {
+    org() {
+      if (this.org === '' || this.org === null) {
+        this.orgShow = false
+      } else {
+        this.orgShow = true
+      }
+    }
+  },
   mounted() {
     this.idEdit = false
-    const dicKey = { 'selectType': '10XX' }
+    const dicKey = { 'selectType': '10XX', menuId: this.$route.meta.id }
     getInstitutionalTypeData(dicKey).then(response => {
       this.org_typeOptions = response.data
     })
@@ -198,7 +195,7 @@ export default {
       // this.getBindList(this.orgId)
     },
     getDataList() {
-      getUnBindList().then(res => {
+      getUnBindList({ type: 'agency' }).then(res => {
         if (res.code === 0) {
           this.tableList = res.data
         }
@@ -240,7 +237,8 @@ export default {
     getData() {
       const parmas = _.cloneDeep(this.form)
       parmas.areaCode = typeof (parmas.areaCode) === 'object' ? parmas.areaCode.join('') : parmas.areaCode
-      getOrgList(parmas).then(res => {
+      const paramsForm = Object.assign(parmas, { menuId: this.$route.meta.id })
+      getOrgList(paramsForm).then(res => {
         if (res) {
           this.tableData = res.data.list
           this.total = res.data.total
@@ -255,7 +253,8 @@ export default {
       this.isChooseOrg = ''
       this.isChooseAccount = ''
       getBindList({
-        orgId: this.orgId
+        orgId: this.orgId,
+        type: 'agency'
       }).then(res => {
         if (res.code === 0) {
           this.accountDatas = res.data
@@ -299,7 +298,8 @@ export default {
     searchBindList() {
       if (this.checkedName !== '') {
         searchBindList({
-          userName: this.checkedName
+          userName: this.checkedName,
+          type: 'agency'
         }).then(res => {
           if (res.code === 0) {
             if (res.data.length === 0) {

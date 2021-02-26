@@ -9,7 +9,7 @@
             </div>
             <div class="reportContet">
               <div class="item">
-                <div class="reportTit">报告一：分值设定和照护服务分级划分</div>
+                <div class="reportTit">照护服务分级评分参考值</div>
                 <div class="items">
                   <div v-for="(item,i) in form.careService" :key="i" style="display:flex;">
                     <div class="itemList">{{ item.level }}</div>
@@ -18,7 +18,7 @@
                 </div>
               </div>
               <div class="item">
-                <div class="reportTit">报告一：分值设定和照护服务分级划分</div>
+                <div class="reportTit">评估分数总结</div>
                 <div class="items">
                   <div style="display:flex;height:50%;border-bottom:1px solid #e3e3e3">
                     <div class="itemList1" :style="{lineHeight:length*20 + length/2+'px'}">评估总分</div>
@@ -48,10 +48,10 @@
             </el-table>
             <el-table :data="form.abnormalOptions" border style="width: 100%;margin-top:30px;">
               <el-table-column prop="project" label="评估项目" align="center" min-width="180" />
-              <el-table-column prop="value" min-width="500" label="项目分析">
+              <el-table-column prop="value" min-width="500" label="项目分析（得分为4分、8分、10分的选项提示）">
                 <template scope="{row}">
                   <div v-for="(item,i) in row.value" :key="i" style="padding:20px;">
-                    <div style="bottom-bottom:1px solid red">{{ item.subjectTitle }}</div>
+                    <div style="bottom-bottom:1px solid red">{{ item.subjectTitle }}：{{ item.optionDes }}</div>
                     <!-- style="text-indent:20px" -->
                     <!-- <div>异常提示：{{ item.optionDes }}</div>
                       <div>照护建议：{{ item.careAdvice }}</div> -->
@@ -84,7 +84,7 @@
   </div>
 </template>
 <script>
-getPreviewAssess
+import { closeSelectedTag } from '@/utils/rooterJump'
 import { getPreviewAssess, savePreview } from '@/api/evaluationManagement/assessmentForm'
 export default {
   data() {
@@ -105,9 +105,16 @@ export default {
   mounted() {
     this.assessId = this.$route.params.id
     getPreviewAssess({ assessId: this.assessId }).then((res) => {
-      if (res.code == 0) {
+      if (res.code === 0) {
         this.form = res.data
         this.length = res.data.careService.length
+        const arr = []
+        this.form.assessObjExtendList.forEach(item => {
+          if (item.propType === 200) {
+            arr.push(item)
+          }
+        })
+        this.form.assessObjExtendList = arr
       }
     })
   },
@@ -128,6 +135,7 @@ export default {
         savePreview({ assessId: this.assessId }).then((res) => {
           if (res.code == 0) {
             this.$message.success('评估报告生成成功')
+            closeSelectedTag(this, this.$route)
             this.$router.push('/evaluationManagement/esimateManage/assessmentForm')
           } else {
             this.$message.error(res.msg)

@@ -1,4 +1,4 @@
-<!--池州设施  
+<!--池州设施
         村民互助点  -2021
         社区养老服务站  -2022
         养老服务指导中心 -2023 -->
@@ -131,7 +131,7 @@
                         placeholder="请输入时间分类"
                         @keyup.enter.native="editContent('form_base')"
                       />
-                      
+
                       <span v-else>{{ form.timeClassification }}</span>
                     </el-form-item>
                   </el-col>
@@ -211,9 +211,11 @@
                   <el-col :md="24" :lg="24" style="height: auto;">
                     <el-form-item :label="this.isEditForm?'设施图片':'设施图片：'">
                       <el-row v-if="!this.isEditForm" class="agencyImageRow">
-                        <el-col v-for="(item,index) in this.imageInfoVosLookUrl" class="agencyImageCol">
-                          <img :src="item" class="agencyImage">
-                        </el-col>
+                        <viewer :images="imageInfoVosLookUrl">
+                          <el-col v-for="(item, index) in imageInfoVosLookUrl" :key="index" class="agencyImageCol" style="cursor: pointer">
+                            <img :src="item" class="agencyImage">
+                          </el-col>
+                        </viewer>
                       </el-row>
                       <div v-else class="agencyImageWrap">
                         <Uploadpics :id-edit="idEdit" :form-imgs="form.imageInfoVos" @pics="getPicList" @keyup.enter.native="editContent('form_base')" />
@@ -831,7 +833,7 @@ export default {
           })
         })
         that.resultArr.push(result)
-      } 
+      }
       formName.forEach(item => {
         check(item)
       })
@@ -852,7 +854,7 @@ export default {
       // 联系方式
       if (this.form.phone && this.form.phone.length > 20) {
          this.$message.error('联系方式长度不能超过20，请重新输入！')
-         return false 
+         return false
       }
       //校验
       this.checkRules(form)

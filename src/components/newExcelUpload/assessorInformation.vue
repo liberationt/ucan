@@ -366,7 +366,7 @@ export default {
       await getEditAuthority(this.$route.meta.id).then(res => {
         res.forEach(item => {
           if (item.menuName === '含小区导入模板') {
-            data.ignoreField = item.menuName
+            data.ignoreField = encodeURI(item.menuName)
             return
           }
         })

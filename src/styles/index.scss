@@ -284,15 +284,14 @@ code {
   display: none !important;
 }
 .serviceDialog {
-  .el-dialog {
-    margin-bottom: 50px;
-    min-width: 1580px !important;
-    min-height:800px !important;
-    max-height:800px !important;
-    margin-top: 8vh !important;
-  }
+//  .el-dialog {
+//    margin-bottom: 50px;
+//    //min-width: 1080px !important;
+//    //min-height:700px !important;
+//    //max-height:700px !important;
+//    margin-top: 8vh !important;
+//  }
   .el-dialog__body {
-    height: 750px;
-    max-height: 750px;
+    overflow: visible;
   }
 }

@@ -4,6 +4,16 @@
     <!--查询表单-->
     <el-header class="formDiv">
       <el-form :inline="true" :model="form" class="demo-form-inline">
+        <el-form-item label="所属区域">
+          <Address
+            :area-code="areaCode"
+            :form-code="form.areaCode"
+            :id-edit="idEdit"
+            :width="'200px'"
+            @getAreaCode="getAreaCode"
+            @keyup.enter.native="onSubmit"
+          />
+        </el-form-item>
         <el-form-item label="卡状态">
           <el-select v-model="form.status" placeholder="请选择卡状态" clearable style="width: 200px" @keyup.enter.native="onSubmit">
             <el-option
@@ -101,6 +111,7 @@
 
 <script>
 import _ from 'lodash'
+import Address from '@/components/Address'
 import qs from 'qs'
 import { allSelectdictionaryData } from '@/api/common'
 import {
@@ -118,13 +129,18 @@ import uploadExcelMix from '@/mixins/uploadExcelMix'
 export default {
   components: {
     ImportDialog,
-    Pagination
+    Pagination,
+    Address
   },
   mixins: [uploadExcelMix],
   data() {
     return {
+      // 区划
+      areaCode: [],
+      idEdit: true,
       // 查询表单
       form: {
+        areaCode: '', // 区划
         status: '', // 卡状态
         keyword: '', // ID或者姓名
         pageNum: pageModel.pageNum, // 分页页数
@@ -144,8 +160,12 @@ export default {
   mounted() {
     this.getDict()
     this.getData(this.form)
+    this.idEdit = false
   },
   methods: {
+    getAreaCode(val) {
+      this.areaCode = val
+    },
     getDict() {
       const dictKeys = ['biz_card_status']
       allSelectdictionaryData(dictKeys).then(res => {
@@ -163,6 +183,14 @@ export default {
     },
     // 获取表格数据
     getData(form) {
+
+      // 解析获取选中的区划
+      const arr = []
+      if (this.areaCode && this.areaCode.length !== 0) {
+        arr.push(this.areaCode[this.areaCode.length - 1])
+      }
+      this.form.areaCode = arr[0] // 所选区域赋值
+
       cardSearch(form).then(res => {
         if (res.code == 0) {
           if (res.data) {
@@ -188,6 +216,7 @@ export default {
         pageSize: pageModel.pageSize // 分页数量
       }
       this.getData(this.form)
+      this.idEdit = !this.idEdit
     },
     fomatFloat(num, n) {
       var f = parseFloat(num)

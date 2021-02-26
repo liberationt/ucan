@@ -1,0 +1,177 @@
+{
+  "id": "2271206",
+  "name": "友康养老服务小程序icon",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "19137520",
+      "name": "icon-ss",
+      "font_class": "icon-ss",
+      "unicode": "e621",
+      "unicode_decimal": 58913
+    },
+    {
+      "icon_id": "19137352",
+      "name": "icon-yy",
+      "font_class": "icon-yy",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    },
+    {
+      "icon_id": "19137353",
+      "name": "icon-dqbb",
+      "font_class": "icon-dqbb",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    },
+    {
+      "icon_id": "19137355",
+      "name": "icon-fh",
+      "font_class": "icon-fh",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "19137356",
+      "name": "icon-wx",
+      "font_class": "icon-wx",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
+      "icon_id": "19137399",
+      "name": "icon-fwsxx",
+      "font_class": "icon-fwsxx",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
+      "icon_id": "18860337",
+      "name": "Sign shoujihao",
+      "font_class": "Signshoujihao",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "18860222",
+      "name": "Sign mima",
+      "font_class": "Signmima",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    },
+    {
+      "icon_id": "18860223",
+      "name": "Sign zhanhao",
+      "font_class": "Signzhanhao",
+      "unicode": "e617",
+      "unicode_decimal": 58903
+    },
+    {
+      "icon_id": "18860225",
+      "name": "Sign yanzhengma",
+      "font_class": "Signyanzhengma",
+      "unicode": "e618",
+      "unicode_decimal": 58904
+    },
+    {
+      "icon_id": "18859476",
+      "name": "home  normal",
+      "font_class": "homenormal1",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "18859477",
+      "name": "my normal",
+      "font_class": "mynormal1",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
+      "icon_id": "18859557",
+      "name": "work normal",
+      "font_class": "worknormal1",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "18857551",
+      "name": "icon- anzhushuohua",
+      "font_class": "icon-anzhushuohua",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "18857208",
+      "name": "Sign daohang",
+      "font_class": "Signdaohang",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "18857209",
+      "name": "Sign dianhua",
+      "font_class": "Signdianhua",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "18857476",
+      "name": "Sign daohang",
+      "font_class": "Signdaohang1",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "18856742",
+      "name": "Sign fuwuwancheng",
+      "font_class": "Signfuwuwancheng1",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "18856627",
+      "name": "Sign daifuwu",
+      "font_class": "Signdaifuwu",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
+    },
+    {
+      "icon_id": "18856628",
+      "name": "Sign fuwushibai",
+      "font_class": "Signfuwushibai",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "18856630",
+      "name": "Sign fuwuzhong",
+      "font_class": "Signfuwuzhong",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "18829493",
+      "name": "my",
+      "font_class": "my",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "18829494",
+      "name": "work order",
+      "font_class": "workorder",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "18828463",
+      "name": "home",
+      "font_class": "home",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    }
+  ]
+}

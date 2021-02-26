@@ -185,6 +185,11 @@ export default {
       this.$emit('getAreaCode', this.code)
       this.getChildren(this.provenceArray, this.currentData, val)
       // this.getProvence(val[val.length - 1])
+    },
+
+    // 重置数据
+    resetCode() {
+      this.code = []
     }
   }
 }

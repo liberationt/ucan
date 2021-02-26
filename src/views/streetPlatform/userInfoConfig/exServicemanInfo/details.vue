@@ -1089,7 +1089,7 @@ export default {
         // 数据处理
         const arrList = []
         this.PreferentialList.forEach(item => {
-          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyDate != '' && item.subsidyDate != null) {
+          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyDate != '' && item.subsidyDate != null || item.id != null && item.id != '') {
             arrList.push(item)
           }
         })

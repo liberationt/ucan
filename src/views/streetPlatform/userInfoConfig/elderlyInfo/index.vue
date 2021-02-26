@@ -308,7 +308,7 @@
             <el-form-item prop="censusAddr" label="户籍详细地址：">
               <el-input v-model="ruleForm.censusAddr" placeholder="请输入户籍详细地址" />
             </el-form-item>
-            <el-form-item prop="liveArea" label="居住区划：">
+            <el-form-item label="居住区划：">
               <Address
                 style="width:100%"
                 :area-code="liveAreaCode"
@@ -317,7 +317,7 @@
                 @getAreaCode="getliveAreaCode"
               />
             </el-form-item>
-            <el-form-item prop="liveAddr" label="居住详细地址：">
+            <el-form-item label="居住详细地址：">
               <el-input v-model="ruleForm.liveAddr" placeholder="请输入居住详细地址" />
             </el-form-item>
           </el-form>
@@ -446,12 +446,11 @@ export default {
     const data = {
       ignoreField: ''
     }
-
     getEditAuthority(this.$route.meta.id).then(res => {
       res.forEach(item => {
         if (item.menuName === '含小区导入模板') {
-          data.ignoreField = item.menuName
-          this.uploadUrl = process.env.VUE_APP_BASE_API + '/biz/person/import?ignoreField=' + data.ignoreField
+          data.ignoreField = encodeURI(item.menuName)
+          this.uploadUrl = process.env.VUE_APP_BASE_API + '/biz/person/import?ignoreField=' + encodeURI(data.ignoreField)
           return
         }
       })
@@ -469,6 +468,9 @@ export default {
       this.dataList = []
     },
     seachInfor() {
+      if (!this.idCard) {
+        return this.$message.warning('请输入身份证号查询')
+      }
       this.dataList = []
       getMovePerson({ idCard: this.idCard }).then(res => {
         if (res.code == 0) {
@@ -524,6 +526,7 @@ export default {
               this.movein = false
               this.dialogSubmit = false
               this.$message.success('迁入成功')
+              this.resetForm()
               this.onSubmit()
             } else {
               this.$message.error(res.msg)

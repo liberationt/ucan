@@ -23,12 +23,10 @@
               @keyup.enter.native="search"
             />
           </el-form-item>
-          <el-form-item>
-            <el-button type="primary" class="base-btn" @click="search">查询
-            </el-button>
-            <el-button type="warning" class="base-btn" @click="onReset">重置
-            </el-button>
-          </el-form-item>
+          <el-button type="primary" class="base-btn" @click="search">查询
+          </el-button>
+          <el-button type="warning" class="base-btn" @click="onReset">重置
+          </el-button>
         </el-form>
         <div :style="{height: heightChange}" class="account-bd">
           <el-table

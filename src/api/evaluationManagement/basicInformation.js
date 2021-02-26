@@ -23,6 +23,14 @@ export function delAssessor(id) {
     method: 'delete'
   })
 }
+// 解除绑定
+export function removeAssessor(params) {
+  return request({
+    url: `/biz/assess/emp/user/untie`,
+    method: 'get',
+    params
+  })
+}
 // 获取评估师机构
 export function getAssessor(id) {
   return request({
@@ -148,7 +156,7 @@ export function getEdit(id) {
 
 export function getAssessOrgan(id) {
   return request({
-    url: `/assess/pension/agency`,
+    url: '/biz/service/facility/provider/assess/agency/drop/down',
     method: 'get'
   })
 }

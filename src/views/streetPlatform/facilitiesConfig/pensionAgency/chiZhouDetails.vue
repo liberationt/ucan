@@ -3,7 +3,7 @@
     <el-main class="tableContainer">
       <el-tabs v-model="activeTabs">
         <!--基本信息tabs start-->
-        <el-tab-pane label="基本信息" name="base" :disabled="this.modelType === 'look'? disabled : ''" >
+        <el-tab-pane label="基本信息" name="base" :disabled="this.modelType === 'look'? disabled : ''">
           <el-collapse v-model="activeCollapse">
             <!--基本信息item start-->
             <el-collapse-item name="baseItem_1">
@@ -147,9 +147,11 @@
                   <el-col :md="24" :lg="24" style="height: auto;">
                     <el-form-item :label="this.isEditForm?'机构图片':'机构图片：'">
                       <el-row v-if="!this.isEditForm" class="agencyImageRow">
-                        <el-col v-for="(item,index) in this.imageInfoVosLookUrl" class="agencyImageCol">
-                          <img :src="item" class="agencyImage">
-                        </el-col>
+                        <viewer :images="imageInfoVosLookUrl">
+                          <el-col v-for="(item, index) in imageInfoVosLookUrl" :key="index" class="agencyImageCol" style="cursor: pointer">
+                            <img :src="item" class="agencyImage">
+                          </el-col>
+                        </viewer>
                       </el-row>
                       <div v-else class="agencyImageWrap">
                         <Uploadpics :id-edit="idEdit" :form-imgs="form.imageInfoVos" @pics="getPicList" @keyup.enter.native="editContent('form_base')" />
@@ -715,7 +717,7 @@ import { transformNumber, transformNumberLetter } from '@/utils/index'
 import { getEditAuthority } from '@/api/user'
 // import { verifyHomePhoneOrMobile } from '@/utils/validate'
 export default {
-  components: { InstituField, Uploadpics,Address },
+  components: { InstituField, Uploadpics, Address },
   data() {
     // 校验机构名称
     const verifyFullName = (rule, value, callback) => {
@@ -741,19 +743,19 @@ export default {
         callback()
       }
     }
-    //校验空余床位、普通床位、护理床位，不能大于总床位
-    //普通床位与护理床位校验 护理 + 普通 = 总床位
+    // 校验空余床位、普通床位、护理床位，不能大于总床位
+    // 普通床位与护理床位校验 护理 + 普通 = 总床位
     const verifyCheckBed = (rule, value, callback) => {
-      if(value && parseInt(value) > parseInt(this.form.totalBed)) {
+      if (value && parseInt(value) > parseInt(this.form.totalBed)) {
         callback(new Error('该床位不能大于总床位，请重新输入!'))
-      }else{
+      } else {
         callback()
       }
     }
 
-    //校验联系方式
-    const verifyHomePhoneOrMobile = (rule,value,callback) =>{
-      if(value){
+    // 校验联系方式
+    const verifyHomePhoneOrMobile = (rule, value, callback) => {
+      if (value) {
         if (/^\d{3,4}[-]\d{7,8}$/.test(value)) {
           callback()
         } else if (/^(0|86|17951)?(13[0-9]|15[012356789]|166|199|17[35678]|18[0-9]|14[57])[0-9]{8}$/.test(value)) {
@@ -761,7 +763,7 @@ export default {
         } else {
           callback(new Error('电话或手机号码格式有误，请重新输入！'))
         }
-      }else{
+      } else {
         callback()
       }
     }
@@ -789,19 +791,19 @@ export default {
         // -----基本信息-------
         orgName: '', // 机构名称
         orgCode: '', // 组织机构代码
-        orgExtendId:'', //池州机构扩展表ID 编辑需要回传
+        orgExtendId: '', // 池州机构扩展表ID 编辑需要回传
         buildArea: '', // 建筑面积
         openState: '', // 开放状态
-        openStateName:'', //开放状态查看用
+        openStateName: '', // 开放状态查看用
         imageInfoVos: [], // 机构图片
         starRating: '', // 星级
-        starRatingName: '', //星级 查看用
+        starRatingName: '', // 星级 查看用
         addr: '', // 机构地址
-        areaCode:[], //所属居委
-        areaCodeStr:'', //所属居委 查看用
+        areaCode: [], // 所属居委
+        areaCodeStr: '', // 所属居委 查看用
         // -------运营信息--------
         operationMode: '', // 运营模式
-        operationModeName:'', //运营模式查看用
+        operationModeName: '', // 运营模式查看用
         phone: '', // 联系方式
         deanFullName: '', // 院长
         // ------拓展服务------
@@ -811,22 +813,22 @@ export default {
         videoLicense: null, // 食品许可证号
         // -----床位信息------
         totalBed: null, // 总床位,
-        availableBed: null,// 空余床位
-        nursingBed: null,// 护理床位
-        ordinaryBed: null,// 普通床位
+        availableBed: null, // 空余床位
+        nursingBed: null, // 护理床位
+        ordinaryBed: null, // 普通床位
         // -----入住信息------
-        totalOccupancy: null,// 总入住人数
-        extremelyPoor: null,// 特困人员
-        socialElderly: null,// 社会老人
-        whichAbilityIsIntact: null,// 其中能力完好
-        ofWhichMildDisabilityAndDementia: null,// 其中轻度失能失智
-        ofWhichModerateDisabilityAndDementia: null,// 其中中度失能失智
-        ofWhichSevereDisabilityAndDementia: null,// 其中重度失能失智
+        totalOccupancy: null, // 总入住人数
+        extremelyPoor: null, // 特困人员
+        socialElderly: null, // 社会老人
+        whichAbilityIsIntact: null, // 其中能力完好
+        ofWhichMildDisabilityAndDementia: null, // 其中轻度失能失智
+        ofWhichModerateDisabilityAndDementia: null, // 其中中度失能失智
+        ofWhichSevereDisabilityAndDementia: null, // 其中重度失能失智
         // -----员工信息------
-        totalPeople:null,// 总人数
-        careWorker: null,// 护理员
-        otherPersonnel: null,// 其他人员
-        averageAge: null,// 平均年龄
+        totalPeople: null, // 总人数
+        careWorker: null, // 护理员
+        otherPersonnel: null, // 其他人员
+        averageAge: null, // 平均年龄
         // -----服务信息----
         providerItemVos: []
       },
@@ -848,16 +850,36 @@ export default {
         ],
         // 普通床位
         ordinaryBed: [
-          { trigger: 'change', validator: verifyCheckBed },
+          { trigger: 'change', validator: verifyCheckBed }
         ],
-        //护理床位
+        // 护理床位
         nursingBed: [
-          { trigger: 'change', validator: verifyCheckBed },
+          { trigger: 'change', validator: verifyCheckBed }
         ],
         // 所属居委
         areaCode: [
           { required: true, trigger: 'change', validator: verifyAreaCode }
         ],
+        buyLiabilityNumber: [
+          {
+            trigger: 'blur',
+            pattern: /^(0|\+?[1-9][0-9]{0,7})$/,
+            message: '请输入正确格式！'
+          }
+        ],
+        buyNursingNumber: [
+          {
+            trigger: 'blur',
+            pattern: /^(0|\+?[1-9][0-9]{0,7})$/,
+            message: '请输入正确格式！'
+          }
+        ],
+        fireControlLicense: [
+          { max: 50, message: '长度不能超过50字，请重新输入！', trigger: 'blur' }
+        ],
+        videoLicense: [
+          { max: 50, message: '长度不能超过50字，请重新输入！', trigger: 'blur' }
+        ]
       },
       disabled: false, // 表单是否可编辑
       activeTabs: 'base', // tab标签切换默认选中name参数
@@ -885,8 +907,8 @@ export default {
       workMsgObj: [], // 职工人员信息
       imageInfoVosLookUrl: [], // 查看时的图片路径
       areaLevel: '',
-      editAuthority: false,// 编辑按钮的权限
-      resultArr:[] //同步校验结果组
+      editAuthority: false, // 编辑按钮的权限
+      resultArr: [] // 同步校验结果组
     }
   },
   // 在模板渲染成html后调用，通常是初始化页面完成后，再对html的dom节点进行一些需要的操作。
@@ -970,7 +992,7 @@ export default {
         // 数据字典接口
         // 1011:长者照顾,  1010:养老机构
         let dicKey = ''
-        //池州养老机构 1010_chizhou
+        // 池州养老机构 1010_chizhou
         dicKey = 'open_state,operate_mode,service_provider_star_rating'
         allSelectdictionaryData(dicKey).then(response => {
           if (response.code === 0) {
@@ -979,7 +1001,7 @@ export default {
                 // 开放状态
                 case 'open_state':
                   this.open_stateOptions = response.data[k]
-                  
+
                   break
                   // 运营模式
                 case 'operate_mode':
@@ -1024,20 +1046,20 @@ export default {
       closeSelectedTag(this, this.$route)
       this.$router.push({ path: '/streetPlatform/facilitiesConfig/pensionAgency' })
     },
-    //下一步校验
-    checkRules(formName){
-      //校验
+    // 下一步校验
+    checkRules(formName) {
+      // 校验
       this.resultArr = []
-      let that = this
+      const that = this
       function check(item) {
-        let result = new Promise(function(resolve,reject){
-            that.$refs[item].validate((valid) =>{
-            if(valid){
+        const result = new Promise(function(resolve, reject) {
+          that.$refs[item].validate((valid) => {
+            if (valid) {
               resolve()
-              console.log('成功',item)
-            }else{
+              console.log('成功', item)
+            } else {
               reject()
-              console.log('失败',item)
+              console.log('失败', item)
             }
           })
         })
@@ -1045,115 +1067,121 @@ export default {
       }
       formName.forEach(item => {
         check(item)
-      });
+      })
     },
-    //上一步
-    tabsLastStep(tabsName){
+    // 上一步
+    tabsLastStep(tabsName) {
       this.activeTabs = tabsName
     },
     // 下一步
-    tabsStep(tabsName,...form) {
+    tabsStep(tabsName, ...form) {
       // 居委
-        if (this.areaLevel && this.areaLevel < 5) {
-          this.activeTabs = 'base'
-          window.scrollTo(0, 0)
-          this.$message.error('所属居委选择错误，请至少选择到居委！')
-          return false
-        }
+      if (this.areaLevel && this.areaLevel < 5) {
+        this.activeTabs = 'base'
+        window.scrollTo(0, 0)
+        this.$message.error('所属居委选择错误，请至少选择到居委！')
+        return false
+      }
       // 运营方联系方式
       if (this.form.phone && this.form.phone.length > 20) {
-         this.$message.error('运营方联系方式长度不能超过20，请重新输入！')
-         return false
+        this.$message.error('运营方联系方式长度不能超过20，请重新输入！')
+        return false
       }
-      //校验
+      // 校验
       this.checkRules(form)
-      let that = this
-      Promise.all(that.resultArr).then(function(){
+      const that = this
+      Promise.all(that.resultArr).then(function() {
         console.log('通过了')
         that.activeTabs = tabsName
-      }).catch(function(){
+      }).catch(function() {
         this.$message.error('校验error')
       })
     },
     // 确定按钮-提交表单
     editContent(...formName) {
-      //床位信息
-      if(Number(this.form.ordinaryBed) + Number(this.form.nursingBed) !== Number(this.form.totalBed)){
+      // 床位信息
+      if (Number(this.form.ordinaryBed) + Number(this.form.nursingBed) !== Number(this.form.totalBed)) {
         this.$message.error('总床位不等于护理与普通床位之和，请核验，并再次输入!')
-         return false
+        return false
       }
-      //总入住人数
-      if((Number(this.form.totalOccupancy) !== Number(this.form.extremelyPoor) + Number(this.form.socialElderly) + Number(this.form.whichAbilityIsIntact)
-       + Number(this.form.ofWhichMildDisabilityAndDementia) + Number(this.form.ofWhichModerateDisabilityAndDementia) + Number(this.form.ofWhichSevereDisabilityAndDementia)
-       )){
-         this.$message.error('总入住人数不等于其他人数之和，请核验，重新输入!')
-          return false
-       }
-       //员工信息 //总人数 = 护理员 + 其他人员
-       if(Number(this.form.totalPeople) !== Number(this.form.careWorker) + Number(this.form.otherPersonnel)){
-         this.$message.error('总人数不等于护理员和其他人员之和，请核验，并再次输入!')
-          return false
+      // 总入住人数
+      if ((Number(this.form.totalOccupancy) !== Number(this.form.extremelyPoor) + Number(this.form.socialElderly)
+      )) {
+        this.$message.error('总入住人数不等于其他人数之和，请核验，重新输入!')
+        return false
+      }
+      // 总入住人数2
+      if ((Number(this.form.totalOccupancy) !== Number(this.form.whichAbilityIsIntact) +
+        Number(this.form.ofWhichMildDisabilityAndDementia) + Number(this.form.ofWhichModerateDisabilityAndDementia) + Number(this.form.ofWhichSevereDisabilityAndDementia)
+      )) {
+        this.$message.error('其中能力完好与其他能力欠缺人数之和不等于总入住人数，请核验，重新输入!')
+        return false
+      }
+      // 员工信息 //总人数 = 护理员 + 其他人员
+      if (Number(this.form.totalPeople) !== Number(this.form.careWorker) + Number(this.form.otherPersonnel)) {
+        this.$message.error('总人数不等于护理员和其他人员之和，请核验，并再次输入!')
+        return false
       }
       const _orgType_ = '养老机构'
       this.checkRules(formName)
-      let that = this
-      Promise.all(that.resultArr).then(function(){
-          const params = that.form
-          params.areaCode = that.areaCode.length === 0 ? '' : that.areaCode[that.areaCode.length - 1] + ''
-          // 处理服务信息字段
-          that.getServiceCheckboxValue()
-          params.providerItemVos = that.serviceMsgObj
-          // 服务信息字典结构，编辑提交的时候不传
-          params.serviceProviderConfigVoList = null
-          // 处理职工字段
-          const dealWorkField = params.providerPersionVos
-          for (const k in dealWorkField) {
-            that.workMsgObj.forEach((item_a) => {
-              if (k === item_a.persionType) {
-                item_a.num = dealWorkField[k]
-              }
-            })
-          }
-          params.providerPersionVos = {}
-          params.providerPersionVos = that.workMsgObj
-          // 新增
-          if (that.modelType === 'add') {
-            submitDataAdd(params).then(response => {
-              if (response.code === 0) {
-                that.$message({
-                  type: 'success',
-                  message: '新增机构信息成功!'
-                })
-                // 关闭页面
-                that.closeDetailsPage()
-              } else {
-                that.$message.error(_orgType_ + response.msg)
-              }
-            }).catch(() => {
-              that.$message.error('新增机构信息失败!')
-            })
-          } else if (that.modelType === 'edit') { // 编辑
-            submitDataEdit(params).then(response => {
-              if (response.code === 0) {
-                that.$message({
-                  type: 'success',
-                  message: '编辑机构信息成功!'
-                })
-                // 关闭页面
-                that.closeDetailsPage()
-              } else {
-                that.$message.error(_orgType_ + response.msg)
-              }
-            }).catch(() => {
-              that.$message.error('编辑机构信息失败!')
-            })
-          } else if (that.modelType === 'look') { // 查看
-            closeSelectedTag(that, that.$route)
-          }
-      }).catch(function(){
-          console.log('未通过!')
-          window.scrollTo(0, 0)
-          return false
+      const that = this
+      Promise.all(that.resultArr).then(function() {
+        const params = that.form
+        params.areaCode = that.areaCode.length === 0 ? '' : that.areaCode[that.areaCode.length - 1] + ''
+        // 处理服务信息字段
+        that.getServiceCheckboxValue()
+        params.providerItemVos = that.serviceMsgObj
+        // 服务信息字典结构，编辑提交的时候不传
+        params.serviceProviderConfigVoList = null
+        // 处理职工字段
+        const dealWorkField = params.providerPersionVos
+        for (const k in dealWorkField) {
+          that.workMsgObj.forEach((item_a) => {
+            if (k === item_a.persionType) {
+              item_a.num = dealWorkField[k]
+            }
+          })
+        }
+        params.providerPersionVos = {}
+        params.providerPersionVos = that.workMsgObj
+        // 新增
+        if (that.modelType === 'add') {
+          submitDataAdd(params).then(response => {
+            if (response.code === 0) {
+              that.$message({
+                type: 'success',
+                message: '新增机构信息成功!'
+              })
+              // 关闭页面
+              that.closeDetailsPage()
+            } else {
+              that.$message.error(_orgType_ + response.msg)
+            }
+          }).catch(() => {
+            that.$message.error('新增机构信息失败!')
+          })
+        } else if (that.modelType === 'edit') { // 编辑
+          submitDataEdit(params).then(response => {
+            if (response.code === 0) {
+              that.$message({
+                type: 'success',
+                message: '编辑机构信息成功!'
+              })
+              // 关闭页面
+              that.closeDetailsPage()
+            } else {
+              that.$message.error(_orgType_ + response.msg)
+            }
+          }).catch(() => {
+            that.$message.error('编辑机构信息失败!')
+          })
+        } else if (that.modelType === 'look') { // 查看
+          closeSelectedTag(that, that.$route)
+        }
+      }).catch(function() {
+        console.log('未通过!')
+        window.scrollTo(0, 0)
+        return false
       })
     },
     // 获取所属居委
@@ -1180,10 +1208,10 @@ export default {
       switch (_orgType_) {
         case '1010_chizhou':
           _path_ = `/pensionAgency/chiZhouDetails/${_id_}`
-          break;
+          break
         default:
           _path_ = `/pensionAgency/details/${_id_}`
-          break;
+          break
       }
       this.$router.push({
         path: _path_,

@@ -20,11 +20,12 @@ import { OpenLoading } from '@/utils/loading'
 
 export default {
   name: 'Address',
-  props: ['formCode', 'width', 'idEdit', 'scope', 'disabled', 'other'],
+  props: ['formCode', 'width', 'idEdit', 'scope', 'disabled', 'other', 'level'],
   data() {
     return {
       // 所属区域数据结构
       props: {
+        levelIs: this.level,
         label: 'areaName',
         value: 'areaCode',
         children: 'children',
@@ -39,6 +40,13 @@ export default {
               }).then(res => {
                 if (res) {
                   this.currentData = res
+                  this.currentData.forEach((item, index) => {
+                    if (this.levelIs) {
+                      if (item.level < this.levelIs) {
+                        this.currentData[index].disabled = true
+                      }
+                    }
+                  })
                   setTimeout(() => {
                     const arr = document.querySelectorAll('.el-cascader-menu')
                     if (arr[arr.length - 1].contains(document.querySelector('.el-cascader-menu__empty-text')) === false) {
@@ -160,6 +168,11 @@ export default {
               // 第一级树初始化
               this.provenceArray = res
               this.provenceArray.forEach((item, index) => {
+                if (this.level) {
+                  if (item.level < this.level) {
+                    item.disabled = true
+                  }
+                }
                 if (item.hasChildren) {
                   // 有子集，改变item的children状态，null变为空数组，页面ui会变成可以被展开状态
                   this.provenceArray[index].children = []
@@ -201,6 +214,10 @@ export default {
         }
       })
       // this.getProvence(val[val.length - 1])
+    },
+    // 重置数据
+    resetCode() {
+      this.code = []
     }
   }
 }

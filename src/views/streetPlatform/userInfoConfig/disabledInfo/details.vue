@@ -1215,7 +1215,7 @@ export default {
         delete _form.bizDeformityPropertyVo.defoStatusName
         const arrList = []
         this.DisabilityList.forEach(item => {
-          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyDate != '' && item.subsidyDate != null) {
+          if (item.subsidyMoney != '' && item.subsidyMoney != null || item.subsidyDate != '' && item.subsidyDate != null || item.id != '' && item.id != null) {
             arrList.push(item)
           }
         })
@@ -1232,8 +1232,8 @@ export default {
         }
         // 残疾类别 特殊处理
         else {
-          _form.bizDeformityPropertyVo.defoType = ""
-          _form.bizDeformityPropertyVo.defoLevel = ""
+          _form.bizDeformityPropertyVo.defoType = ''
+          _form.bizDeformityPropertyVo.defoLevel = ''
         }
         // 新增
         if (this.modelType === 'add' && !this.form.id) {

@@ -71,7 +71,6 @@
                     :area-code="areaCode"
                     :form-code="form.areaCode"
                     :width="'100%'"
-                    :scope="'All'"
                     @getAreaCode="getAreaCode"
                     @keyup.enter.native="editContent('form_base')"
                   />
@@ -108,7 +107,7 @@
 import { adaptiveGrid_max, adaptiveGrid_plus } from '@/common/index'
 import QuillEditor from '@/components/QuillEditor'
 import { addMes, mesDetail, upDataDetail } from '@/api/esimate/esimate'
-import {closeSelectedTag} from "@/utils/rooterJump";
+import { closeSelectedTag } from '@/utils/rooterJump'
 import Address from '@/components/Address'
 export default {
   name: 'MessageDefenddetails',
@@ -131,7 +130,8 @@ export default {
       imageInfoVos: [], // 富文本图片的集合
       rulesForm: {
         title: [
-          { required: true, trigger: 'blur', message: '请填写标题！' }
+          { required: true, trigger: 'blur', message: '请填写标题！' },
+          { max: 30, trigger: 'blur', message: '长度不能超过30，请重新输入' }
         ]
       },
       adaptiveGrid_plus: {
@@ -185,7 +185,9 @@ export default {
               status: res.data.status
             }
             if (this.modelType === 'edit') {
-              this.form.areaCode = res.data.areaCode.split(',')
+              if (res.data.areaCode) {
+                this.form.areaCode = res.data.areaCode.split(',')
+              }
             } else {
               this.address = res.data.areaCodeLevel
             }
@@ -199,7 +201,9 @@ export default {
     },
     editContent(form, status) {
       this.form.status = status
-      this.form.areaCode = this.form.areaCode[this.form.areaCode.length - 1]
+      if (this.form.areaCode) {
+        this.form.areaCode = this.form.areaCode[this.form.areaCode.length - 1]
+      }
       if (this.modelType === 'add') {
         let word = ''
         if (status === '0') {
@@ -265,7 +269,7 @@ export default {
         contentType: '',
         status: ''
       }
-      closeSelectedTag(this, this.$route);
+      closeSelectedTag(this, this.$route)
       this.$router.push('/streetPlatform/messageIssueConfig/messageDefend')
     }
   }

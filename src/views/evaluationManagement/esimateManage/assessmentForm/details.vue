@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-main class="tableContainer">
+    <el-main class="tableContainer formAss">
       <el-tabs v-model="activeTabs" @tab-click="handleClick">
         <el-tab-pane label="基本信息" name="base">
           <el-form
@@ -21,7 +21,7 @@
                 </template>
                 <el-row :gutter="0">
                   <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                    <el-form-item :label="isEditForm ? '姓名' : '姓名：'">
+                    <el-form-item :label="isEditForm ? '姓名' : '姓名：'" prop="fullName">
                       <el-input
                         v-if="isEditForm"
                         v-model="form.fullName"
@@ -33,8 +33,8 @@
                       <span v-else>{{ form.fullName }}</span>
                     </el-form-item>
                   </el-col>
-                  <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                    <el-form-item :label="isEditForm ? '身份证号' : '身份证号'">
+                  <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg" prop="idCard">
+                    <el-form-item :label="isEditForm ? '身份证号' : '身份证号：'">
                       <el-input
                         v-if="this.isEditForm"
                         v-model="form.idCard"
@@ -47,12 +47,13 @@
                     </el-form-item>
                   </el-col>
                   <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                    <el-form-item :label="isEditForm ? '性别' : '性别：'" prop="sex">
+                    <el-form-item :label="isEditForm ? '性别' : '性别：'">
                       <el-select
                         v-if="isEditForm"
                         v-model="form.sex"
                         placeholder="请选择性别"
                         filterable
+                        disabled
                         clearable
                         style="width:100%;"
                         @keyup.enter.native="editContent('form_base')"
@@ -102,6 +103,7 @@
                         v-if="isEditForm"
                         v-model="form.socialSecurityArd"
                         clearable
+                        :disabled="isDisabled"
                         placeholder="请输入社保卡号"
                         @keyup.enter.native="editContent"
                       />
@@ -114,6 +116,7 @@
                         v-if="isEditForm"
                         v-model="form.nation"
                         placeholder="请选择民族"
+                        :disabled="isDisabled"
                         filterable
                         clearable
                         style="width:100%;"
@@ -134,6 +137,7 @@
                       <el-select
                         v-if="isEditForm"
                         v-model="form.eduLevel"
+                        :disabled="isDisabled"
                         clearable
                         placeholder="请选择文化程度"
                         style="width:100%;"
@@ -154,6 +158,7 @@
                       <el-input
                         v-if="isEditForm"
                         v-model="form.jobDes"
+                        :disabled="isDisabled"
                         clearable
                         placeholder="请输入曾从事职业"
                         @keyup.enter.native="editContent"
@@ -167,6 +172,7 @@
                         v-if="isEditForm"
                         v-model="form.hometown"
                         clearable
+                        :disabled="isDisabled"
                         placeholder="请输入籍贯"
                         @keyup.enter.native="editContent"
                       />
@@ -180,6 +186,7 @@
                         v-model="form.maritalStatus"
                         placeholder="请选择婚姻状况"
                         clearable
+                        :disabled="isDisabled"
                         style="width:100%;"
                         @keyup.enter.native="submitBtn"
                       >
@@ -208,6 +215,7 @@
                     <el-form-item :label="isEditForm ? '户籍行政区划' : '户籍行政区划：'" prop="censusArea">
                       <Address
                         v-if="isEditForm"
+                        :disabled="isDisabled"
                         :id-edit="idEdit"
                         :area-code="areaCode[0]"
                         :form-code="form.censusArea"
@@ -226,7 +234,7 @@
                       <el-input
                         v-if="isEditForm"
                         v-model="form.censusAddr"
-                        :disabled="disabled"
+                        :disabled="disabled||isDisabled"
                         clearable
                         placeholder="请输入户籍详细地址"
                         @keyup.enter.native="editContent"
@@ -238,6 +246,7 @@
                     <el-form-item :label="isEditForm ? '居住行政区划' : '居住行政区划：'" prop="liveArea">
                       <Address
                         v-if="isEditForm"
+                        :disabled="isDisabled"
                         :id-edit="idEdit"
                         :area-code="areaCode[1]"
                         :form-code="form.liveArea"
@@ -256,6 +265,7 @@
                       <el-input
                         v-if="isEditForm"
                         v-model="form.liveAddr"
+                        :disabled="isDisabled"
                         clearable
                         placeholder="请输入居住详细地址"
                         @keyup.enter.native="editContent"
@@ -264,12 +274,12 @@
                     </el-form-item>
                   </el-col>
                   <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                    <el-form-item :label="isEditForm ? '住宅电话' : '住宅电话'" prop="homePhone">
+                    <el-form-item :label="isEditForm ? '住宅电话' : '住宅电话：'" prop="homePhone">
                       <el-input
                         v-if="isEditForm"
                         ref="homePhone"
                         v-model.trim="form.homePhone"
-                        :disabled="disabled"
+                        :disabled="disabled||isDisabled"
                         clearable
                         placeholder="请输入住宅电话"
                         type="phone"
@@ -284,6 +294,7 @@
                       <el-input
                         v-if="isEditForm"
                         v-model="form.mobile"
+                        :disabled="isDisabled"
                         clearable
                         placeholder="请输入手机号"
                         @keyup.enter.native="editContent"
@@ -296,6 +307,7 @@
                       <el-input
                         v-if="isEditForm"
                         v-model="form.placeResidence"
+                        :disabled="isDisabled"
                         clearable
                         placeholder="请输入邮编"
                         @keyup.enter.native="editContent"
@@ -307,7 +319,7 @@
                 <el-row :gutter="0">
                   <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
                     <el-form-item :label="isEditForm?'有无代理人':'有无代理人：'" prop="isAgents">
-                      <el-radio-group v-model="form.isAgents" :disabled="modelType=='look'">
+                      <el-radio-group v-model="form.isAgents" :disabled="isDisabled||modelType=='look'">
                         <el-radio label="1">是</el-radio>
                         <el-radio label="0">否</el-radio>
                       </el-radio-group>
@@ -320,6 +332,7 @@
                       <el-input
                         v-if="isEditForm"
                         v-model="form.agentsName"
+                        :disabled="isDisabled"
                         placeholder="请输入代理人姓名"
                         clearable
                         style="width:100%;"
@@ -332,6 +345,7 @@
                       <el-input
                         v-if="isEditForm"
                         v-model="form.agentsRelation"
+                        :disabled="isDisabled"
                         placeholder="请输入与申请人关系"
                         clearable
                         style="width:100%;"
@@ -343,6 +357,7 @@
                     <el-form-item :label="isEditForm ? '居住行政区划' : '居住行政区划：'" prop="agentsLiveArea">
                       <Address
                         v-if="isEditForm"
+                        :disabled="isDisabled"
                         :id-edit="idEdit"
                         :area-code="agentsAreaCode"
                         :form-code="form.agentsLiveArea"
@@ -361,6 +376,7 @@
                       <el-input
                         v-if="isEditForm"
                         v-model="form.agentsLiveAddr"
+                        :disabled="isDisabled"
                         clearable
                         placeholder="请输入居住详细地址"
                         @keyup.enter.native="editContent"
@@ -369,7 +385,7 @@
                     </el-form-item>
                   </el-col>
                   <el-col v-if="form.isAgents === '1'" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                    <el-form-item :label="isEditForm ? '住宅电话' : '住宅电话'" prop="agentsHomePhone">
+                    <el-form-item :label="isEditForm ? '住宅电话' : '住宅电话：'" prop="agentsHomePhone">
                       <el-input
                         v-if="isEditForm"
                         ref="homePhone"
@@ -390,6 +406,7 @@
                         v-if="isEditForm"
                         v-model="form.agentsMobile"
                         clearable
+                        :disabled="isDisabled"
                         placeholder="请输入手机号"
                         @keyup.enter.native="editContent"
                       />
@@ -402,6 +419,7 @@
                         v-if="isEditForm"
                         v-model="form.agentsPlaceResidence"
                         clearable
+                        :disabled="isDisabled"
                         placeholder="请输入邮编"
                         @keyup.enter.native="editContent"
                       />
@@ -458,19 +476,19 @@
                       <span v-else>{{ form.occupancyCodeName }}</span>
                     </el-form-item>
                   </el-col>
-                  <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                    <el-form-item :label="isEditForm ? '评估费用承担' : '评估费用承担：'">
-                      <el-input
-                        v-if="isEditForm"
-                        v-model="form.costBearingCodeName"
-                        disabled
-                        clearable
-                        placeholder="请输入评估费用承担"
-                        @keyup.enter.native="editContent"
-                      />
-                      <span v-else>{{ form.costBearingCodeName }}</span>
-                    </el-form-item>
-                  </el-col>
+                  <!--                  <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">-->
+                  <!--                    <el-form-item :label="isEditForm ? '评估费用承担' : '评估费用承担：'">-->
+                  <!--                      <el-input-->
+                  <!--                        v-if="isEditForm"-->
+                  <!--                        v-model="form.costBearingCodeName"-->
+                  <!--                        disabled-->
+                  <!--                        clearable-->
+                  <!--                        placeholder="请输入评估费用承担"-->
+                  <!--                        @keyup.enter.native="editContent"-->
+                  <!--                      />-->
+                  <!--                      <span v-else>{{ form.costBearingCodeName }}</span>-->
+                  <!--                    </el-form-item>-->
+                  <!--                  </el-col>-->
                   <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
                     <el-form-item :label="isEditForm ? '预约评估日期' : '预约评估日期：'">
                       <el-date-picker
@@ -509,59 +527,121 @@
                       <span v-else>{{ form.assessAddrCodeName }}</span>
                     </el-form-item>
                   </el-col>
-                  <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                    <el-form-item :label="isEditForm ? '所属区划' : '所属区划：'">
-                      <Address
-                        v-if="isEditForm"
-                        :id-edit="idEdit"
-                        :area-code="areaCodeBase"
-                        :form-code="form.assessAreaCode"
-                        :width="'100%'"
-                        disabled
-                        @getAreaCode="getAreaCodeBase_reg"
-                        @keyup.enter.native="editContent"
-                      />
-                      <span v-else>{{ form.assessAreaCodeLevelName }}</span>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                  <el-col v-if="isOther" :md="adaptiveGrid_plus.md" :lg="adaptiveGrid_plus.lg">
                     <el-form-item :label="isEditForm ? '评估地址' : '评估地址：'">
                       <el-input
                         v-if="isEditForm"
-                        ref="assessAddr"
-                        v-model="form.assessAddr"
+                        v-model="form.forOtherAddr"
                         clearable
-                        disabled
+                        maxlength="50"
                         placeholder="请输入评估地址"
                         @keyup.enter.native="editContent"
                       />
-                      <span v-else>{{ form.assessAddr }}</span>
+                      <span v-else>{{ form.forOtherAddr }}</span>
                     </el-form-item>
                   </el-col>
-                  <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                    <el-form-item :label="isEditForm ? '评估联络人' : '评估联络人：'">
-                      <el-input
-                        v-if="isEditForm"
-                        v-model="form.assessLinkman"
-                        clearable
-                        disabled
-                        placeholder="请输入评估联络人"
-                        @keyup.enter.native="editContent"
-                      />
-                      <span v-else>{{ form.assessLinkman }}</span>
+                  <el-col v-if="!isEditForm" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                    <el-form-item label="评估状态：">
+                      <span>{{ assessStatusName }}</span>
                     </el-form-item>
                   </el-col>
+                  <el-col v-if="!isEditForm" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                    <el-form-item label="评估师1：">
+                      <span>{{ form.ourAssessEmpName }}</span>
+                    </el-form-item>
+                  </el-col>
+                  <el-col v-if="!isEditForm" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                    <el-form-item label="手机号码：">
+                      <span>{{ form.orderTakingAssessMobile1 }}</span>
+                    </el-form-item>
+                  </el-col>
+                  <el-col v-if="!isEditForm" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                    <el-form-item label="评估师2：">
+                      <span>{{ orderTakingAssessName2 }}</span>
+                    </el-form-item>
+                  </el-col>
+                  <el-col v-if="!isEditForm" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                    <el-form-item label="手机号码：">
+                      <span>{{ orderTakingAssessMobile2 }}</span>
+                    </el-form-item>
+                  </el-col>
+                  <el-col v-if="!isEditForm && (assessStatusName === '评估中' || assessStatusName === '待终评' || assessStatusName === '已完成')" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                    <el-form-item label="评估开始时间：">
+                      {{ assessStartDate }}
+                    </el-form-item>
+                  </el-col>
+                  <el-col v-if="!isEditForm && (assessStatusName === '待终评' || assessStatusName === '已完成')" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                    <el-form-item label="完成时间：">
+                      {{ taskEndDate }}
+                    </el-form-item>
+                  </el-col>
+                  <el-col v-if="!isEditForm && assessStatusName === '已取消'" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                    <el-form-item label="取消时间：">
+                      {{ cancelDate }}
+                    </el-form-item>
+                  </el-col>
+                  <!--                  <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">-->
+                  <!--                    <el-form-item :label="isEditForm ? '所属区划' : '所属区划：'">-->
+                  <!--                      <Address-->
+                  <!--                        v-if="isEditForm"-->
+                  <!--                        :id-edit="idEdit"-->
+                  <!--                        :area-code="areaCodeBase"-->
+                  <!--                        :form-code="form.assessAreaCode"-->
+                  <!--                        :width="'100%'"-->
+                  <!--                        disabled-->
+                  <!--                        @getAreaCode="getAreaCodeBase_reg"-->
+                  <!--                        @keyup.enter.native="editContent"-->
+                  <!--                      />-->
+                  <!--                      <span v-else>{{ form.assessAreaCodeLevelName }}</span>-->
+                  <!--                    </el-form-item>-->
+                  <!--                  </el-col>-->
+                  <!--                  <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">-->
+                  <!--                    <el-form-item :label="isEditForm ? '评估地址' : '评估地址：'">-->
+                  <!--                      <el-input-->
+                  <!--                        v-if="isEditForm"-->
+                  <!--                        ref="assessAddr"-->
+                  <!--                        v-model="form.assessAddr"-->
+                  <!--                        clearable-->
+                  <!--                        disabled-->
+                  <!--                        placeholder="请输入评估地址"-->
+                  <!--                        @keyup.enter.native="editContent"-->
+                  <!--                      />-->
+                  <!--                      <span v-else>{{ form.assessAddr }}</span>-->
+                  <!--                    </el-form-item>-->
+                  <!--                  </el-col>-->
+                  <!--                  <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">-->
+                  <!--                    <el-form-item :label="isEditForm ? '评估联络人' : '评估联络人：'">-->
+                  <!--                      <el-input-->
+                  <!--                        v-if="isEditForm"-->
+                  <!--                        v-model="form.assessLinkman"-->
+                  <!--                        clearable-->
+                  <!--                        disabled-->
+                  <!--                        placeholder="请输入评估联络人"-->
+                  <!--                        @keyup.enter.native="editContent"-->
+                  <!--                      />-->
+                  <!--                      <span v-else>{{ form.assessLinkman }}</span>-->
+                  <!--                    </el-form-item>-->
+                  <!--                  </el-col>-->
+                  <!--                  <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">-->
+                  <!--                    <el-form-item :label="isEditForm ? '联系电话' : '联系电话：'">-->
+                  <!--                      <el-input-->
+                  <!--                        v-if="isEditForm"-->
+                  <!--                        v-model="form.assessLinkmanPhone"-->
+                  <!--                        clearable-->
+                  <!--                        disabled-->
+                  <!--                        placeholder="请输入联系电话"-->
+                  <!--                        @keyup.enter.native="editContent"-->
+                  <!--                      />-->
+                  <!--                      <span v-else>{{ form.assessLinkmanPhone }}</span>-->
+                  <!--                    </el-form-item>-->
+                  <!--                  </el-col>-->
+                </el-row>
+                <el-row :gutter="0">
                   <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                    <el-form-item :label="isEditForm ? '联系电话' : '联系电话：'">
-                      <el-input
-                        v-if="isEditForm"
-                        v-model="form.assessLinkmanPhone"
-                        clearable
-                        disabled
-                        placeholder="请输入联系电话"
-                        @keyup.enter.native="editContent"
-                      />
-                      <span v-else>{{ form.assessLinkmanPhone }}</span>
+                    <el-form-item :label="isEditForm ? '合照' : '合照：'">
+                      <div v-if="form.img" style="width: 150px;height: 150px;border-radius: 3px;overflow: hidden">
+                        <img :src="form.img" alt="" style="width: 150px;height: 150px">
+                      </div>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -581,6 +661,7 @@
                         <el-checkbox
                           v-for="(item,index) in economicsOptions"
                           :key="index"
+                          :disabled="isDisabled"
                           :label="item.dictValue"
                         >{{ item.dictLabel }}</el-checkbox>
                       </el-checkbox-group>
@@ -592,6 +673,7 @@
                       <el-select
                         v-if="isEditForm"
                         v-model="form.liveState"
+                        :disabled="isDisabled"
                         placeholder="请选择居住情况"
                         filterable
                         clearable
@@ -609,10 +691,11 @@
                     </el-form-item>
                   </el-col>
                   <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                    <el-form-item :label="isEditForm ? '长护险评估等级' : '长护险评估等级：'">
+                    <el-form-item :label="isEditForm ? '长护险评估等级' : '长护险评估等级：'" prop="longTermLevel">
                       <el-select
                         v-if="isEditForm"
                         v-model="form.longTermLevel"
+                        :disabled="isDisabled"
                         placeholder="请选择长护险评估等级"
                         filterable
                         clearable
@@ -630,31 +713,11 @@
                     </el-form-item>
                   </el-col>
                   <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                    <el-form-item :label="isEditForm ? '宗教信仰' : '宗教信仰：'">
-                      <el-select
-                        v-if="isEditForm"
-                        v-model="form.faith"
-                        placeholder="请选择宗教信仰"
-                        filterable
-                        clearable
-                        style="width:100%;"
-                        @keyup.enter.native="editContent('form_base')"
-                      >
-                        <el-option
-                          v-for="item in faithOptions"
-                          :key="item.dictValue"
-                          :label="item.dictLabel"
-                          :value="item.dictValue"
-                        />
-                      </el-select>
-                      <span v-else>{{ form.faithName }}</span>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                    <el-form-item :label="isEditForm ? '家庭支持' : '家庭支持：'">
+                    <el-form-item :label="isEditForm ? '家庭支持' : '家庭支持：'" prop="homeSupport">
                       <el-select
                         v-if="isEditForm"
                         v-model="form.homeSupport"
+                        :disabled="isDisabled"
                         placeholder="请选择家庭支持"
                         filterable
                         clearable
@@ -672,10 +735,11 @@
                     </el-form-item>
                   </el-col>
                   <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                    <el-form-item :label="isEditForm ? '社会参与' : '社会参与：'">
+                    <el-form-item :label="isEditForm ? '社会参与' : '社会参与：'" prop="socialActivities">
                       <el-select
                         v-if="isEditForm"
                         v-model="form.socialActivities"
+                        :disabled="isDisabled"
                         placeholder="请选择社会参与"
                         filterable
                         clearable
@@ -693,10 +757,47 @@
                     </el-form-item>
                   </el-col>
                   <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                    <el-form-item :label="isEditForm ? '就医方式' : '就医方式：'">
+                    <el-form-item :label="isEditForm ? '宗教信仰' : '宗教信仰：'" prop="faith">
+                      <el-select
+                        v-if="isEditForm"
+                        v-model="form.faith"
+                        :disabled="isDisabled"
+                        placeholder="请选择宗教信仰"
+                        filterable
+                        clearable
+                        style="width:100%;"
+                        @keyup.enter.native="editContent('form_base')"
+                      >
+                        <el-option
+                          v-for="item in faithOptions"
+                          :key="item.dictValue"
+                          :label="item.dictLabel"
+                          :value="item.dictValue"
+                        />
+                      </el-select>
+                      <span v-else>{{ form.faithName }}</span>
+                    </el-form-item>
+                  </el-col>
+                  <el-col v-if="form.faith === 'other_beliefs'" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                    <el-form-item :label="isEditForm ? '其他信仰' : '其他信仰：'" prop="otherBeliefs">
+                      <el-input
+                        v-if="isEditForm"
+                        v-model="form.otherBeliefs"
+                        :disabled="isDisabled"
+                        maxlength="50"
+                        clearable
+                        placeholder="请输入其他信仰"
+                        @keyup.enter.native="editContent"
+                      />
+                      <span v-else>{{ form.otherBeliefs }}</span>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                    <el-form-item :label="isEditForm ? '就医方式' : '就医方式：'" prop="medicalTreatment">
                       <el-select
                         v-if="isEditForm"
                         v-model="form.medicalTreatment"
+                        :disabled="isDisabled"
                         placeholder="请选择就医方式"
                         filterable
                         clearable
@@ -713,11 +814,26 @@
                       <span v-else>{{ form.medicalTreatmentName }}</span>
                     </el-form-item>
                   </el-col>
+                  <el-col v-if="form.medicalTreatment === 'hospitals_used_to_visit'" :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
+                    <el-form-item :label="isEditForm ? '习惯就诊的医院' : '习惯就诊的医院：'" prop="hospitalsUsedToVisit">
+                      <el-input
+                        v-if="isEditForm"
+                        v-model="form.hospitalsUsedToVisit"
+                        :disabled="isDisabled"
+                        maxlength="50"
+                        clearable
+                        placeholder="请输入习惯就诊的医院"
+                        @keyup.enter.native="editContent"
+                      />
+                      <span v-else>{{ form.hospitalsUsedToVisit }}</span>
+                    </el-form-item>
+                  </el-col>
                   <el-col :md="adaptiveGrid.md" :lg="adaptiveGrid.lg">
-                    <el-form-item :label="isEditForm ? '需要帮助时是否得到照料' : '需要帮助时是否得到照料：'">
+                    <el-form-item :label="isEditForm ? '需要帮助时是否得到照料' : '需要帮助时是否得到照料：'" prop="needHelpIsCare">
                       <el-select
                         v-if="isEditForm"
                         v-model="form.needHelpIsCare"
+                        :disabled="isDisabled"
                         placeholder="请选择需要帮助时是否得到照料"
                         filterable
                         clearable
@@ -739,10 +855,11 @@
                     :md="adaptiveGrid.md"
                     :lg="adaptiveGrid.lg"
                   >
-                    <el-form-item :label="isEditForm ? '谁帮助照料' : '谁帮助照料：'">
+                    <el-form-item :label="isEditForm ? '谁帮助照料' : '谁帮助照料：'" prop="whoHelpsCare">
                       <el-select
                         v-if="isEditForm"
                         v-model="form.whoHelpsCare"
+                        :disabled="isDisabled"
                         placeholder="请选择谁帮助照料"
                         filterable
                         clearable
@@ -764,10 +881,11 @@
                     :md="adaptiveGrid.md"
                     :lg="adaptiveGrid.lg"
                   >
-                    <el-form-item :label="isEditForm ? '照料人' : '照料人：'">
+                    <el-form-item :label="isEditForm ? '照料人' : '照料人：'" prop="whoHelpsCareOther">
                       <el-input
                         v-if="isEditForm"
                         v-model="form.whoHelpsCareOther"
+                        :disabled="isDisabled"
                         clearable
                         placeholder="请输入照料人"
                       />
@@ -775,8 +893,12 @@
                     </el-form-item>
                   </el-col>
                   <el-col>
-                    <el-form-item :label="isEditForm ? '兴趣爱好' : '兴趣爱好：'">
-                      <el-checkbox-group v-if="isEditForm" v-model="form.data['300']">
+                    <el-form-item
+                      :label="isEditForm ? '兴趣爱好' : '兴趣爱好：'"
+                      :rules="[
+                        { required: true }]"
+                    >
+                      <el-checkbox-group v-if="isEditForm" v-model="form.data['300']" :disabled="isDisabled">
                         <el-checkbox
                           v-for="(item,index) in hobbyOptions"
                           :key="index"
@@ -801,6 +923,18 @@
                           {{ form.remark }}
                         </span>
                       </span>
+                      <span
+                        v-if="form.data['300'].length === 0 && isCheck === true"
+                        style="color: #ff4949;
+                        font-size: 12px;
+                        line-height: 1;
+                        padding-top: 4px;
+                        position: absolute;
+                        top: 100%;
+                        left: 0;"
+                      >
+                        至少选择一项兴趣爱好！
+                      </span>
                     </el-form-item>
                   </el-col>
                 </el-row>
@@ -816,7 +950,7 @@
                 <el-row :gutter="0">
                   <el-col>
                     <el-form-item :label="isEditForm ? '既往疾病说明' : '既往疾病说明：'">
-                      <el-checkbox-group v-if="isEditForm" v-model="form.data['100']">
+                      <el-checkbox-group v-if="isEditForm" v-model="form.data['100']" :disabled="isDisabled">
                         <el-checkbox
                           v-for="(item,index) in historyOptions"
                           :key="index"
@@ -844,7 +978,7 @@
                   </el-col>
                   <el-col>
                     <el-form-item :label="isEditForm ? '现有疾病说明' : '现有疾病说明：'">
-                      <el-checkbox-group v-if="isEditForm" v-model="form.data['200']">
+                      <el-checkbox-group v-if="isEditForm" v-model="form.data['200']" :disabled="isDisabled">
                         <el-checkbox
                           v-for="(item,index) in nowOptions"
                           :key="index"
@@ -861,6 +995,7 @@
                       <span v-else>
                         <span v-for="(item,i) in newList" :key="i">
                           <span v-if="item.itemCode=='2047'">
+                            <!-- <span v-if="i!=0 && item.remark!=null">、</span>{{ item. this.assessCompleteDate = data.applyVo.updateTimeremark }} -->
                             <span v-if="i!=0 && item.remark!=null">、</span>{{ item.remark }}
                           </span>
                           <span v-else>
@@ -888,6 +1023,7 @@
                         v-model="form.currentTakeMedicine"
                         type="textarea"
                         clearable
+                        :disabled="isDisabled"
                         :rows="5"
                         maxlength="200"
                         show-word-limit
@@ -901,13 +1037,16 @@
             </el-collapse>
           </el-form>
           <el-footer>
-            <div class="footerBtn">
+            <div v-if="modelType!='look'" class="footerBtn">
               <el-button
                 type="primary"
                 class="base-btn btnMarginLeft15"
                 @click="saveBaseData"
               >确定</el-button>
               <el-button class="mr" @click="cancelDetailsPage">取消</el-button>
+            </div>
+            <div v-else class="footerBtn">
+              <el-button class="mr" @click="cancelDetailsPage">返回</el-button>
             </div>
           </el-footer>
         </el-tab-pane>
@@ -925,8 +1064,8 @@
               </div>
               <div v-for="(second,i) in first" :key="i">
                 <h3>{{ i }}</h3>
-                <el-collapse>
-                  <el-collapse-item v-for="(third,k,f) in second" :key="k" :name="'baseItem' + f">
+                <el-collapse v-model="activeCollapseList">
+                  <el-collapse-item v-for="(third,k,f) in second" :key="k" :name="'baseItem' + k">
                     <template slot="title">
                       <div class="titleSlider">
                         <span>
@@ -939,7 +1078,21 @@
                       <el-col v-for="(fourth,z) in third" :key="z">
                         <el-form-item :label="`${z+1}、${fourth.subjectTitle}`">
                           <span>{{ fourth.subjectRemarks }}</span>
-                          <el-radio-group :value="true">
+                          <el-radio-group v-if="key!='适应性评估'" :value="true">
+                            <el-radio
+                              v-for="(items,j) in fourth.options"
+                              :key="j"
+                              :disabled="isDisabled||!isEditForm"
+                              :label="items.ifSelected"
+                              @change="changeType(fourth,items)"
+                            >
+                              <div class="numberInfor">
+                                <span>{{ items.optionDes }}</span>
+                                <span>{{ items.optionValue }}分</span>
+                              </div>
+                            </el-radio>
+                          </el-radio-group>
+                          <el-radio-group v-else :value="true">
                             <el-radio
                               v-for="(items,j) in fourth.options"
                               :key="j"
@@ -953,6 +1106,7 @@
                               </div>
                             </el-radio>
                           </el-radio-group>
+                          <span v-show="!getSel(fourth.options, f) && isBtn" style="color: #ff0000">请选择该项!</span>
                         </el-form-item>
                       </el-col>
                     </el-row>
@@ -963,7 +1117,7 @@
                             v-for="(itemss,p) in fourth.options"
                             :key="p"
                             v-model="itemss.ifSelected"
-                            :disabled="!isEditForm"
+                            :disabled="isDisabled||!isEditForm"
                             :label="itemss.ifSelected"
                             @change="changeType(fourth,itemss)"
                           >
@@ -996,6 +1150,7 @@
                         <el-input
                           v-if="isEditForm"
                           v-model="otherSpecialDesc"
+                          :disabled="isDisabled||!isEditForm"
                           type="textarea"
                           clearable
                           :rows="5"
@@ -1054,7 +1209,7 @@ import {
   updateAssessQuestionnaire,
   getHobby
 } from '@/api/evaluationManagement/assessmentForm'
-
+import { closeSelectedTag } from '@/utils/rooterJump'
 export default {
   name: 'EsimateApplyDetails',
   components: { Address },
@@ -1089,6 +1244,10 @@ export default {
       }
     }
     return {
+      isCheck: false,
+      isBtn: false,
+      orderTakingAssessName2: '',
+      orderTakingAssessMobile2: '',
       radio: 1,
       checkList: [],
       cityList: [],
@@ -1103,6 +1262,7 @@ export default {
         'baseItem_6',
         'baseItem_7'
       ],
+      activeCollapseList: [],
       activeCollapses: [
         'baseItem0',
         'baseItem1',
@@ -1140,6 +1300,8 @@ export default {
         eduLevel: '',
         eduLevelName: '',
         faith: '',
+        otherBeliefs: '',
+        hospitalsUsedToVisit: '',
         faithName: '',
         fullName: '',
         homePhone: '',
@@ -1190,6 +1352,7 @@ export default {
         costBearingCodeName: '',
         appointmentData: '', // 预约评估日期
         assessAddrCode: '', // 评估地点
+        forOtherAddr: '',
         assessAddrCodeName: '',
         assessAreaCode: '', // 所属区划
         assessAreaCodeLevelName: '',
@@ -1205,6 +1368,62 @@ export default {
       },
       otherSpecialDesc: '',
       rulesForm: {
+        whoHelpsCareOther: [
+          { required: true, trigger: 'blur', message: '请填写帮助！' }
+        ],
+        needHelpIsCare: [
+          { required: true, trigger: 'change', message: '请选择需要帮助时是否得到照料！' }
+        ],
+        whoHelpsCare: [
+          { required: true, trigger: 'change', message: '请选择谁帮助照料！' }
+        ],
+        medicalTreatment: [
+          { required: true, trigger: 'change', message: '请选择就医方式！' }
+        ],
+        otherBeliefs: [
+          { required: true, trigger: 'blur', message: '请填写其他信仰！' }
+        ],
+        hospitalsUsedToVisit: [
+          { required: true, trigger: 'blur', message: '请填写习惯就诊的医院！' }
+        ],
+        faith: [
+          { required: true, trigger: 'change', message: '请选择宗教信仰！' }
+        ],
+        socialActivities: [
+          { required: true, trigger: 'change', message: '请选择社会参与！' }
+        ],
+        homeSupport: [
+          { required: true, trigger: 'change', message: '请选择家庭支持！' }
+        ],
+        longTermLevel: [
+          { required: true, trigger: 'change', message: '请选择长护险等级！' }
+        ],
+        maritalStatus: [
+          { required: true, trigger: 'change', message: '请选择婚姻状况！' }
+        ],
+        hometown: [
+          { required: true, trigger: 'blur', message: '请填写籍贯！' }
+        ],
+        jobDes: [
+          { required: true, trigger: 'blur', message: '请填写曾从事职业！' }
+        ],
+        eduLevel: [
+          { required: true, trigger: 'change', message: '请选择文化程度！' }
+        ],
+        nation: [
+          { required: true, trigger: 'change', message: '请选择民族！' }
+        ],
+        socialSecurityArd: [
+          { required: true, trigger: 'blur', message: '请填写社保卡号！' }
+        ],
+        fullName: [
+          { required: true, trigger: 'blur', message: '请填写姓名！' },
+          { trigger: 'blur', validator: verifyFullName }
+        ],
+        idCard: [
+          { required: true, trigger: 'MANUAL_TRIGGER', message: '请填写身份证！' },
+          { trigger: 'MANUAL_TRIGGER', validator: verifyIdCard }
+        ],
         sex: [{ required: true, trigger: 'change', message: '请选择性别！' }],
         mobile: [
           { required: true, trigger: 'blur', message: '请输入手机号！' },
@@ -1216,7 +1435,7 @@ export default {
         //   { required: true, trigger: 'change', message: '请选择籍贯！' }
         // ],
         // maritalStatus: [{ required: true, trigger: 'change', message: '请选择婚姻状况！' }],
-        liveState: [{ required: true, trigger: 'change', message: '请选择居住状况！' }],
+        liveState: [{ required: true, trigger: 'change', message: '请选择居住情况！' }],
         economicState: [{ required: true, trigger: 'change', message: '请选择经济状况！' }],
         agentsMobile: [
           { required: true, trigger: 'blur', message: '请输入手机号！' },
@@ -1358,12 +1577,60 @@ export default {
       newList: [],
       isShow: false,
       modelType: '',
-      isClick: false
+      isClick: false,
+      assessStatusName: '',
+      assessStartDate: '',
+      cancelDate: '',
+      taskEndDate: '',
+      arrName: [],
+      allName: [],
+      // 新增待终评的时候只能修改适应性评估
+      isDisabled: false,
+      isOther: false
+    }
+  },
+  watch: {
+    'form.assessAddrCode': function(val, oldVal) {
+      if (val === 'other_location') {
+        this.isOther = true
+        // if (this.isFirst === true) {
+        //   this.isFirst = false
+        //   return false
+        // }
+        // this.disabledAdd = false
+        // this.form.assessAddr = ''
+        // this.form.assessAreaCode = []
+        // this.areaCodeBase = []
+        // setTimeout(() => {
+        //   this.idSbEdit = !this.idSbEdit
+        // })
+      } else {
+        this.isOther = false
+        // this.disabledAdd = true
+        // // this.form.assessAddr = ''
+        // // this.areaCodeBase = []
+        // if (val === 'old_man_s_home') {
+        //   this.form.assessAddr = this.form.liveAddr
+        //   this.form.assessAreaCode = JSON.parse(JSON.stringify(this.areaCode[1]))
+        //   this.areaCodeBase = JSON.parse(JSON.stringify(this.areaCode[1]))
+        //   setTimeout(() => {
+        //     this.idSbEdit = !this.idSbEdit
+        //   })
+        // } else {
+        //   this.form.assessAddr = JSON.parse(JSON.stringify(this.jgAddress))
+        //   this.form.assessAreaCode = JSON.parse(JSON.stringify(this.jgAreaCode.split(',')))
+        //   this.areaCodeBase = JSON.parse(JSON.stringify(this.jgAreaCode.split(',')))
+        //   setTimeout(() => {
+        //     this.idSbEdit = !this.idSbEdit
+        //   })
+        // }
+      }
     }
   },
   mounted() {
     this.modelType = this.$route.query.modelType
     this.assessId = this.$route.params.id || ''
+    this.isDisabled = this.$route.query.assessStatus
     if (this.modelType === 'look') {
       this.getQuestionnaire()
     } else {
@@ -1372,6 +1639,15 @@ export default {
     this.getData(this.assessId, this.modelType)
   },
   methods: {
+    getSel(data, index) {
+      let isSel = false
+      data.forEach(item => {
+        if (item.ifSelected === true) {
+          isSel = item.ifSelected
+        }
+      })
+      return isSel
+    },
     handleClick(val) {
       if (this.modelType === 'edit' && val.name === 'base') {
         this.saveAssess(2)
@@ -1455,14 +1731,21 @@ export default {
       const otherOption = []
       let dataList = []
       let number = 0
+      this.arrName = []
+      this.allName = []
+      this.activeCollapseList = []
+      const indexArr = []
       for (const key in params) {
         if (key != '单列事项评估') {
           for (const obj in params[key]) {
             for (const item in params[key][obj]) {
-              params[key][obj][item].forEach((items) => {
+              this.allName.push(item)
+              params[key][obj][item].forEach((items, i) => {
                 number++
+                let isSel = false
                 items.options.forEach((itemList) => {
                   if (itemList.ifSelected === true) {
+                    isSel = true
                     options.push({
                       questionnaireId: itemList.questionnaireId,
                       ifSelected: itemList.ifSelected,
@@ -1472,8 +1755,27 @@ export default {
                     })
                   }
                 })
+                if (isSel === false) {
+                  indexArr.push(i)
+                  this.arrName.push(item)
+                }
               })
             }
+          }
+          this.arrName = Array.from(new Set(this.arrName))
+          if (this.arrName.length !== 0) {
+            this.arrName.forEach(item => {
+              this.activeCollapseList.push('baseItem' + item)
+            })
+            this.allName.forEach((item, index) => {
+              if (item === this.arrName[0]) {
+                if (indexArr.length !== 0) {
+                  window.scrollTo(0, index * 47 + indexArr[0] * 250)
+                } else {
+                  window.scrollTo(0, index * 47)
+                }
+              }
+            })
           }
         } else {
           for (const obj in params[key]) {
@@ -1502,6 +1804,7 @@ export default {
         otherSpecialDesc: this.otherSpecialDesc
       }
       if (type == 3) {
+        this.isBtn = true
         if (options.length < number) {
           this.$message.warning('信息未填写完整，请补充完整后预览结果')
         } else {
@@ -1519,7 +1822,8 @@ export default {
             this.closeDetailsPage()
           }
           if (type == 3) {
-            this.$router.push(`/assessmentForm/assessReport/${this.assessId}`)
+            closeSelectedTag(this, this.$route, `/assessmentForm/assessReport/${this.assessId}`)
+            // this.$router.push(`/assessmentForm/assessReport/${this.assessId}`)
           }
         } else {
           this.$message.error(res.msg)
@@ -1541,6 +1845,12 @@ export default {
           this.assessForm = res.data.data
           this.isShow = true
           this.otherSpecialDesc = res.data.otherSpecialDesc
+          if (this.isDisabled && this.modelType === 'edit' && this.activeTabs === 'assess') {
+            this.$nextTick(() => {
+              this.activeCollapseList.push('baseItem入住适应')
+              window.scrollBy(0, 800)
+            })
+          }
         }
       })
     },
@@ -1579,8 +1889,14 @@ export default {
       })
     },
     editContent(formName, name) {
+      if (this.form.data['300'].length === 0) {
+        this.isCheck = true
+      }
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          if (this.form.data['300'].length === 0) {
+            return false
+          }
           this.activeTabs = name
           const params = _.cloneDeep(this.clearData(this.form))
           params.bizAssessPerson.censusArea =
@@ -1628,9 +1944,11 @@ export default {
       })
     },
     closeDetailsPage() {
+      closeSelectedTag(this, this.$route)
       this.$router.push('/evaluationManagement/esimateManage/assessmentForm')
     },
     cancelDetailsPage() {
+      closeSelectedTag(this, this.$route)
       this.$router.push('/evaluationManagement/esimateManage/assessmentForm')
     },
     getSelect() {
@@ -1729,6 +2047,11 @@ export default {
                   break
               }
             }
+            const arr = ['', '', '', '', '', '', '']
+            this.longTermLevelOptions.forEach(item => {
+              arr[item.dictSort - 1] = item
+            })
+            this.longTermLevelOptions = arr
             resolve()
           })
           .catch(() => {
@@ -1851,6 +2174,8 @@ export default {
       bizAssessPerson.eduLevel = data.eduLevel,
       bizAssessPerson.eduLevelName = data.eduLevelName,
       bizAssessPerson.faith = data.faith,
+      bizAssessPerson.otherBeliefs = data.faith === 'other_beliefs' ? data.otherBeliefs : '',
+      bizAssessPerson.hospitalsUsedToVisit = data.medicalTreatment === 'hospitals_used_to_visit' ? data.hospitalsUsedToVisit : '',
       bizAssessPerson.faithName = data.faithName,
       bizAssessPerson.fullName = data.fullName,
       bizAssessPerson.homePhone = data.homePhone,
@@ -1901,6 +2226,7 @@ export default {
       bizAssessInfo.costBearingCodeName = data.costBearingCodeName,
       bizAssessInfo.appointmentData = data.appointmentData, // 预约评估日期
       bizAssessInfo.assessAddrCode = data.assessAddrCode, // 评估地点
+      bizAssessInfo.forOtherAddr = data.forOtherAddr,
       bizAssessInfo.assessAddrCodeName = data.assessAddrCodeName, // 评估地点
       bizAssessInfo.assessAreaCodeLevelName = data.assessAreaCodeLevelName, //
       // assessAreaCode= data.bizAssessInfo.assessAreaCodeLevel.split(","), // 所属区划
@@ -1950,8 +2276,18 @@ export default {
           dataList3.push(item.itemCode)
         })
       }
+      this.assessStatusName = data.bizAssessInfo.assessStatusName
+      this.orderTakingAssessName2 = data.bizAssessInfo.orderTakingAssessName2
+      this.orderTakingAssessMobile2 = data.bizAssessInfo.mobile2
+      this.assessStartDate = data.bizAssessInfo.assessStartDate
+      this.cancelDate = data.bizAssessInfo.cancelDate
+      this.assessStartDate = data.bizAssessInfo.assessStartDate
+      this.taskEndDate = data.bizAssessInfo.assessCompleteDate
       this.form = {
+        orderTakingAssessMobile1: data.bizAssessInfo.mobile1, // 联系电话
+        ourAssessEmpName: data.bizAssessInfo.orderTakingAssessName1,
         // 基本信息
+        img: data.bizImageInfoList[0] ? `${process.env.VUE_APP_API_IMGURL}${data.bizImageInfoList[0].imgUrl}` : '',
         age: data.bizAssessPerson.age,
         agentsHomePhone: data.bizAssessPerson.agentsHomePhone,
         agentsLiveAddr: data.bizAssessPerson.agentsLiveAddr,
@@ -1976,6 +2312,8 @@ export default {
         eduLevel: data.bizAssessPerson.eduLevel,
         eduLevelName: data.bizAssessPerson.eduLevelName,
         faith: data.bizAssessPerson.faith,
+        otherBeliefs: data.bizAssessPerson.otherBeliefs,
+        hospitalsUsedToVisit: data.bizAssessPerson.hospitalsUsedToVisit,
         faithName: data.bizAssessPerson.faithName,
         fullName: data.bizAssessPerson.fullName,
         homePhone: data.bizAssessPerson.homePhone,
@@ -2025,6 +2363,7 @@ export default {
         costBearingCodeName: data.bizAssessInfo.costBearingCodeName,
         appointmentData: data.bizAssessInfo.appointmentData, // 预约评估日期
         assessAddrCode: data.bizAssessInfo.assessAddrCode, // 评估地点
+        forOtherAddr: data.bizAssessInfo.forOtherAddr,
         assessAddrCodeName: data.bizAssessInfo.assessAddrCodeName, // 评估地点
         assessAreaCodeLevelName: data.bizAssessInfo.assessAreaCodeLevelName, // 评估地点
         // assessAreaCode: data.bizAssessInfo.assessAreaCodeLevel.split(","), // 所属区划
@@ -2082,5 +2421,13 @@ export default {
 }
 .assessItem {
   text-align: center;
+}
+</style>
+
+<style lang="scss">
+.formAss {
+  .el-form-item__error {
+    top: 36px !important;
+  }
 }
 </style>

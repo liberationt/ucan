@@ -6,30 +6,34 @@
         key="dynamicValidateForm"
         :model="dynamicValidateForm"
       >
-        <el-collapse v-model="activeCollapse">
-          <el-collapse-item name="baseItem_1">
-            <template slot="title">
-              <div class="titleSlider">
-                <span>
-                  <i class="titleTip" />报告时效设置
-                </span>
-              </div>
-            </template>
-            <el-row :gutter="0">
-              <el-col v-for="(item,i) in dynamicValidateForm.prescripOption" :key="i" :md="24" :lg="24">
-                <div class="inforCommon">
-                  <span style="margin-right:10px">{{ item.title }}</span>
-                  <el-form-item
-                    :key="item.key"
-                    :prop="'prescripOption.'+ i + '.value1'"
-                    :rules="rulesForm.value1"
-                  >
-                    <el-input-number v-model="item.value1" style="width:150px" /></el-form-item>
-                  <span style="margin-left:10px">{{ item.operator }}</span>
+        <el-collapse v-model="activeDynCollapse">
+          <div v-for="(item,i) in dynamicValidateForm.prescripOption" :key="i">
+            <el-collapse-item :name="activeDynCollapse[i]">
+              <template slot="title">
+                <div class="titleSlider">
+                  <span>
+                    <i class="titleTip" />{{ item.tab }}
+                  </span>
                 </div>
-              </el-col>
-            </el-row>
-          </el-collapse-item>
+              </template>
+              <el-row :gutter="0">
+                <el-col :md="24" :lg="24">
+                  <div class="inforCommon">
+                    <span style="margin-right:10px">{{ item.title }}</span>
+                    <el-form-item
+                      :key="item.key"
+                      :prop="'prescripOption.'+ i + '.value1'"
+                      :rules="rulesForm.value1"
+                    >
+                      <el-input-number v-model="item.value1" style="width:150px" /></el-form-item>
+                    <span style="margin-left:10px">{{ item.operator }}</span>
+                  </div>
+                </el-col>
+              </el-row>
+            </el-collapse-item>
+          </div>
+        </el-collapse>
+        <el-collapse v-model="activeCollapse">
           <el-collapse-item name="baseItem_2">
             <template slot="title">
               <div class="titleSlider">
@@ -98,7 +102,7 @@
               </el-col>
             </el-row>
           </el-collapse-item>
-          <el-collapse-item name="baseItem_4">
+          <!--<el-collapse-item name="baseItem_4">
             <template slot="title">
               <div class="titleSlider">
                 <span>
@@ -121,7 +125,7 @@
                 </div>
               </el-col>
             </el-row>
-          </el-collapse-item>
+          </el-collapse-item>-->
         </el-collapse>
       </el-form>
       <el-footer>
@@ -181,6 +185,7 @@ export default {
         prescripOption: [
           {
             id: '',
+            tab: '评估报告有效期',
             title: '评估报告有效期',
             value1: '',
             value2: '',
@@ -188,6 +193,7 @@ export default {
           },
           {
             id: '',
+            tab: '异常提示分值设置',
             title: '异常提示分值≥',
             value1: '',
             value2: '',
@@ -195,13 +201,15 @@ export default {
           },
           {
             id: '',
-            title: '从两个评估师接单开始计,任务处理时长',
+            tab: '评估任务时效设置',
+            title: '从提交评估时间计,超过',
             value1: '',
             value2: '',
-            operator: '天，超过时间未开始评估，放回任务池，重新派单'
+            operator: '天未提交报告,任务超时'
           },
           {
             id: '',
+            tab: '复核评估时效设置',
             title: '评估报告生成后,',
             value1: '',
             value2: '',
@@ -325,6 +333,7 @@ export default {
       },
       activeTabs: 'base',
       activeCollapse: ['baseItem_1', 'baseItem_2', 'baseItem_3', 'baseItem_4'],
+      activeDynCollapse: ['baseItem_1_0', 'baseItem_1_1', 'baseItem_1_2', 'baseItem_1_3'],
       rulesForm: {
         value1: [
           { required: true, trigger: 'blur', message: '请输入参数设置数值' },

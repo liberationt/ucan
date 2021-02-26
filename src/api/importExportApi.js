@@ -20,6 +20,24 @@ export function getElderMesDownload(data) {
     timeout: EXPORT_TIMEOUT
   })
 }
+// 补贴信息导出
+export function getSubsidyDownload(params) {
+  return request({
+    url: '/biz/subsidy/export',
+    method: 'get',
+    params,
+    // responseType: 'arraybuffer',
+    timeout: EXPORT_TIMEOUT
+  })
+}
+// 补贴信息模板下载
+export function getSubsidyTemplate(params) {
+  return request({
+    url: '/biz/subsidy/download/template',
+    method: 'post',
+    responseType: 'arraybuffer'
+  })
+}
 
 // 残疾人下载模板
 export function getDisabledImportTemplate(data) {

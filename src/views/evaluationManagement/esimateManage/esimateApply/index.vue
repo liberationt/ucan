@@ -75,8 +75,8 @@
         <el-header>
           <el-button v-has="{class: '新增'}" type="primary" class="base-btn" @click="addTableRow()">新增
           </el-button>
-          <!--          <el-button v-has="{class: '导入'}" type="primary" class="base-btn" @click="addTableRow()">导入-->
-          <!--          </el-button>-->
+          <el-button v-has="{class: '导入'}" type="primary" class="base-btn" @click="importFun()">导入
+          </el-button>
           <el-button v-has="{class: '导出'}" type="primary" class="base-btn" @click="exportFun()">导出
           </el-button>
           <div style="width: 100%">
@@ -96,57 +96,46 @@
             @row-dblclick="toDetail"
           >
             <el-table-column type="selection" width="50" />
-            <el-table-column label="序号" width="80" fixed="left">
+            <el-table-column label="序号" width="50" fixed="left">
               <template slot-scope="{row,$index}">
                 <span>{{ $index + 1 }}</span>
               </template>
             </el-table-column>
+            <el-table-column label="评估编号" prop="assessNo" width="150"  align="center" />
             <el-table-column label="姓名" prop="fullName" width="120" />
             <el-table-column label="性别" prop="sex" width="80" />
             <el-table-column label="年龄" prop="age" width="100" />
-            <el-table-column label="身份证号" prop="idCard" width="180" />
+            <el-table-column label="身份证号" prop="idCard" width="180" align="center"  />
+            <el-table-column label="手机号码" prop="mobile" width="180" align="center" />
             <el-table-column label="居住地址" prop="liveAddr" min-width="250" />
-            <el-table-column label="养老机构" prop="orgName" min-width="250" />
             <el-table-column label="评估类别" prop="assessType" width="120" />
             <el-table-column label="入住情况" prop="occupancyCode" width="120" />
-            <el-table-column label="申请状态" prop="assessStatus" width="120" />
-            <el-table-column label="评估师1" prop="orderTakingAssessName1" width="240">
-              <template slot-scope="{row}">
-                <div>
-                  {{ row.orderTakingAssessName1 }}
-                  <span v-if="row.orderTakingAssessName1 !== '' && row.empMobile !== ''">-</span>
-                  {{ row.empMobile }}
-                </div>
-              </template>
+            <el-table-column label="预约评估日期" prop="appointmentData" width="150" />
+            <el-table-column label="评估地点" prop="assessAddrCodeName"/>
+<!--            <el-table-column label="申请状态" prop="assessStatus" width="120" />-->
+            <el-table-column label="评估师1" prop="empMobileAndEmpName" width="240">
             </el-table-column>
-            <el-table-column label="评估师2" prop="orderTakingAssessName2" width="240">
-              <template slot-scope="{row}">
-                <div>
-                  {{ row.orderTakingAssessName2 }}
-                  <span v-if="row.orderTakingAssessName2 !== '' && row.empMobile2 !== ''">-</span>
-                  {{ row.empMobile2 }}
-                </div>
-              </template>
+            <el-table-column label="评估师2" prop="empMobileAndEmpName2" width="240">
             </el-table-column>
-            <el-table-column label="申请人账号" prop="createBy" width="120" />
+<!--            <el-table-column label="申请人账号" prop="createBy" width="120" />-->
+            <el-table-column label="养老机构" prop="orgName" min-width="250" />
+            <el-table-column label="任务状态" prop="taskStatus" min-width="150" v-if="activeName === 'has_not_started' || activeName === 'started'"/>
+            <el-table-column label="完成时间" prop="assessCompleteDate" min-width="150"  v-if="activeName === 'to_be_reviewed' || activeName === 'completed'"/>
+            <el-table-column label="取消时间" prop="updateTime" min-width="150" v-if="activeName === 'cancelled'"/>
             <el-table-column label="申请时间" prop="createTime" min-width="150" />
-            <el-table-column v-show="isALready === '已取消'" label="取消时间" prop="updateTime" min-width="150" />
-            <el-table-column v-if="isALready !== '已取消'" label="操作" align="center" width="200" fixed="right">
+            <el-table-column label="操作" align="center" width="200" fixed="right">
               <template slot-scope="{row}">
-                <span v-if="row.assessStatus === '待支付'" v-has="{class: '编辑'}" class="table-btn" @click="handleEdit(row)">
+                <span v-if="row.assessStatus === '待提交'" v-has="{class: '编辑'}" class="table-btn" @click="handleEdit(row)">
                   编辑
                 </span>
-                <span v-if="row.assessStatus === '待支付'" v-has="{class: '支付'}" class="table-btn" @click="openPay(row)">
-                  支付
+                <span v-has="{class: '查看'}" class="table-btn" @click="toDetail(row)">
+                  查看
                 </span>
-                <span v-if="row.assessStatus === '待支付'" v-has="{class: '删除'}" class="table-btn" @click="delList(row)">
+                <span v-if="row.assessStatus === '待提交'" v-has="{class: '删除'}" class="table-btn" @click="delList(row)">
                   删除
                 </span>
-                <span v-if="row.assessStatus === '待接单' && new Date(row.appointmentData) > new Date().getTime ()" class="table-btn" @click="cancel(row)" v-has="{class: '取消评估'}">
+                <span v-if="row.assessStatus === '待评估' || row.assessStatus === '评估中'" class="table-btn" @click="cancel(row)" v-has="{class: '取消评估'}">
                   取消评估
-                </span>
-                <span v-if="row.assessStatus === '已接单' && row.taskStatus === '未开始' && new Date(row.appointmentData) > new Date().getTime ()" class="table-btn" @click="cancel(row)" v-has="{class: '取消评估'}">
-                  取消评估{{new Date(row.appointmentData).getTime()}}
                 </span>
               </template>
             </el-table-column>
@@ -196,26 +185,31 @@
         </div>
       </div>
     </el-dialog>
+    <ExcelUpload :dialog-table-visible="dialogVisible" :title="'导入评估申请'" :template-name="'评估申请导入模板'" :template-api="templateApi" :upload-url="uploadUrl" :type="'评估申请'" @visible="visible" />
   </el-container>
 </template>
 
 <script>
 import Address from '@/components/Address'
 import Pagination from '@/components/Pagination'
-import { getEsimateApplyList, delApply, cancelApply, payMes, payAli, payWechat, paySuccess, exportApply, shortMes } from '@/api/esimate/esimate'
+import { getEsimateApplyList, delApply, cancelApply, payMes, payAli, payWechat, paySuccess, exportApply, shortMes, getShenDownload } from '@/api/esimate/esimate'
 import { pageModel } from '@/common'
 import { allSelectdictionaryData } from '@/api/facilitiesConfig/pensionAgency'
 import { downloadFromBlob } from '@/utils/index'
 import { getOrgList } from '@/api/evaluationManagement/basicInformation'
 import { canExport, exportTitleConstant, exportContentConstant, exportGoDownloadConstant, exportKnowConstant } from '@/common/constant'
+import ExcelUpload from '@/components/newExcelUpload/assessorInformation'
 export default {
   name: 'EsimateApply',
   components: {
     Address,
-    Pagination
+    Pagination,
+    ExcelUpload
   },
   data() {
     return {
+      templateApi: getShenDownload,
+      uploadUrl: process.env.VUE_APP_BASE_API + '/assess/apply/import',
       payDialogVisible: false,
       payRadio: 1,
       dailogForm: {
@@ -224,7 +218,9 @@ export default {
       },
       dailogRules: {
         cancelRemark: [
-          { required: true, message: '请输入取消原因，不超过200字', trigger: 'blur' }
+          { required: true, message: '请输入取消原因，不超过200字', trigger: 'blur' },
+          { max: 200, message: '取消原因不能超过200字', trigger: 'change' },
+          { min: 2, message: '取消原因不能少于2字', trigger: 'change' }
         ]
       },
       cancelDialogVisible: false,
@@ -251,20 +247,28 @@ export default {
         type: '1',
         key: ''
       }, {
-        name: '待支付',
+        name: '待提交',
         type: '2',
-        key: 'to_be_paid'
+        key: 'to_submit'
       }, {
-        name: '待接单',
+        name: '待评估',
         type: '3',
-        key: 'pending_orders'
+        key: 'has_not_started'
       }, {
-        name: '已接单',
+        name: '评估中',
         type: '4',
-        key: 'order_received'
+        key: 'started'
+      }, {
+        name: '已完成',
+        type: '5',
+        key: 'completed'
+      }, {
+        name: '待终评',
+        type: '6',
+        key: 'to_be_reviewed'
       }, {
         name: '已取消',
-        type: '5',
+        type: '7',
         key: 'cancelled'
       }],
       activeName: '',
@@ -276,7 +280,8 @@ export default {
       timer: null,
       isALready: '',
       exportData: '',
-      restaurants: []
+      restaurants: [],
+      dialogVisible: false
     }
   },
   watch: {
@@ -295,6 +300,12 @@ export default {
     this.getOrgOption()
   },
   methods: {
+    visible(value) {
+      this.dialogVisible = value
+    },
+    importFun() {
+      this.dialogVisible = true
+    },
     shortMes(id, name) {
       shortMes({
         id: id,
@@ -324,7 +335,7 @@ export default {
     },
     createFilter(queryString) {
       return (restaurant) => {
-        return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+        return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
       }
     },
     async exportFun() {
@@ -535,6 +546,7 @@ export default {
       })
     },
     handleClick(row) {
+      this.tableData = []
       this.isALready = row.label
       this.form.assessStatus = row.name
       this.form.pageNum = 1
@@ -566,7 +578,7 @@ export default {
         areaCode: '', // 区域表单ID
         orgName: '',
         assessType: '',
-        assessStatus: '',
+        assessStatus: this.form.assessStatus,
         occupancyCode: '',
         keyword: '',
         applyBeginDate: '',
@@ -587,7 +599,7 @@ export default {
             this.tableData[index].createTime = this.dateFtt('yyyy-MM-dd hh:mm:ss', myDate)
           })
           this.total = res.data.total
-          this.exportData = JSON.parse(JSON.stringify(this.form))
+          // this.exportData = JSON.parse(JSON.stringify(this.form))
         }
       })
     },

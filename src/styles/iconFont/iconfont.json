@@ -6,6 +6,69 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "18929166",
+      "name": "icon-gdgl",
+      "font_class": "icon-gdgl",
+      "unicode": "e61a",
+      "unicode_decimal": 58906
+    },
+    {
+      "icon_id": "18929167",
+      "name": "icon-fwry",
+      "font_class": "icon-fwry",
+      "unicode": "e61b",
+      "unicode_decimal": 58907
+    },
+    {
+      "icon_id": "18929168",
+      "name": "icon-sjbb",
+      "font_class": "icon-sjbb",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    },
+    {
+      "icon_id": "18929169",
+      "name": "icon-xmgl",
+      "font_class": "icon-xmgl",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    },
+    {
+      "icon_id": "18929170",
+      "name": "icon-fuwushang",
+      "font_class": "icon-fuwushang",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "18929171",
+      "name": "icon-fuwushangxxgl",
+      "font_class": "icon-fuwushangxxgl",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
+      "icon_id": "18049042",
+      "name": "butie",
+      "font_class": "butie",
+      "unicode": "e66d",
+      "unicode_decimal": 58989
+    },
+    {
+      "icon_id": "17708848",
+      "name": "sjgl",
+      "font_class": "sjgl",
+      "unicode": "e66c",
+      "unicode_decimal": 58988
+    },
+    {
+      "icon_id": "17609933",
+      "name": "xxfb",
+      "font_class": "xxfb",
+      "unicode": "e66b",
+      "unicode_decimal": 58987
+    },
+    {
       "icon_id": "16063041",
       "name": "wenjuan",
       "font_class": "wenjuan",

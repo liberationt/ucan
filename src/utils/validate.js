@@ -101,7 +101,7 @@ export function validateIP(rule, value, callback) {
 
 /* 是否手机号码或者固话*/
 export function validatePhoneTwo(rule, value, callback) {
-  const reg = /^((0\d{2,3}-\d{7,8})|(1[34578]\d{9}))$/
+  const reg = /^((0\d{2,3}-\d{7,8})|(1[345789]\d{9}))$/
   if (value == '' || value == undefined || value == null) {
     callback()
   } else {
@@ -114,7 +114,7 @@ export function validatePhoneTwo(rule, value, callback) {
 }
 /* 是否手机号码或者固话带分机*/
 export function validatePhoneThere(rule, value, callback) {
-  const reg = /^((0\d{2,3}-\d{7,8}(-\d{4}){0,1})|(1[34578]\d{9}))$/
+  const reg = /^((0\d{2,3}-\d{7,8}(-\d{4}){0,1})|(1[345789]\d{9}))$/
   if (value == '' || value == undefined || value == null) {
     callback()
   } else {
@@ -141,7 +141,7 @@ export function validateTelphone(rule, value, callback) {
 }
 /* 是否手机号码*/
 export function validatePhone(rule, value, callback) {
-  const reg = /^[1][3,4,5,7,8][0-9]{9}$/
+  const reg = /^[1][3,4,5,7,8,9][0-9]{9}$/
   if (value == '' || value == undefined || value == null) {
     callback()
   } else {
@@ -466,7 +466,7 @@ export function verifyHomePhone(rule, value, callback) {
 /* 手机号码 */
 export function verifyMobile(rule, value, callback) {
   if (value !== '' && value !== null) {
-    if (/^(0|86|17951)?(13[0-9]|15[012356789]|166|199|17[35678]|18[0-9]|14[57])[0-9]{8}$/.test(value)) {
+    if (/^(0|86|17951)?(1[345789]\d{9})$/.test(value)) {
       callback()
     } else {
       callback(new Error('手机号码格式有误，请重新输入！'))
@@ -481,7 +481,7 @@ export function verifyHomePhoneOrMobile(rule, value, callback) {
   if (value !== '' && value !== null) {
     if (/^\d{3,4}[-]\d{7,8}$/.test(value)) {
       callback()
-    } else if (/^(0|86|17951)?(13[0-9]|15[012356789]|166|199|17[35678]|18[0-9]|14[57])[0-9]{8}$/.test(value)) {
+    } else if (/^(0|86|17951)?(1[345789]\d{9})$/.test(value)) {
       callback()
     } else {
       callback(new Error('电话或手机号码格式有误，请重新输入！'))
@@ -506,5 +506,19 @@ export function isPositiveIntegerNotMust(rule, value, callback) {
     }
   } else {
     callback(new Error('请输入正整数！'))
+  }
+}
+
+/* 验证内容是否英文数字*/
+export function isCode(rule, value, callback) {
+  const reg = /^[0-9a-zA-Z]+$/
+  if (value === '' || value === undefined || value == null) {
+    callback()
+  } else {
+    if (!reg.test(value)) {
+      callback(new Error('信用代码仅由英文字母，数字组成'))
+    } else {
+      callback()
+    }
   }
 }

@@ -4,6 +4,23 @@
     <!--查询表单-->
     <el-header class="formDiv">
       <el-form :inline="true" :model="form" class="demo-form-inline">
+        <el-form-item label="服务类型">
+          <el-select
+            v-model="form.serviceType"
+            placeholder="请选择服务类型"
+            clearable
+            style="width:100%;"
+            @keyup.enter.native="onSubmit"
+          >
+            <el-option
+              v-for="item in serviceTypeOptions"
+              v-if="serviceTypeOptions.length !== 0"
+              :key="item.dictValue"
+              :label="item.dictLabel"
+              :value="item.dictValue"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="关键词">
           <el-input
             v-model.trim="form.serviceName"
@@ -51,7 +68,7 @@
             </el-table-column>
             <el-table-column label="服务名称" show-overflow-tooltip prop="serviceName" min-width="180" />
             <el-table-column label="服务范围" prop="serviceScope" min-width="180" />
-            <el-table-column label="服务名额" prop="serviceNum" min-width="130" />
+            <el-table-column label="服务类型" prop="serviceTypeName" min-width="130" />
             <el-table-column label="申请方式" prop="applyWay" min-width="200" />
             <el-table-column label="创建时间" prop="createTime" min-width="180" />
             <el-table-column label="服务地点" prop="orgName" min-width="100" />
@@ -219,7 +236,8 @@ import { pageModel } from '@/common'
 import { getToken } from '@/utils/auth'
 import {
   getServiceData,
-  removeTableRowData
+  removeTableRowData,
+  allSelectdictionaryData
 } from '@/api/serviceActivityConfig/serviceProject'
 import Address from '@/components/Address'
 import {
@@ -238,8 +256,12 @@ export default {
       // 机构类型
       org_typeOptions: [],
       lookVisible: false,
+
+      // 服务类型options
+      serviceTypeOptions: [],
       // 查询表单
       form: {
+        serviceType: '', // 服务类型
         serviceName: '', // 关键字查询
         pageNum: pageModel.pageNum, // 分页页数
         pageSize: pageModel.pageSize // 分页数量
@@ -425,13 +447,37 @@ export default {
     // 老人标签选择事件
     handleChange(val) {
     },
+    getSelect() {
+      return new Promise((resolve, reject) => {
+        // 数据字典接口
+        const dicKey = 'service_project_type'
+        allSelectdictionaryData(dicKey).then(response => {
+          if (response.code === 0) {
+            for (const k in response.data) {
+              switch (k) {
+                case 'service_project_type':
+                  this.serviceTypeOptions = response.data[k]
+                  break
+              }
+            }
+          } else {
+            this.$message.error('数据字典接口请求失败！')
+          }
+          resolve()
+        }).catch(() => {
+          this.$message.error('数据字典接口请求失败！')
+          reject()
+        })
+      })
+    },
     // 表单查询按钮
     onSubmit() {
       this.getData(this.form)
     },
     // 获取表格数据
-    getData(form) {
-      getServiceData(form).then(res => {
+    async getData(form) {
+      await this.getSelect()
+      await getServiceData(form).then(res => {
         if (res.rows) {
           this.tableData = res.rows
           this.total = res.total
@@ -543,14 +589,16 @@ export default {
 	.dialogInfor{
 		display: flex;
 		justify-content: space-between;
-		align-items: center;
 	}
 	.inforLeft,.inforRight{
-		width:680px;height:680px;
+		width:44%;
 		border:1px solid #333;
 		padding:10px;
+    overflow: auto;
 	}
 	.inforCenter{
+    display: flex;
+    align-items: center;
 		div{
 			width:40px;
 			height:40px;
